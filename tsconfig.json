@@ -1,0 +1,9 @@
+{
+  "extends": "@salesforce/dev-config/tsconfig-strict",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "esModuleInterop": true
+  },
+  "include": ["./src/**/*.ts"]
+}
