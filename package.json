@@ -1,5 +1,5 @@
 {
-  "name": "sf-metadata-generator",
+  "name": "@shuntaro/sf-metadata-generator",
   "description": "sf plugin to generate metadata",
   "version": "0.0.1",
   "dependencies": {
