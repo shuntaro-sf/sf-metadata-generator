@@ -127,7 +127,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
           row[key] = Generate.defaultValues[row.type][key];
         }
         // validates inputs
-        if (!this.isValidInputs2(key, row, rowIndex, colIndex)) {
+        if (!this.isValidInputs(key, row, rowIndex, colIndex)) {
           return;
         }
         row[key] = this.convertSpecialChars(row[key]);
@@ -138,11 +138,11 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
 
       // valueSet
       if (row.type === 'Picklist' || row.type === 'MultiselectPicklist') {
-        this.getPicklistMetaStr2(row, rowIndex);
+        this.getPicklistMetaStr(row, rowIndex);
       }
       // summaryFilterItems
       if (row.type === 'Summary') {
-        this.getSummaryFilterItemsMetaStr2(row, rowIndex);
+        this.getSummaryFilterItemsMetaStr(row, rowIndex);
       }
 
       Generate.successResults.push({
@@ -166,16 +166,16 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     });
 
     if (Generate.validationResults.length > 0) {
-      this.showValidationErrorMessages2();
+      this.showValidationErrorMessages();
     } else {
-      this.saveMetaData2(flags);
-      this.showFailureResults2();
+      this.saveMetaData(flags);
+      this.showFailureResults();
     }
     return { MetaJson: Generate.metaJson };
   }
 
-  private getPicklistMetaStr2(row: { [key: string]: any }, rowIndex: number): void {
-    if (!this.isValidInputsForPicklist2(row, rowIndex)) {
+  private getPicklistMetaStr(row: { [key: string]: any }, rowIndex: number): void {
+    if (!this.isValidInputsForPicklist(row, rowIndex)) {
       return;
     }
     const valueSetDefinitionElm = Generate.valueSetDefaultValues.valueSetDefinition;
@@ -196,7 +196,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     delete row.picklistLabel;
   }
 
-  private getSummaryFilterItemsMetaStr2(row: { [key: string]: any }, rowIndex: number): any {
+  private getSummaryFilterItemsMetaStr(row: { [key: string]: any }, rowIndex: number): any {
     // when there are no summaryFilterItems columns
     const noSummaryFilterItemsColumns =
       !Object.keys(row).includes('summaryFilterItemsField') &&
@@ -212,14 +212,13 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
       delete row.summaryFilterItemsValue;
       return null;
     }
-    if (!this.isValidInputsForSummaryFilterItems2(row, rowIndex)) {
+    if (!this.isValidInputsForSummaryFilterItems(row, rowIndex)) {
       return;
     }
-    const summaryFilterItemsElm = Generate.summaryFilterItemsDefaultValues.valueSetDefinition;
-
+    const summaryFilterItemsElm = Generate.summaryFilterItemsDefaultValues;
     Object.keys(summaryFilterItemsElm).forEach((tag) => {
       if (Object.keys(row).includes('summaryFilterItems' + tag.substring(1).toUpperCase())) {
-        summaryFilterItemsElm[tag] = row['summaryFilterItems' + String(tag.substring(1).toUpperCase())];
+        summaryFilterItemsElm[tag] = row['summaryFilterItems' + tag.substring(1).toUpperCase()];
       }
     });
 
@@ -230,7 +229,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
   }
 
   // eslint-disable-next-line complexity
-  private isValidInputs2(key: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
+  private isValidInputs(key: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
     const validationResLenBefore = Generate.validationResults.length;
     const regExpForOneChar = /^[a-zA-Z]/;
     const regExpForSnakeCase = /^[a-zA-Z][0-9a-zA-Z_]+[a-zA-Z]$/;
@@ -851,7 +850,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     }
   }
 
-  private isValidInputsForPicklist2(row: { [key: string]: string }, rowIndex: number): boolean {
+  private isValidInputsForPicklist(row: { [key: string]: string }, rowIndex: number): boolean {
     const header = Object.keys(row);
     const validationResLenBefore = Generate.validationResults.length;
     const typeColIndex = header.indexOf('type');
@@ -897,7 +896,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     return validationResLenBefore === Generate.validationResults.length;
   }
 
-  private isValidInputsForSummaryFilterItems2(row: { [key: string]: string }, rowIndex: number): boolean {
+  private isValidInputsForSummaryFilterItems(row: { [key: string]: string }, rowIndex: number): boolean {
     const header = Object.keys(row);
     const validationResLenBefore = Generate.validationResults.length;
     const fieldColIndex = header.indexOf('summaryFilterItemsField');
@@ -925,27 +924,32 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     const value = row.summaryFilterItemsValue;
 
     // for field tag
-    const isCustomField = field.endsWith('__c');
-    const regExpForOneChar = /^[a-zA-Z]/;
+    const fullNameSplit = field.split('.');
     const regExpForSnakeCase = /^[a-zA-Z][0-9a-zA-Z_]+[a-zA-Z]$/;
-    if (
-      (field.length > 1 && !regExpForSnakeCase.test(field)) ||
-      (field.length === 1 && !regExpForOneChar.test(field))
-    ) {
-      this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.format'));
-    }
-    if ((!isCustomField && field.split('__').length > 1) || (isCustomField && field.split('__').length > 2)) {
+
+    if (fullNameSplit.length !== 2) {
       this.pushValidationResult(
         errorIndexForField,
-        messages.getMessage('validation.summaryfilteritemsfield.underscore')
+        messages.getMessage('validation.summarizedfield.invalid.reference')
       );
+    } else {
+      if (!regExpForSnakeCase.test(fullNameSplit[0]) || !regExpForSnakeCase.test(fullNameSplit[1])) {
+        this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.format'));
+      }
+      if (fullNameSplit[0].split('__').length > 2 || fullNameSplit[1].split('__').length > 2) {
+        this.pushValidationResult(
+          errorIndexForField,
+          messages.getMessage('validation.summaryfilteritemsfield.underscore')
+        );
+      }
+      if (fullNameSplit[0].length === 0 || fullNameSplit[1].length === 0) {
+        this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.blank'));
+      }
+      if (!this.isValidLengthForSummary(fullNameSplit)) {
+        this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.length'));
+      }
     }
-    if (field.length === 0) {
-      this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.blank'));
-    }
-    if ((!isCustomField && field.length > 40) || (isCustomField && field.length > 43)) {
-      this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.length'));
-    }
+
     // for operation tag
     if (!Generate.options.summaryFilterItemsOperation.includes(operation)) {
       this.pushValidationResult(
@@ -990,12 +994,12 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     return isValidLength;
   }
 
-  private showValidationErrorMessages2(): void {
+  private showValidationErrorMessages(): void {
     console.table(Generate.validationResults);
     throw new SfError(messages.getMessage('validation'));
   }
 
-  private saveMetaData2(
+  private saveMetaData(
     flags: {
       input: string | undefined;
       outputdir: string;
@@ -1027,7 +1031,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     });
   }
 
-  private showFailureResults2(): void {
+  private showFailureResults(): void {
     if (Object.keys(Generate.failureResults).length === 0) {
       return;
     }
