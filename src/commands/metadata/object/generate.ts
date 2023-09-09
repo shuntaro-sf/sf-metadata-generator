@@ -95,38 +95,39 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
 
     csvJson.forEach((row, rowIndex) => {
       const removedKeys = [] as string[];
-      Object.keys(Generate.defaultValues[row.type]).forEach((key) => {
-        const colIndex = Object.keys(row).indexOf(key);
-        const indexOfKey = Object.keys(row).indexOf(key);
 
+      Object.keys(Generate.defaultValues).forEach((tag) => {
+        const colIndex = Object.keys(row).indexOf(tag);
+        const indexOfTag = Object.keys(row).indexOf(tag);
+        console.log(row);
         // dose not include tag at the header and the tag is not required
-        if (indexOfKey === -1 && Generate.isRequired[row.type][key] === null) {
-          removedKeys.push(key);
+        if (indexOfTag === -1 && Generate.isRequired[tag] === null) {
+          removedKeys.push(tag);
           return;
         }
         // when not applicable tag
-        if (Generate.isRequired[row.type][key] === null && Generate.defaultValues[row.type][key] === null) {
-          removedKeys.push(key);
+        if (Generate.isRequired[tag] === null && Generate.defaultValues[tag] === null) {
+          removedKeys.push(tag);
           return;
         }
         // to omit tag that dosent need to be xml tag if blank
         if (
-          !Generate.isRequired[row.type][key] &&
-          Generate.defaultValues[row.type][key] === null &&
-          (indexOfKey === -1 || row[key] === '')
+          !Generate.isRequired[tag] &&
+          Generate.defaultValues[tag] === null &&
+          (indexOfTag === -1 || row[tag] === '')
         ) {
-          removedKeys.push(key);
+          removedKeys.push(tag);
           return;
         }
         // set defaultvalue
-        if (row[key] === '' && Generate.defaultValues[row.type][key] !== null) {
-          row[key] = Generate.defaultValues[row.type][key];
+        if (row[tag] === '' && Generate.defaultValues[tag] !== null) {
+          row[tag] = Generate.defaultValues[tag];
         }
         // validates inputs
-        if (!this.isValidInputs(key, row, rowIndex, colIndex)) {
+        if (!this.isValidInputs(tag, row, rowIndex, colIndex)) {
           return;
         }
-        row[key] = this.convertSpecialChars(row[key]);
+        row[tag] = this.convertSpecialChars(row[tag]);
       });
       // nameField
       this.pushNameFieldMetaStr(row, rowIndex);
@@ -135,8 +136,8 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
       this.getMetaSettings(row);
 
       Generate.successResults.push({
-        FULLNAME: row.fullName + '.' + Generate.objectExtension,
-        PATH: join(flags.outputdir, row.fullName + '.' + Generate.objectExtension).replace('//', '/'),
+        FULLNAME: row.fullName + Generate.objectExtension,
+        PATH: join(flags.outputdir, row.fullName + Generate.objectExtension).replace('//', '/'),
       });
 
       removedKeys.forEach((key) => {
@@ -194,13 +195,13 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
   }
 
   // eslint-disable-next-line complexity
-  private isValidInputs(key: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
+  private isValidInputs(tag: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
     const validationResLenBefore = Generate.validationResults.length;
     const regExpForSnakeCase = /^[a-zA-Z][0-9a-zA-Z_]+[a-zA-Z]$/;
     const errorIndex = 'Row' + String(rowIndex + 1) + 'Col' + String(colIndex + 1);
     const rowList = Object.values(row);
 
-    switch (key) {
+    switch (tag) {
       case 'fullName':
         this.validatesFullName(rowList, colIndex, regExpForSnakeCase, errorIndex);
         break;
@@ -449,19 +450,15 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
     console.table(Generate.successResults);
     Object.keys(Generate.metaXmls).forEach((fullName) => {
       if (
-        (!flags.updates && !existsSync(join(flags.outputdir, fullName + '.' + Generate.objectExtension))) ||
+        (!flags.updates && !existsSync(join(flags.outputdir, fullName + Generate.objectExtension))) ||
         flags.updates
       ) {
         // for creating
-        writeFileSync(
-          join(flags.outputdir, fullName + '.' + Generate.objectExtension),
-          Generate.metaXmls[fullName],
-          'utf8'
-        );
+        writeFileSync(join(flags.outputdir, fullName + Generate.objectExtension), Generate.metaXmls[fullName], 'utf8');
       } else {
         // when fail to save
-        Generate.failureResults[fullName + '.' + Generate.objectExtension] =
-          'Failed to save ' + fullName + '.' + Generate.objectExtension + '. ' + messages.getMessage('failureSave');
+        Generate.failureResults[fullName + Generate.objectExtension] =
+          'Failed to save ' + fullName + Generate.objectExtension + '. ' + messages.getMessage('failureSave');
       }
     });
   }

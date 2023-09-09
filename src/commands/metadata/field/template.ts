@@ -45,7 +45,7 @@ export default class Template extends SfCommand<FieldTemplateResult> {
       csvList.push(Object.values(Template.templateInput[key]));
     });
     const csvStr = csvList.join('\n');
-    writeFileSync(flags.outputdir + '/Template.csv', csvStr, 'utf8');
+    writeFileSync(flags.outputdir + '/field-template.csv', csvStr, 'utf8');
     console.log(messages.getMessage('success') + flags.outputdir + '.');
     return { CsvTemplate: csvStr };
   }

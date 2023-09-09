@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
@@ -37,16 +38,14 @@ export default class Template extends SfCommand<ObjectTemplateResult> {
     if (!existsSync(flags.outputdir)) {
       throw new SfError(messages.getMessage('error.path.output') + flags.outputdir);
     }
-
-    let csvTemplate = '';
-    const firstRowKey = Object.keys(Template.templateInput)[0];
-    const firstRow = Template.templateInput[firstRowKey];
-    csvTemplate += Object.keys(String(firstRow)).join(',') + '\n';
-    for (const rowName in Template.templateInput) {
-      csvTemplate += Object.values(String(Template.templateInput[rowName])).join(',') + '\n';
-    }
-    writeFileSync(flags.outputdir + '/Template.csv', csvTemplate, 'utf8');
+    const csvList = [];
+    csvList[0] = Object.keys(Object.values(Template.templateInput)[0]);
+    Object.keys(Template.templateInput).forEach((key) => {
+      csvList.push(Object.values(Template.templateInput[key]));
+    });
+    const csvStr = csvList.join('\n');
+    writeFileSync(flags.outputdir + '/object-template.csv', csvStr, 'utf8');
     console.log(messages.getMessage('success') + flags.outputdir + '.');
-    return { CsvTemplate: csvTemplate };
+    return { CsvTemplate: csvStr };
   }
 }

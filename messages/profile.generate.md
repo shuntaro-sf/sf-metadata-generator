@@ -32,7 +32,11 @@ Cannot find the output-directory:
 
 # error.path.source
 
-Cannot find the srouce:
+Cannot find the source:
+
+# error.source.extension
+
+Name of extension of source must be .profile-meta.xml.
 
 # validation
 

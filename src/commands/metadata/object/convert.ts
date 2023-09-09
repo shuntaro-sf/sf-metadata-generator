@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable class-methods-use-this */
-import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { statSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
+import { join, extname, parse } from 'path';
+import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
@@ -32,6 +38,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
   };
 
   private static header = ConfigData.objectConvertConfig.header;
+  private static objectExtension = ConfigData.objectGenerateConfig.objectExtension;
 
   public async run(): Promise<ObjectConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -41,88 +48,76 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
     if (!existsSync(flags.outputdir)) {
       throw new SfError(messages.getMessage('error.path.output') + flags.outputdir);
     }
+    const parser = new xml2js.Parser();
+    const filesInSourcedir = readdirSync(flags.sourcedir);
 
-    const dirsInSourcedir = readdirSync(flags.sourcedir);
-    let csvDataStr = Convert.header.join(',') + '\n';
-
-    for (const dir of dirsInSourcedir) {
-      const dirForEachSource = readdirSync(join(flags.sourcedir, dir));
-      const metaFile = dirForEachSource.find((element) => element.includes(dir));
-      if (metaFile === undefined) {
-        continue;
+    const csvList = [] as string[][];
+    csvList[0] = Convert.header;
+    filesInSourcedir.forEach((file) => {
+      if (
+        flags.sourcedir === undefined ||
+        statSync(join(flags.sourcedir, file)).isDirectory() ||
+        extname(join(flags.sourcedir, file)) !== '.xml'
+      ) {
+        return;
       }
-      const metastr = readFileSync(join(flags.sourcedir, dir, metaFile), { encoding: 'utf8' });
-      const row = [] as string[];
-
-      if (!this.isCustomObject(dir)) {
-        continue;
+      const fullName = this.getFullNameFromPath(flags.source);
+      if (fullName === '') {
+        return;
       }
 
-      this.convertXmlToRowOfCsv(metastr, row);
-      csvDataStr += row.join(',') + '\n';
-    }
-
-    writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvDataStr, 'utf8');
-
-    // Return an object to be displayed with --json*/
-    return { csvDataStr };
-  }
-
-  private convertXmlToRowOfCsv(metastr: string, row: string[]): void {
-    for (const tag of Convert.header) {
-      const indexOfTag = Convert.header.indexOf(tag);
-      if (tag !== 'nameFieldType' && tag !== 'nameFieldLabel') {
-        const regexp = new RegExp('\\<' + tag + '\\>(.+)\\</' + tag + '\\>');
-        const tagValue = metastr.match(regexp);
-        if (tagValue !== null) {
-          row[indexOfTag] = this.convertSpecialChars(tagValue[1]);
+      const metaXml = readFileSync(join(flags.sourcedir, file), { encoding: 'utf8' });
+      parser.parseString(metaXml, (err, metaJson) => {
+        if (err) {
+          console.log(err.message);
         } else {
-          row[indexOfTag] = '';
+          if (!Object.keys(metaJson).includes('CustomObject')) {
+            return;
+          }
+          const row = [...Array(Convert.header.length)].map((elm, idx) => {
+            if (
+              Convert.header[idx] === 'nameFieldLabel' ||
+              Convert.header[idx] === 'nameFieldDisplayFormat' ||
+              Convert.header[idx] === 'nameFieldType'
+            ) {
+              return this.getValueForNameField(metaJson, idx);
+            } else {
+              return Object.keys(metaJson.CustomObject).includes(Convert.header[idx])
+                ? this.convertSpecialChars(metaJson.CustomObject[Convert.header[idx]][0])
+                : '';
+            }
+          });
+          row[Convert.header.indexOf('fullName')] = fullName;
+          csvList.push(row);
         }
-      } else {
-        const valueOfTag = this.getValueOfPicklistTag(metastr, row, tag);
-        row[indexOfTag] = this.convertSpecialChars(valueOfTag);
-      }
-    }
+      });
+    });
+    const csvStr = csvList.join('\n');
+    writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+
+    return {
+      csvDataStr: csvStr,
+    };
   }
 
-  private getValueOfPicklistTag(metastr: string, row: string[], tag: string): string {
-    const indexOfTag = Convert.header.indexOf(tag);
-    const regexp = new RegExp('\\<nameField\\>[\\s\\S]*\\</nameField\\>');
-    const tagValue = metastr.match(regexp);
-    if (tagValue === null) {
-      row[indexOfTag] = '';
+  private getFullNameFromPath(path: string): string {
+    const fullNameRegExp = new RegExp(Convert.objectExtension + '$');
+    const fullNameMatch = parse(path).base.match(fullNameRegExp);
+    if (fullNameMatch === null) {
       return '';
     }
-    const nameField = tagValue[0];
-    let valueOfTag = '';
-    if (tag === 'nameFieldType') {
-      const regexpFullName = new RegExp('\\<type\\>(.+)\\</type\\>', 'g');
-      const nameFieldTypes = nameField.match(regexpFullName);
-
-      if (nameFieldTypes !== null) {
-        let nameFieldTypeValue = nameFieldTypes.join(';');
-        nameFieldTypeValue = nameFieldTypeValue.replace(/<type>/g, '');
-        nameFieldTypeValue = nameFieldTypeValue.replace(/<\/type>/g, '');
-        valueOfTag = nameFieldTypeValue;
-      }
-    } else if (tag === 'nameFieldLabel') {
-      const regexpLabel = new RegExp('\\<label\\>(.+)\\</label\\>', 'g');
-      const nameFieldLabels = nameField.match(regexpLabel);
-      if (nameFieldLabels !== null) {
-        let nameFieldLabelValue = nameFieldLabels.join(';');
-        nameFieldLabelValue = nameFieldLabelValue.replace(/<label>/g, '');
-        nameFieldLabelValue = nameFieldLabelValue.replace(/<\/label>/g, '');
-        valueOfTag = nameFieldLabelValue;
-      }
-    }
-    return this.convertSpecialChars(valueOfTag);
+    return fullNameMatch[0];
   }
 
-  private isCustomObject(file: string): boolean {
-    const inputSplit = file.split('.');
-    const fullName = inputSplit[0];
-    return fullName.includes('__c');
+  private getValueForNameField(metaJson: { [key: string]: any }, colIndex: number): string {
+    if (!Object.keys(metaJson.CustomField).includes('nameField')) {
+      return '';
+    }
+    const nameFieldElm = metaJson.CustomField.nameField[0] as { [key: string]: string };
+    const tag =
+      Convert.header[colIndex].replace('nameField', '').substring(0, 1).toLocaleLowerCase() +
+      Convert.header[colIndex].replace('nameField', '').substring(1);
+    return nameFieldElm[tag];
   }
 
   private convertSpecialChars(str: string): string {

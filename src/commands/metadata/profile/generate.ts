@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
@@ -7,7 +8,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync, existsSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { join, parse } from 'path';
+import csvtojson from 'csvtojson';
+import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
@@ -20,12 +23,13 @@ export type Options = { [key: string]: any | Options };
 export type ActionOverrides = { [key: string]: any | ActionOverrides };
 export type MetaSettings = { [key: string]: any | MetaSettings };
 export type PermissionTags = { [key: string]: any | PermissionTags };
+export type MetaJson = { [key: string]: any | MetaJson };
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profile.generate');
 
 export type ProfileGenerateResult = {
-  metaStr: string;
+  MetaJson: MetaJson;
 };
 
 export default class Generate extends SfCommand<ProfileGenerateResult> {
@@ -54,12 +58,17 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
     }),
   };
 
+  private static xmlSetting = ConfigData.objectGenerateConfig.xmlSetting as { [key: string]: string };
   private static delimiter = ConfigData.profileGenerateConfig.delimiter;
   private static permissionTags = ConfigData.profileGenerateConfig.permissionTags as PermissionTags;
   private static options = ConfigData.profileGenerateConfig.options as Options;
+  private static indentationLength = ConfigData.profileGenerateConfig.indentationLength;
+  private static profileExtension = ConfigData.profileGenerateConfig.profileExtension;
 
   private static validationResults = [] as Array<{ [key: string]: string }>;
-  private static permissionMetaStrs = {} as { [key: string]: string };
+  private static successResults = [] as Array<{ [key: string]: string }>;
+  private static metaXmls = {} as { [key: string]: string };
+  private static metaJson = {} as { [key: string]: any };
 
   public async run(): Promise<ProfileGenerateResult> {
     const { flags } = await this.parse(Generate);
@@ -75,16 +84,90 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
     if (flags.delimiter === undefined) {
       flags.delimiter = Generate.delimiter;
     }
-    const csv = readFileSync(flags.input, {
-      encoding: 'utf8',
-    })
-      .toString()
-      .split('\n')
-      .map((e) => e.trim())
-      .map((e) => e.split(',').map((elm) => elm.trim()));
 
-    const header = csv[0];
-    let metaStr = readFileSync(flags.source, { encoding: 'utf8' });
+    const parser = new xml2js.Parser();
+
+    const metaXml = readFileSync(flags.source, { encoding: 'utf8' });
+
+    const fullName = this.getFullNameFromPath(flags.source);
+    if (fullName === '') {
+      throw new SfError(messages.getMessage('error.source.extension'));
+    }
+
+    parser.parseString(metaXml, (err, metaJson) => {
+      if (err) {
+        console.log(err.message);
+      } else {
+        if (!Object.keys(metaJson).includes('Profile')) {
+          return;
+        }
+        Generate.metaJson = metaJson;
+      }
+    });
+    console.log(Generate.metaJson);
+    const csvJson = await csvtojson().fromFile(flags.input);
+
+    csvJson.forEach((row, rowIndex) => {
+      console.log(row.type);
+      const metaItem = Generate.metaJson.Profile[row.type].filter(
+        (elm: { [x: string]: any[] }) => row.fullName === elm[Generate.permissionTags[row.type].keyTag][0]
+      )[0];
+      Generate.permissionTags[row.type].tags.forEach((tag: string) => {
+        const indexOfTag = Object.keys(row).indexOf(tag);
+
+        // dose not include tag at the header
+        if (indexOfTag === -1) {
+          return;
+        }
+
+        if (Generate.permissionTags[row.type][tag] === null) {
+          return;
+        }
+        /*
+        if (!Generate.permissionMetaStrs[fullName]) {
+          //    this.extractMetaStrsForEachKeyTag(metastr, row.type, String(keyTag));
+        }*/
+
+        // validates inputs
+        if (!this.isValidInputs(tag, row, rowIndex, indexOfTag)) {
+          return;
+        }
+
+        metaItem[tag][0] = this.convertSpecialChars(row[tag]);
+      });
+
+      Object.keys(row).sort();
+      row['$'] = { xmlns: Generate.xmlSetting.xmlns };
+      const xmlBuilder = new xml2js.Builder({
+        renderOpts: { pretty: true, indent: ' '.repeat(Generate.indentationLength), newline: '\n' },
+        xmldec: { version: Generate.xmlSetting.version, encoding: Generate.xmlSetting.encoding, standalone: undefined },
+      });
+      const xml = xmlBuilder.buildObject(Generate.metaJson);
+      Generate.metaXmls[fullName] = xml;
+    });
+    Generate.successResults.push({
+      FULLNAME: fullName + Generate.profileExtension,
+      PATH: join(flags.outputdir, fullName + Generate.profileExtension).replace('//', '/'),
+    });
+
+    if (Generate.validationResults.length > 0) {
+      this.showValidationErrorMessages();
+    } else {
+      this.saveMetaData(flags);
+    }
+    return { MetaJson: Generate.metaJson };
+  }
+
+  private getFullNameFromPath(path: string): string {
+    const fullNameRegExp = new RegExp(Generate.profileExtension + '$');
+    const fullNameMatch = parse(path).base.match(fullNameRegExp);
+    if (fullNameMatch === null) {
+      return '';
+    }
+    return fullNameMatch[0];
+  }
+  /*
+
 
     for (let rowIndex = 1; rowIndex < csv.length; rowIndex++) {
       if (csv[rowIndex].length < header.length) {
@@ -143,7 +226,7 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
       Generate.permissionMetaStrs[fullName] = newPermMetaStr;
     }
     return metastr;
-  }
+  }*/ /*
 
   private extractMetaStrsForEachKeyTag(metastr: string, type: string, keyTag: string): void {
     const regexp = new RegExp('<' + type + '>');
@@ -165,52 +248,51 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
         row[indexOfTag] = row[indexOfTag].toLowerCase();
       }
     }
-  }
+  }*/
 
-  private isValidInputs(tag: string, row: string[], header: string[], rowIndex: number): boolean {
-    const indexOfType = header.indexOf('type');
-    const type = row[indexOfType];
-    const indexOfTag = header.indexOf(tag);
-
+  // eslint-disable-next-line complexity
+  private isValidInputs(tag: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
     const validationResLenBefore = Generate.validationResults.length;
-    const errorIndex = 'Row' + (rowIndex + 1) + 'Col' + (indexOfTag + 1);
+    const errorIndex = 'Row' + String(rowIndex + 1) + 'Col' + String(colIndex + 1);
+    const rowList = Object.values(row);
+    const type = row.type;
 
     switch (tag) {
       case 'editable':
-        this.validatesEditable(type, row, indexOfTag, errorIndex);
+        this.validatesEditable(type, rowList, colIndex, errorIndex);
         break;
       case 'readable':
-        this.validatesReadable(type, row, indexOfTag, errorIndex);
+        this.validatesReadable(type, rowList, colIndex, errorIndex);
         break;
       case 'allowCreate':
-        this.validatesAllowCreate(type, row, indexOfTag, errorIndex);
+        this.validatesAllowCreate(type, rowList, colIndex, errorIndex);
         break;
       case 'allowDelete':
-        this.validatesAllowDelete(type, row, indexOfTag, errorIndex);
+        this.validatesAllowDelete(type, rowList, colIndex, errorIndex);
         break;
       case 'allowEdit':
-        this.validatesAllowEdit(type, row, indexOfTag, errorIndex);
+        this.validatesAllowEdit(type, rowList, colIndex, errorIndex);
         break;
       case 'allowRead':
-        this.validatesAllowRead(type, row, indexOfTag, errorIndex);
+        this.validatesAllowRead(type, rowList, colIndex, errorIndex);
         break;
       case 'modifyAllRecords':
-        this.validatesModiryAllRecords(type, row, indexOfTag, errorIndex);
+        this.validatesModiryAllRecords(type, rowList, colIndex, errorIndex);
         break;
       case 'viewAllRecords':
-        this.validatesViewAllRecords(type, row, indexOfTag, errorIndex);
+        this.validatesViewAllRecords(type, rowList, colIndex, errorIndex);
         break;
       case 'default':
-        this.validatesDefault(type, row, indexOfTag, errorIndex);
+        this.validatesDefault(type, rowList, colIndex, errorIndex);
         break;
       case 'visible':
-        this.validatesVisible(type, row, indexOfTag, errorIndex);
+        this.validatesVisible(type, rowList, colIndex, errorIndex);
         break;
       case 'enabled':
-        this.validatesEnable(type, row, indexOfTag, errorIndex);
+        this.validatesEnable(type, rowList, colIndex, errorIndex);
         break;
       case 'visibility':
-        this.validatesVisibility(type, row, indexOfTag, errorIndex);
+        this.validatesVisibility(type, rowList, colIndex, errorIndex);
         break;
     }
     return validationResLenBefore === Generate.validationResults.length;
@@ -330,7 +412,6 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
   }
 
   private saveMetaData(
-    metastr: string,
     flags: { input: string | undefined; outputdir: string; source: string | undefined; delimiter: string } & {
       [flag: string]: any;
     } & { json: boolean | undefined }
@@ -338,72 +419,21 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
     const blue = '\u001b[34m';
     const white = '\u001b[37m';
     console.log('===' + blue + ' Generated Source' + white);
-    if (flags.source === undefined) {
-      return;
-    }
-    const dirsToSource = flags.source.split('/');
-    if (!existsSync(join(flags.outputdir, dirsToSource[dirsToSource.length - 1]))) {
-      writeFileSync(join(flags.outputdir, dirsToSource[dirsToSource.length - 1]), metastr, 'utf8');
-    }
-    console.log(
-      'Successfully saved ' +
-        dirsToSource[dirsToSource.length - 1] +
-        ' in ' +
-        join(flags.outputdir, dirsToSource[dirsToSource.length - 1])
-    );
+    console.table(Generate.successResults);
+    Object.keys(Generate.metaXmls).forEach((fullName) => {
+      if (existsSync(join(flags.outputdir, fullName + '.' + Generate.profileExtension))) {
+        // for creating
+        writeFileSync(
+          join(flags.outputdir, fullName + '.' + Generate.profileExtension),
+          Generate.metaXmls[fullName],
+          'utf8'
+        );
+      }
+    });
   }
 
   private showValidationErrorMessages(): void {
-    const logLengths = this.getLogLenghts(Generate.validationResults);
-    this.showLogHeader(logLengths);
-    this.showLogBody(Generate.validationResults, logLengths);
+    console.table(Generate.validationResults);
     throw new SfError(messages.getMessage('validation'));
-  }
-
-  private getLogLenghts(logs: Array<{ [key: string]: string }>): { [key: string]: number } {
-    const logLengths = {} as { [key: string]: number };
-    for (const log of logs) {
-      for (const logName in log) {
-        if (logLengths[logName] < log[logName].length || logLengths[logName] === undefined) {
-          logLengths[logName] = log[logName].length;
-        }
-      }
-    }
-    return logLengths;
-  }
-
-  private showLogHeader(logLengths: any): void {
-    let header = '';
-    let line = '';
-    const whiteSpace = ' ';
-    const lineChar = '─';
-
-    let counter = 0;
-    for (const logName in logLengths) {
-      counter++;
-      header += logName;
-      if (counter < Object.keys(String(logLengths)).length) {
-        header += whiteSpace.repeat(logLengths[logName] - logName.length) + '\t';
-      }
-      line += lineChar.repeat(Number(logLengths[logName])) + '\t';
-    }
-    console.log(header);
-    console.log(line);
-  }
-
-  private showLogBody(logs: any[], logLengths: any): void {
-    const whiteSpace = ' ';
-    for (const log of logs) {
-      let logMessage = '';
-      let counter = 0;
-      for (const logName in log) {
-        counter++;
-        logMessage += log[logName];
-        if (counter < Object.keys(String(log)).length) {
-          logMessage += whiteSpace.repeat(logLengths[logName] - log[logName].length) + '\t';
-        }
-      }
-      console.log(logMessage);
-    }
   }
 }

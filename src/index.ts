@@ -2796,6 +2796,7 @@ export const objectConvertConfig = {
     'nameFieldLabel',
     'nameFieldDisplayFormat',
   ],
+  objectExtension: 'object-meta.xml',
 };
 
 export const objectGenerateConfig = {
@@ -3014,7 +3015,7 @@ export const objectGenerateConfig = {
     nameFieldType: ['Text', 'AutoNumber'],
   },
   indentationLength: 4,
-  objectExtension: 'object-meta.xml',
+  objectExtension: '.object-meta.xml',
   delimiter: ',',
   tagNames: [
     'label',
@@ -3128,6 +3129,11 @@ export const profileConvertConfig = {
 };
 
 export const profileGenerateConfig = {
+  xmlSetting: {
+    version: '1.0',
+    encoding: 'UTF-8',
+    xmlns: 'http://soap.sforce.com/2006/04/metadata',
+  },
   permissionTags: {
     applicationVisibilities: {
       keyTag: 'application',
@@ -3176,6 +3182,8 @@ export const profileGenerateConfig = {
     enabled: ['true', 'false'],
     visibility: ['DefaultOn', 'DefaultOff', 'Hidden'],
   },
+  indentationLength: 4,
+  profileExtension: 'profile-meta.xml',
   delimiter: ',',
   resolveJsonModule: true,
 };

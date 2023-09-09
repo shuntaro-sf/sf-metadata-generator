@@ -240,14 +240,14 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
   }
 
   // eslint-disable-next-line complexity
-  private isValidInputs(key: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
+  private isValidInputs(tag: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {
     const validationResLenBefore = Generate.validationResults.length;
     const regExpForOneChar = /^[a-zA-Z]/;
     const regExpForSnakeCase = /^[a-zA-Z][0-9a-zA-Z_]+[a-zA-Z]$/;
     const errorIndex = 'Row' + String(rowIndex + 1) + 'Col' + String(colIndex + 1);
     const header = Object.keys(row);
     const rowList = Object.values(row);
-    switch (key) {
+    switch (tag) {
       case 'fullName':
         this.validatesFullName(regExpForSnakeCase, rowList, colIndex, errorIndex);
         break;

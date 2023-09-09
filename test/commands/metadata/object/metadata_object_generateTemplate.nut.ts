@@ -3,16 +3,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-console */
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
-import { FieldTemplateResult } from '../../../../src/commands/metadata/field/template';
+import { ObjectGenerateResult } from '../../../../src/commands/metadata/object/generate';
+import { ObjectTemplateResult } from '../../../../src/commands/metadata/object/template';
 
 const alias = 'sfPlugin';
-const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
-const templateOutputDir = './test/resources/input/field/';
+const outputDir = './test/resources/project/force-app/main/default/objects/';
+const templateOutputDir = './test/resources/input/object/';
 
 let testSession: TestSession;
 
-describe('metadata field generate template NUTs', () => {
+describe('metadata object generate template NUTs', () => {
   before('prepare session', async () => {
     testSession = await TestSession.create();
   });
@@ -21,15 +21,15 @@ describe('metadata field generate template NUTs', () => {
     await testSession?.clean();
   });
 
-  it('metadata field generate', () => {
-    execCmd<FieldTemplateResult>('metadata field template --outputdir ' + templateOutputDir + ' --json', {
+  it('metadata object generate', () => {
+    execCmd<ObjectTemplateResult>('metadata object template --outputdir ' + templateOutputDir + ' --json', {
       ensureExitCode: 0,
     });
 
-    execCmd<FieldGenerateResult>(
-      'metadata field generate --input ' +
+    execCmd<ObjectGenerateResult>(
+      'metadata object generate --input ' +
         templateOutputDir +
-        'field-template.csv --outputdir ' +
+        'object-template.csv --outputdir ' +
         outputDir +
         ' --json',
       {
