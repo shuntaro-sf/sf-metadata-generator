@@ -2,53 +2,172 @@
 
 [![NPM](https://img.shields.io/npm/v/@shuntaro/sf-metadata-generator.svg?label=@shuntaro/sf-metadata-generator)](https://www.npmjs.com/package/@shuntaro/sf-metadata-generator) [![Downloads/week](https://img.shields.io/npm/dw/@shuntaro/sf-metadata-generator.svg)](https://npmjs.org/package/@shuntaro/sf-metadata-generator) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/salesforcecli/@shuntaro/sf-metadata-generator/main/LICENSE.txt)
 
-## Using the template
+# How to get started
 
-This repository provides a template for creating a plugin for the Salesforce CLI. To convert this template to a working plugin:
+Make sure you have already installed this plugin.
 
-1. Please get in touch with the Platform CLI team. We want to help you develop your plugin.
-2. Generate your plugin:
+## Field metadata
 
-   ```
-   sf plugins install dev
-   sf dev generate plugin
+To start generating field metadata, you need a csv file to include tab names e.g., fullName, label, type, ... , at the header and values for those tags to determine each detail of custom fields from the second line.
 
-   git init -b main
-   git add . && git commit -m "chore: initial commit"
-   ```
+Other spreadsheet files are also supported as delimiter flag on the generator command can be any string.
 
-3. Create your plugin's repo in the salesforcecli github org
-4. When you're ready, replace the contents of this README with the information you want.
+The description of each tag is as follows. For further details of custrom-field-metadata, see [https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/customfield.htm](https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/customfield.htm)
 
-## Learn about `sf` plugins
+| Tag                         | Description                                                                                                                                                                                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fullName                    | Custom field API name.                                                                                                                                                                                                                                                       |
+| label                       | Field label name.                                                                                                                                                                                                                                                            |
+| description                 | Field descritpion.                                                                                                                                                                                                                                                           |
+| inlineHelpText              | Field-level help text.                                                                                                                                                                                                                                                       |
+| type                        | Data type. Options are listed below:<br>AutoNumber, Checkbox, Currency, Date, DateTime, Email, Location, Number, Percent, Phone, Picklist, MultiselectPicklist, Text, TextArea, LongTextArea, Html, EncryptedText, Time, Url, Lookup, MasterDetail, ExternalLookup, Summary. |
+| required                    | Whether it is required. Options are listed below:<br>true, false.                                                                                                                                                                                                            |
+| externalId                  | Whether it is an external ID. Options are listed below:<br>true, false.                                                                                                                                                                                                      |
+| trackHistory                | Whether to enableck history tracking. Options are listed below:<br>true, false.                                                                                                                                                                                              |
+| trackTrending               | Whether to track historical trending. Options are listed below:<br>true, false.                                                                                                                                                                                              |
+| unique                      | Whether it is unique. Options are listed below:<br>true, false.                                                                                                                                                                                                              |
+| defaultValue                | Default value. For Checkbox data type. Options are listed below:<br>true, false.                                                                                                                                                                                             |
+| displayFormat               | Display format for AutoNumber. Example: A-{0000}.                                                                                                                                                                                                                            |
+| displayLocationInDecimal    | Whether to display location in decimal. Options are listed below:<br>true, false.                                                                                                                                                                                            |
+| scale                       | Number of decimal places.                                                                                                                                                                                                                                                    |
+| precision                   | Number of digits.                                                                                                                                                                                                                                                            |
+| visibleLines                | Number of visible lines applied to MultiselectPicklist, LongTextArea, and Html.                                                                                                                                                                                              |
+| length                      | Text length applied to Text, TextArea, LongTextArea, and Html.                                                                                                                                                                                                               |
+| maskChar                    | Mask character applied to EncryptedText. Options are listed below:<br>asterisk, X.                                                                                                                                                                                           |
+| maskType                    | Mask type applied to EncryptedText. Options are listed below:<br>all, lastFour, creditCard, nino, ssn, sin.                                                                                                                                                                  |
+| picklistFullName            | Picklist API Names applied to Picklist and MultiselectPicklist. Note that semicolon ';' is used as the default delimiter to separate character string to multiple names. The delimiter can be chenged giving the picklistdelimiter.                                          |
+| picklistLabel               | Picklist labels applied to Picklist and MultiselectPicklist. Note that semicolon ';' is used as the default delimiter to separate character string to multiple labels. The delimiter can be chenged giving the picklistdelimiter.                                            |
+| caseSensitive               | Whether the field is case-sensitive. Applied only for Text. Options are listed below:<br>true, false.                                                                                                                                                                        |
+| referenceTo                 | Object FullName that the object of this field references to.                                                                                                                                                                                                                 |
+| relationshipLabel           | Label for relationship.                                                                                                                                                                                                                                                      |
+| relationshipName            | Child relationship name applied for Lookup, MasterDetail, and ExternalLookup.                                                                                                                                                                                                |
+| relationshipOrder           | Order of master-detail relationship. Options are listed below:<br>0, 1.                                                                                                                                                                                                      |
+| deleteConstraint            | Deletion options for lookup relationships. Options are listed below:<br>Cascade, Restrict, SetNull.                                                                                                                                                                          |
+| reparentableMasterDetail    | Whether the child records in a master-detail relationship on a custom object can be reparented to different parent records. Options are listed below:<br>true, false.                                                                                                        |
+| writeRequiresMasterRead     | Whether to allow users with Read access to the primary record permission to create, edit, or delete child records. Options are listed below:<br>true, false.                                                                                                                 |
+| summaryForeignKey           | Represents the master-detail field on the child that defines the relationship between the parent and the child. Example: ChildObject.ParentObject.                                                                                                                           |
+| summaryOperation            | Type of operation for roll-up summary field. Options are listed below:<br>count, sum, min, max.                                                                                                                                                                              |
+| summarizedField             | Represents the field on the detail row that is being summarized. Example: ChildObject.Field.                                                                                                                                                                                 |
+| summaryFilterItemsField     | Represents the field to filter items.                                                                                                                                                                                                                                        |
+| summaryFilterItemsOperation | Type of comparison operation to filter items. Options are listed below:<br>equals,notEqual,lessThan,greaterThan,lessOrEqual,greaterOrEqual,contains,notContain,startsWith,includes,excludes,within.                                                                          |
+| summaryFilterItemsValue     | Value to compare with summaryFilterItemsField.                                                                                                                                                                                                                               |
 
-Salesforce CLI plugins are based on the [oclif plugin framework](<(https://oclif.io/docs/introduction.html)>). Read the [plugin developer guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_plugins.meta/sfdx_cli_plugins/cli_plugins_architecture_sf_cli.htm) to learn about Salesforce CLI plugin development.
+Or you can create a template file running the following commnad:
 
-This repository contains a lot of additional scripts and tools to help with general Salesforce node development and enforce coding standards. You should familiarize yourself with some of the [node developer packages](#tooling) used by Salesforce.
+```
+  $ sf metadata field template --outputdir ./outputdir/
+```
 
-Additionally, there are some additional tests that the Salesforce CLI will enforce if this plugin is ever bundled with the CLI. These test are included by default under the `posttest` script and it is required to keep these tests active in your plugin if you plan to have it bundled.
+Then, `sf metadata field generate` generates custom field metadata of the input-csv-file.
 
-### Tooling
+The flag `--input` specifies the input-csv-file to be converted to metadata-xml-files and `--outputdir` the directory to save those xml files.
 
-- [@salesforce/core](https://github.com/forcedotcom/sfdx-core)
-- [@salesforce/kit](https://github.com/forcedotcom/kit)
-- [@salesforce/sf-plugins-core](https://github.com/salesforcecli/sf-plugins-core)
-- [@salesforce/ts-types](https://github.com/forcedotcom/ts-types)
-- [@salesforce/ts-sinon](https://github.com/forcedotcom/ts-sinon)
-- [@salesforce/dev-config](https://github.com/forcedotcom/dev-config)
-- [@salesforce/dev-scripts](https://github.com/forcedotcom/dev-scripts)
+```
+  $ sf metadata field generate --input ./input.csv --outputdir ./outputdir/
+```
 
-### Hooks
+You can also update custom-field-xml-files with `sf metadata field convert`. Assume you have created SFDX project and retrieved field-xml files you want to update. Then, run the following command to rewrite the files in the csv format.
 
-For cross clouds commands, e.g. `sf env list`, we utilize [oclif hooks](https://oclif.io/docs/hooks) to get the relevant information from installed plugins.
+```
+  $ sf metadata field convert -sourcedir ./force-app/main/default/objects/Account/fields/ --outputdir ../outputdir/
+```
 
-This plugin includes sample hooks in the [src/hooks directory](src/hooks). You'll just need to add the appropriate logic. You can also delete any of the hooks if they aren't required for your plugin.
+Edit the craeted csv file as you want to update metadata, and then run `sf metadata field generate --updates` to override the xml files.
 
-# Everything past here is only a suggestion as to what should be in your specific plugin's description
+Note that runnning without `--updates` avoids overrinding existing metadata.
 
-This plugin is bundled with the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli). For more information on the CLI, read the [getting started guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm).
+```
+  $ sf metadata field generate --input ./input.csv --outputdir ./outputdir/ --updates
+```
 
-We always recommend using the latest version of these commands bundled with the CLI, however, you can install a specific version or tag if needed.
+## Object metadata
+
+To start generating object metadata, you need a csv file to include tab names e.g., fullName, label, allowInChatterGroups, ... , at the header and values for those tags to determine each detail of custom objects from the second line.
+
+Other spreadsheet files are also supported as delimiter flag on the generator command can be any string.
+
+The description of each tag is as follows. For further details of custrom-object-metadata, see [https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/customobject.htm](https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/customobject.htm)
+
+| Tag                    | Description                                                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| fullName               | Custom object API name.                                                                                                      |
+| label                  | Custom object label name.                                                                                                    |
+| description            | Object descritpion.                                                                                                          |
+| allowInChatterGroups   | Whether to allow records of this custom object type to be added to Chatter groups. Options are listed below:<br>true, false. |
+| deploymentStatus       | Deployment status. Options are listed below:<br>Deployed, InDevelopment.                                                     |
+| enableActivities       | Whether to enable activities. Options are listed below:<br>true, false.                                                      |
+| enableBulkApi          | Whether to enable bulk API. Options are listed below:<br>true, false.                                                        |
+| enableHistory          | Whether to enable history. Options are listed below:<br>true, false.                                                         |
+| enableReports          | Whether to enable reports. Options are listed below:<br>true, false.                                                         |
+| enableSearch           | Whether to enable search. Options are listed below:<br>true, false.                                                          |
+| enableSharing          | Whether to enable sharing. Options are listed below:<br>true, false.                                                         |
+| enableStreamingApi     | Whether to enable sreaming API. Options are listed below:<br>true, false.                                                    |
+| nameFieldType          | Type of name field. Options are listed below:<br>Text, AutoNumber.                                                           |
+| nameFieldLabel         | Label for name field.                                                                                                        |
+| nameFieldDisplayFormat | Name field display format. Applied when nameFieldType is set to AutoNumber.                                                  |
+
+Or you can create a template file running the following commnad:
+
+```
+  $ sf metadata object template --outputdir ./outputdir/
+```
+
+Then, `sf metadata object generate` generates custom object metadata of the input-csv-file.
+
+The flag `--input` specifies the input-csv-file to be converted to metadata-xml-files and `--outputdir` the directory to save those xml files.
+
+```
+  $ sf metadata object generate --input ./input.csv --outputdir ./outputdir/
+```
+
+You can also update custom-object-xml-files with `sf metadata object convert`. Assume you have created SFDX project and retrieved object-xml files you want to update. Then, run the following command to rewrite the files in the csv format.
+
+```
+  $ sf metadata object convert -sourcedir ./force-app/main/default/objects/ --outputdir ../outputdir/
+```
+
+Edit the craeted csv file as you want to update metadata, and then run `sf metadata object generate --updates` to override the xml files.
+
+Note that runnning without `--updates` avoids overrinding existing metadata.
+
+```
+  $ sf metadata object generate --input ./input.csv --outputdir ./outputdir/ --updates
+```
+
+## Profile metadata
+
+Only update is supported for profile metadata due to dependencies on other metadata.
+
+You can rewrite a profile xml file in the csv format as shown in field metadata by runnning `metadata field convert`.
+
+```
+  $ sf metadata field convert -sourcedir ./force-app/main/default/profiles/xxx.profile-meta.xml --outputdir ../outputdir/
+```
+
+Edit the craeted csv file as you want to update metadata. The description of the output csv file is as follows. For further details of profile-metadata, see [https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/meta_profile.htm](https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/meta_profile.htm)
+
+| Tag              | Description                                                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fullName         | FullName to update.                                                                                                                                                                                     |
+| type             | Field Name to update. Options are listed below:<br>applicationVisibilities, classAccesses, fieldPermissions, objectPermissions, pageAccesses, recordTypeVisibilities, tabVisibilities, userPermissions. |
+| editable         | Whether it is allowed to edit the field of fullName. Options are listed below:<br>true, false.                                                                                                          |
+| readable         | Whether it is allowed to read the field of fullName. Options are listed below:<br>true, false.                                                                                                          |
+| allowCreate      | Whether it is allowed to create the object of fullName. Options are listed below:<br>true, false.                                                                                                       |
+| allowDelete      | Whether it is allowed to delete the object of fullName. Options are listed below:<br>true, false.                                                                                                       |
+| allowEdit        | Whether it is allowed to edit the object of fullName. Options are listed below:<br>true, false.                                                                                                         |
+| allowRead        | Whether it is allowed to read the object of fullName. Options are listed below:<br>true, false.                                                                                                         |
+| modifyAllRecords | Whether it is allowed to modify all records of the object of fullName.Options are listed below:<br>true, false.                                                                                         |
+| viewAllRecords   | Whether it is allowed to view all records of the object of fullName. Options are listed below:<br>true, false.                                                                                          |
+| default          | Whether it is default. Applied for applicationVisibilities and recordTypeVisibilities. Options are listed below:<br>true, false.                                                                        |
+| visible          | Whether it is visible. Applied for applicationVisibilities and recordTypeVisibilities. Options are listed below:<br>true, false.                                                                        |
+| enabled          | Whether it is enabled. Applied for classAccesses, pageAccesses, and userPermissions. Options are listed below:<br>true, false.                                                                          |
+| visibility       | Type of tag-visibility. Applied for tabVisibilities. Options are listed below:<br>DefaultOn, DefaultOff,Hidden                                                                                          |
+
+Then, run `sf metadata profile generate --updates` to override the profile xml file.
+
+```
+  $ sf metadata profile generate --input ./input.csv --outputdir ../outputdir/
+```
 
 ## Install
 
@@ -110,6 +229,233 @@ sf plugins
 ## Commands
 
 <!-- commands -->
+
+- [`sf metadata field convert`](#sf-metadata-field-convert)
+- [`sf metadata field generate`](#sf-metadata-field-generate)
+- [`sf metadata field template`](#sf-metadata-field-template)
+- [`sf metadata object convert`](#sf-metadata-object-convert)
+- [`sf metadata object generate`](#sf-metadata-object-generate)
+- [`sf metadata object template`](#sf-metadata-object-template)
+- [`sf metadata profile convert`](#sf-metadata-profile-convert)
+- [`sf metadata profile generate`](#sf-metadata-profile-generate)
+
+## `sf metadata field convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata field convert [--json] [-s <value>] [-e <value>] [-p <value>]
+
+FLAGS
+  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
+  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
+  -s, --sourcedir=<value>          directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata field convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata field generate`
+
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata field generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>] [-p <value>]
+
+FLAGS
+  -d, --delimiter=<value>          [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
+  -i, --input=<value>              input file to be converted to xml files
+  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
+  -u, --updates                    whether update existing xml files in outputdir or not
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Generates metadata from input to a csv file in ouputdir:
+
+    $ sf metadata field generate --input ./input.csv --outputdir ./outputdir/
+```
+
+## `sf metadata field template`
+
+Creates a template input-csv-file.
+
+```
+USAGE
+  $ sf metadata field template [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] directory where a template csv file is saved.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Creates a template input-csv-file.
+
+  Creates a template input-csv-file.
+
+EXAMPLES
+  Creates a template input-csv-file to ouputdir:
+
+    $ sf metadata field template --outputdir ./outputdir/
+```
+
+## `sf metadata object convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata object convert [--json] [-s <value>] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -s, --sourcedir=<value>  directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata object convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata object generate`
+
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata object generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>]
+
+FLAGS
+  -d, --delimiter=<value>  [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -i, --input=<value>      input file to be converted to xml files
+  -u, --updates            whether update existing xml files in outputdir or not
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata object generate --input ./input.csv --outputdir ./outputdir/
+```
+
+## `sf metadata object template`
+
+Creates a template input-csv-file.
+
+```
+USAGE
+  $ sf metadata object template [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] directory where a template csv file is saved.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Creates a template input-csv-file.
+
+  Creates a template input-csv-file.
+
+EXAMPLES
+  Creates a template input-csv-file to ouputdir:
+
+    $ sf metadata object template --outputdir ./outputdir/
+```
+
+## `sf metadata profile convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata profile convert [--json] [-s <value>] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -s, --source=<value>     directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata profile convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata profile generate`
+
+Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata profile generate [--json] [-i <value>] [-e <value>] [-s <value>] [-d <value>]
+
+FLAGS
+  -d, --delimiter=<value>  [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -i, --input=<value>      input file to be converted to xml files
+  -s, --source=<value>     directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata profile generate --input ./input.csv --source ./source.profile-meta.xml --outputdir ./outputdir/
+```
+
+<!-- commandsstop -->
 
 - [`sf metadata field convert`](#sf-metadata-field-convert)
 - [`sf metadata field generate`](#sf-metadata-field-generate)
