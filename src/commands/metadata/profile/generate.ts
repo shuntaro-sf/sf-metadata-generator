@@ -164,7 +164,7 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
     if (fullNameMatch === null) {
       return '';
     }
-    return fullNameMatch[0];
+    return parse(path).base.replace(Generate.profileExtension, '');
   }
   /*
 

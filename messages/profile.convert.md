@@ -22,6 +22,10 @@ Cannot find the souce-directory
 
 Cannot find the output-directory
 
+# error.source.extension
+
+Name of extension of source must be .profile-meta.xml.
+
 # examples
 
 - Converts metadata in sourcedir to a csv file in ouputdir:

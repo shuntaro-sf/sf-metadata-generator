@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -5,7 +8,8 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { join, parse } from 'path';
+import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
@@ -38,6 +42,7 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
 
   private static permissionTags = ConfigData.profileConvertConfig.permissionTags as PermissionTags;
   private static header = ConfigData.profileConvertConfig.header;
+  private static profileExtension = ConfigData.profileGenerateConfig.profileExtension;
 
   public async run(): Promise<ProfileConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -47,49 +52,56 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
     if (!existsSync(flags.outputdir)) {
       throw new SfError(messages.getMessage('error.path.output') + flags.outputdir);
     }
+    const parser = new xml2js.Parser();
 
-    const metastr = readFileSync(flags.source, { encoding: 'utf8' });
+    const csvList = [] as string[][];
+    csvList[0] = Convert.header;
+    const fullName = this.getFullNameFromPath(flags.source);
+    if (fullName === '') {
+      throw new SfError(messages.getMessage('error.source.extension') + flags.outputdir);
+    }
 
-    const csvDataStr = this.convertXmlToRowOfCsv(metastr);
+    const metaXml = readFileSync(flags.source, { encoding: 'utf8' });
+    parser.parseString(metaXml, (err, metaJson) => {
+      if (err) {
+        console.log(err.message);
+      } else {
+        if (!Object.keys(metaJson).includes('Profile')) {
+          return;
+        }
 
-    writeFileSync(join(flags.outputdir, 'profile-meta.csv'), csvDataStr, 'utf8');
-
-    return { csvDataStr };
-  }
-
-  private convertXmlToRowOfCsv(metastr: string): string {
-    const csvDataStr = Convert.header.join(',') + '\n';
-    for (const type in Convert.permissionTags) {
-      const keyTag = Convert.permissionTags[type]['keyTag'];
-      const regexp = new RegExp('<' + type + '>');
-      const tagMetastrs = metastr.split(regexp);
-      for (const tagMetastr of tagMetastrs) {
-        this.addRowStrToCsvStr(String(keyTag), type, csvDataStr, tagMetastr);
+        Object.keys(Convert.permissionTags).forEach((type) => {
+          metaJson.Profile[type].forEach((elm: { [x: string]: any }) => {
+            const row = [];
+            row[Convert.header.indexOf('type')] = type;
+            row[Convert.header.indexOf('fullName')] = elm[Convert.permissionTags[type].keyTag];
+            Convert.permissionTags[type].tags.forEach((tag: string) => {
+              if (!Convert.header.includes(tag)) {
+                return;
+              }
+              row[Convert.header.indexOf(tag)] = this.convertSpecialChars(elm[tag][0]);
+            });
+            csvList.push(row);
+          });
+        });
       }
-    }
-    return csvDataStr;
+    });
+    const csvStr = csvList.join('\n');
+    writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
+
+    return { csvDataStr: csvStr };
   }
 
-  private addRowStrToCsvStr(keyTag: string, type: string, csvDataStr: string, tagMetastr: string): void {
-    const indexOfFullName = Convert.header.indexOf('fullName');
-    const row = Array(Convert.header.length);
-    const keyTagRegexp = new RegExp('<' + keyTag + '>(.+)<\\/' + keyTag + '>');
-    const keyTagValue = tagMetastr.match(keyTagRegexp);
-    if (keyTagValue === null) {
-      return;
+  private getFullNameFromPath(path: string): string {
+    const fullNameRegExp = new RegExp(Convert.profileExtension + '$');
+    const fullNameMatch = parse(path).base.match(fullNameRegExp);
+    console.log(fullNameMatch);
+    if (fullNameMatch === null) {
+      return '';
     }
-    row[indexOfFullName] = this.convertSpecialChars(keyTagValue[1]);
-    for (const tag of Convert.permissionTags[type]['tags']) {
-      const indexOfTag = Convert.header.indexOf(String(tag));
-      const tagRegexp = new RegExp('<' + tag + '>(.+)<\\/' + tag + '>');
-      const tagValue = tagMetastr.match(tagRegexp);
-      if (tagValue === null) {
-        return;
-      }
-      row[indexOfTag] = this.convertSpecialChars(tagValue[1]);
-    }
-    csvDataStr += row.join(',') + '\n';
+    return parse(path).base.replace(Convert.profileExtension, '');
   }
+
   private convertSpecialChars(str: string): string {
     str = str.replace(/&amp;/g, '&');
     str = str.replace(/&lt;/g, '<');

@@ -99,7 +99,7 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
       Object.keys(Generate.defaultValues).forEach((tag) => {
         const colIndex = Object.keys(row).indexOf(tag);
         const indexOfTag = Object.keys(row).indexOf(tag);
-        console.log(row);
+
         // dose not include tag at the header and the tag is not required
         if (indexOfTag === -1 && Generate.isRequired[tag] === null) {
           removedKeys.push(tag);

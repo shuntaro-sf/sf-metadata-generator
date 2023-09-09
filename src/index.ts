@@ -3126,6 +3126,7 @@ export const profileConvertConfig = {
       tags: ['enabled'],
     },
   },
+  profileExtension: '.profile-meta.xml',
 };
 
 export const profileGenerateConfig = {
@@ -3183,7 +3184,7 @@ export const profileGenerateConfig = {
     visibility: ['DefaultOn', 'DefaultOff', 'Hidden'],
   },
   indentationLength: 4,
-  profileExtension: 'profile-meta.xml',
+  profileExtension: '.profile-meta.xml',
   delimiter: ',',
   resolveJsonModule: true,
 };
