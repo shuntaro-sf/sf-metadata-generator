@@ -22,7 +22,7 @@ export type MetaSettings = { [key: string]: any | MetaSettings };
 export type PermissionTags = { [key: string]: any | PermissionTags };
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-metadata-generator', 'profile.generate');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profile.generate');
 
 export type ProfileGenerateResult = {
   metaStr: string;

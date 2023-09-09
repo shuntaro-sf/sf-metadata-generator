@@ -13,7 +13,7 @@ import * as TemplateData from '../../../';
 export type TemplateInput = { [key: string]: any | TemplateInput };
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-metadata-generator', 'field.template');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'field.template');
 
 export type FieldTemplateResult = {
   CsvTemplate: string;
@@ -40,9 +40,9 @@ export default class Template extends SfCommand<FieldTemplateResult> {
       throw new SfError(messages.getMessage('error.path.output') + flags.outputdir);
     }
     const csvList = [];
-    csvList[0] = Object.keys(Template.templateInput)[0];
-    Template.templateInput.forEach((row: { [s: string]: any }) => {
-      csvList.push(Object.values(row));
+    csvList[0] = Object.keys(Object.values(Template.templateInput)[0]);
+    Object.keys(Template.templateInput).forEach((key) => {
+      csvList.push(Object.values(Template.templateInput[key]));
     });
     const csvStr = csvList.join('\n');
     writeFileSync(flags.outputdir + '/Template.csv', csvStr, 'utf8');

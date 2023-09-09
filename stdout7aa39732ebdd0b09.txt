@@ -1,0 +1,965 @@
+[
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: "&'()()",
+    relationshipName: 'accountLookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'AccountAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    relationshipName: 'accountLookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account__ddd',
+    relationshipName: 'accountLookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'AccountAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA__c',
+    relationshipName: 'accountLookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'accountLookupaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: '&&&&accountLookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'account__Lookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'accountLookup',
+    relationshipLabel: 'accountlookupaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    relationshipOrder: '',
+    deleteConstraint: 'Cascade',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'lookup__c',
+    label: 'lookup',
+    description: 'lookup field.',
+    type: 'Lookup',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'accountLookup',
+    relationshipLabel: 'account lookup',
+    relationshipOrder: 'false',
+    deleteConstraint: 'bar',
+    reparentableMasterDetail: '',
+    writeRequiresMasterRead: ''
+  },
+  {
+    fullName: 'masterDetail__c',
+    label: 'masterDetail',
+    description: 'MasterDetail field.',
+    type: 'MasterDetail',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'accountMasterDetail',
+    relationshipLabel: 'account masterDetail',
+    relationshipOrder: 'bar',
+    deleteConstraint: '',
+    reparentableMasterDetail: 'true',
+    writeRequiresMasterRead: 'true'
+  },
+  {
+    fullName: 'masterDetail__c',
+    label: 'masterDetail',
+    description: 'MasterDetail field.',
+    type: 'MasterDetail',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'accountMasterDetail',
+    relationshipLabel: 'account masterDetail',
+    relationshipOrder: '0',
+    deleteConstraint: '',
+    reparentableMasterDetail: 'bar',
+    writeRequiresMasterRead: 'true'
+  },
+  {
+    fullName: 'masterDetail__c',
+    label: 'masterDetail',
+    description: 'MasterDetail field.',
+    type: 'MasterDetail',
+    externalId: '',
+    required: '',
+    unique: '',
+    defaultValue: '',
+    trackTrending: '',
+    displayLocationInDecimal: '',
+    scale: '',
+    precision: '',
+    visibleLines: '',
+    length: '',
+    maskChar: '',
+    maskType: '',
+    picklistFullName: '',
+    picklistLabel: '',
+    referenceTo: 'Account',
+    relationshipName: 'accountMasterDetail',
+    relationshipLabel: 'account masterDetail',
+    relationshipOrder: '0',
+    deleteConstraint: '',
+    reparentableMasterDetail: 'true',
+    writeRequiresMasterRead: 'bar'
+  }
+]
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+0
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+1
+2
+1
+2
+1
+1
+2
+1
+2
+1
+1
+1
+1
+1
+1
+1
+2
+1
+2
+┌─────────┬──────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ (index) │    INDEX     │                                                                                PROBLEM                                                                                 │
+├─────────┼──────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│    0    │ 'Row1Col19'  │   'referenceTo can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.'    │
+│    1    │ 'Row2Col19'  │                                                       'Length of referenceTo must be less than or equal to 40.'                                                        │
+│    2    │ 'Row3Col19'  │                                                  'referenceTo cannot contain two consecutive underscore characters,'                                                   │
+│    3    │ 'Row4Col19'  │                                                       'Length of referenceTo must be less than or equal to 40.'                                                        │
+│    4    │ 'Row5Col20'  │                                                     'Length of relationshipName must be less than or equal to 40.'                                                     │
+│    5    │ 'Row6Col20'  │ 'relationshipName can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.' │
+│    6    │ 'Row7Col20'  │                                                'relationshipName cannot contain two consecutive underscore characters.'                                                │
+│    7    │ 'Row8Col21'  │                                                    'Length of relationshipLabel must be less than or equal to 80.'                                                     │
+│    8    │ 'Row9Col23'  │                                               'deleteConstraint must be one of the followings:Cascade,Restrict,SetNull'                                                │
+│    9    │ 'Row10Col22' │                                                         'relationshipOrder must be one of the followings:0,1'                                                          │
+│   10    │ 'Row11Col24' │                                                           'reparentableMasterDetail must be true or false.'                                                            │
+│   11    │ 'Row12Col25' │                                                            'writeRequiresMasterRead must be true or false.'                                                            │
+└─────────┴──────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+{
+  "code": 1,
+  "context": "Generate",
+  "commandName": "Generate",
+  "message": "Validtion error",
+  "name": "SfError",
+  "status": 1,
+  "stack": "SfError: Validtion error\n    at Generate.showValidationErrorMessages (C:\\sfdxPlugin\\@shuntaro\\sf\\sf-metadata-generator\\src\\commands\\metadata\\field\\generate.ts:17:1797)\n    at Generate.run (C:\\sfdxPlugin\\@shuntaro\\sf\\sf-metadata-generator\\src\\commands\\metadata\\field\\generate.ts:10:43)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Generate._run (C:\\sfdxPlugin\\@shuntaro\\sf\\sf-metadata-generator\\node_modules\\@oclif\\core\\lib\\command.js:117:22)\n    at async Config.runCommand (C:\\sfdxPlugin\\@shuntaro\\sf\\sf-metadata-generator\\node_modules\\@oclif\\core\\lib\\config\\config.js:329:25)\n    at async Object.run (C:\\sfdxPlugin\\@shuntaro\\sf\\sf-metadata-generator\\node_modules\\@oclif\\core\\lib\\main.js:89:16)",
+  "exitCode": 1,
+  "warnings": []
+}

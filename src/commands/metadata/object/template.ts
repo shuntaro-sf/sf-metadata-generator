@@ -11,7 +11,7 @@ import * as TemplateData from '../../../';
 export type TemplateInput = { [key: string]: any | TemplateInput };
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-metadata-generator', 'field.template');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'field.template');
 
 export type ObjectTemplateResult = {
   CsvTemplate: string;

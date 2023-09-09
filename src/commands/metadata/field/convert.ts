@@ -15,7 +15,7 @@ import { Messages, SfError } from '@salesforce/core';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-metadata-generator', 'field.convert');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'field.convert');
 
 export type FieldConvertResult = {
   csvDataStr: string;

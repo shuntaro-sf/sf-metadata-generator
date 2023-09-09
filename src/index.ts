@@ -2832,19 +2832,165 @@ export const objectGenerateConfig = {
     enableStreamingApi: false,
     description: false,
   },
-  metaSettings: {
-    actionOverrides: {
-      Accept: { type: 'Default', formFactor: ['Large', 'Small'] },
-      CancelEdit: { type: 'Default', formFactor: ['Large', 'Small'] },
-      Clone: { type: 'Default', formFactor: ['Large', 'Small'] },
-      Delete: { type: 'Default', formFactor: ['Large', 'Small'] },
-      Edit: { type: 'Default', formFactor: ['Large', 'Small'] },
-      List: { type: 'Default', formFactor: ['Large', 'Small'] },
-      New: { type: 'Default', formFactor: ['Large', 'Small'] },
-      SaveEdit: { type: 'Default', formFactor: ['Large', 'Small'] },
-      Tab: { type: 'Default', formFactor: ['Large', 'Small'] },
-      View: { type: 'Default', formFactor: ['Large', 'Small'] },
+  nameFieldDefaultValues: {
+    nameField: {
+      label: null,
+      trackHistory: 'false',
+      displayFormat: null,
+      type: 'Text',
     },
+  },
+  nameFieldIsRequired: {
+    nameField: {
+      label: true,
+      trackHistory: null,
+      displayFormat: false,
+      type: true,
+    },
+  },
+  metaSettings: {
+    actionOverrides: [
+      {
+        actionName: 'Accept',
+        type: 'Default',
+      },
+      {
+        actionName: 'Accept',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'Accept',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'CancelEdit',
+        type: 'Default',
+      },
+      {
+        actionName: 'CancelEdit',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'CancelEdit',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'Clone',
+        type: 'Default',
+      },
+      {
+        actionName: 'Clone',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'Clone',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'Delete',
+        type: 'Default',
+      },
+      {
+        actionName: 'Delete',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'Delete',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'Edit',
+        type: 'Default',
+      },
+      {
+        actionName: 'Edit',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'Edit',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'List',
+        type: 'Default',
+      },
+      {
+        actionName: 'List',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'List',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'New',
+        type: 'Default',
+      },
+      {
+        actionName: 'New',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'New',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'SaveEdit',
+        type: 'Default',
+      },
+      {
+        actionName: 'SaveEdit',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'SaveEdit',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'Tab',
+        type: 'Default',
+      },
+      {
+        actionName: 'Tab',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'Tab',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+      {
+        actionName: 'View',
+        type: 'Default',
+      },
+      {
+        actionName: 'View',
+        formFactor: 'Large',
+        type: 'Default',
+      },
+      {
+        actionName: 'View',
+        formFactor: 'Small',
+        type: 'Default',
+      },
+    ],
     compactLayoutAssignment: 'SYSTEM',
     enableFeeds: 'false',
     enableLicensing: 'false',
@@ -2853,6 +2999,7 @@ export const objectGenerateConfig = {
     sharingModel: 'ReadWrite',
     visibility: 'Public',
   },
+
   options: {
     allowInChatterGroups: ['true', 'false'],
     deploymentStatus: ['Deployed', 'InDevelopment'],

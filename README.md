@@ -565,6 +565,233 @@ EXAMPLES
 
 <!-- commandsstop -->
 
+- [`sf metadata field convert`](#sf-metadata-field-convert)
+- [`sf metadata field generate`](#sf-metadata-field-generate)
+- [`sf metadata field template`](#sf-metadata-field-template)
+- [`sf metadata object convert`](#sf-metadata-object-convert)
+- [`sf metadata object generate`](#sf-metadata-object-generate)
+- [`sf metadata object template`](#sf-metadata-object-template)
+- [`sf metadata profile convert`](#sf-metadata-profile-convert)
+- [`sf metadata profile generate`](#sf-metadata-profile-generate)
+
+## `sf metadata field convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata field convert [--json] [-s <value>] [-e <value>] [-p <value>]
+
+FLAGS
+  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
+  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
+  -s, --sourcedir=<value>          directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata field convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata field generate`
+
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata field generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>] [-p <value>]
+
+FLAGS
+  -d, --delimiter=<value>          [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
+  -i, --input=<value>              input file to be converted to xml files
+  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
+  -u, --updates                    whether update existing xml files in outputdir or not
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Generates metadata from input to a csv file in ouputdir:
+
+    $ sf metadata field generate --input ./input.csv --outputdir ./outputdir/
+```
+
+## `sf metadata field template`
+
+Creates a template input-csv-file.
+
+```
+USAGE
+  $ sf metadata field template [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] directory where a template csv file is saved.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Creates a template input-csv-file.
+
+  Creates a template input-csv-file.
+
+EXAMPLES
+  Creates a template input-csv-file to ouputdir:
+
+    $ sf metadata field template --outputdir ./outputdir/
+```
+
+## `sf metadata object convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata object convert [--json] [-s <value>] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -s, --sourcedir=<value>  directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata object convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata object generate`
+
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata object generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>]
+
+FLAGS
+  -d, --delimiter=<value>  [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -i, --input=<value>      input file to be converted to xml files
+  -u, --updates            whether update existing xml files in outputdir or not
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata object generate --input ./input.csv --outputdir ./outputdir/
+```
+
+## `sf metadata object template`
+
+Creates a template input-csv-file.
+
+```
+USAGE
+  $ sf metadata object template [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] directory where a template csv file is saved.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Creates a template input-csv-file.
+
+  Creates a template input-csv-file.
+
+EXAMPLES
+  Creates a template input-csv-file to ouputdir:
+
+    $ sf metadata object template --outputdir ./outputdir/
+```
+
+## `sf metadata profile convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata profile convert [--json] [-s <value>] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -s, --source=<value>     directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata profile convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata profile generate`
+
+Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata profile generate [--json] [-i <value>] [-e <value>] [-s <value>] [-d <value>]
+
+FLAGS
+  -d, --delimiter=<value>  [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -i, --input=<value>      input file to be converted to xml files
+  -s, --source=<value>     directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata profile generate --input ./input.csv --source ./source.profile-meta.xml --outputdir ./outputdir/
+```
+
+<!-- commandsstop -->
+
 - [`sf hello world`](#sf-hello-world)
 
 ## `sf hello world`

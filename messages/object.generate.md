@@ -106,6 +106,10 @@ enableSharing value must be true or false.
 
 enableStreamingApi value must be true or false.
 
+# validation.no.namefieldtype
+
+Column of nameFieldType can not be found.
+
 # validation.namefieldtype.options
 
 nameFieldType must be one of the followings:

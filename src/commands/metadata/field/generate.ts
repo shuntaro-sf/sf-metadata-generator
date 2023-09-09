@@ -22,7 +22,7 @@ export type Options = { [key: string]: any | Options };
 export type MetaJson = { [key: string]: any | MetaJson };
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-metadata-generator', 'field.generate');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'field.generate');
 
 export type FieldGenerateResult = {
   MetaJson: MetaJson;
@@ -88,51 +88,62 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     const csvJson = await csvtojson().fromFile(flags.input);
 
     csvJson.forEach((row, rowIndex) => {
+      const removedKeys = [] as string[];
+      const typeIndex = Object.keys(row).indexOf('type');
       if (!Object.keys(row).includes('type')) {
-        this.pushValidationResult('Row' + String(rowIndex), messages.getMessage('validation.no.type'));
+        this.pushValidationResult('Row' + String(rowIndex + 1), messages.getMessage('validation.no.type'));
         return;
       }
-      const removedKeys = [] as string[];
-      Object.keys(Generate.defaultValues[row.type]).forEach((key) => {
-        const colIndex = Object.keys(row).indexOf(key);
-        if (!Generate.options.type.includes(row.type)) {
-          this.pushValidationResult(
-            'Row' + String(rowIndex) + 'Col' + String(colIndex),
-            messages.getMessage('validation.type.options') + Generate.options.type.toString()
-          );
-        }
-        const indexOfKey = Object.keys(row).indexOf(key);
+      if (!Generate.options.type.includes(row.type)) {
+        this.pushValidationResult(
+          'Row' + String(rowIndex + 1) + 'Col' + String(typeIndex + 1),
+          messages.getMessage('validation.type.options') + Generate.options.type.toString()
+        );
+        return;
+      }
+
+      Object.keys(Generate.defaultValues[row.type]).forEach((tag) => {
+        const indexOfTag = Object.keys(row).indexOf(tag);
 
         // dose not include tag at the header and the tag is not required
-        if (indexOfKey === -1 && Generate.isRequired[row.type][key] === null) {
-          removedKeys.push(key);
+        if (indexOfTag === -1 && Generate.isRequired[row.type][tag] === null) {
+          removedKeys.push(tag);
           return;
         }
         // when not applicable tag
-        if (Generate.isRequired[row.type][key] === null && Generate.defaultValues[row.type][key] === null) {
-          removedKeys.push(key);
+        if (Generate.isRequired[row.type][tag] === null && Generate.defaultValues[row.type][tag] === null) {
+          removedKeys.push(tag);
           return;
         }
+
         // to omit tag that dosent need to be xml tag if blank
         if (
-          !Generate.isRequired[row.type][key] &&
-          Generate.defaultValues[row.type][key] === null &&
-          (indexOfKey === -1 || row[key] === '')
+          !Generate.isRequired[row.type][tag] &&
+          Generate.defaultValues[row.type][tag] === null &&
+          (indexOfTag === -1 || row[tag] === '')
         ) {
-          removedKeys.push(key);
+          removedKeys.push(tag);
           return;
         }
         // set defaultvalue
-        if (row[key] === '' && Generate.defaultValues[row.type][key] !== null) {
-          row[key] = Generate.defaultValues[row.type][key];
+        if (row[tag] === '' && Generate.defaultValues[row.type][tag] !== null) {
+          row[tag] = Generate.defaultValues[row.type][tag];
         }
         // validates inputs
-        if (!this.isValidInputs(key, row, rowIndex, colIndex)) {
+        if (!this.isValidInputs(tag, row, rowIndex, indexOfTag)) {
           return;
         }
-        row[key] = this.convertSpecialChars(row[key]);
-        if ((key === 'picklistFullName' || key === 'picklistLabel') && Object.keys(row).includes(key)) {
-          row[key] = row[key].split(flags.picklistdelimiter);
+
+        if ((tag === 'picklistFullName' || tag === 'picklistLabel') && Object.keys(row).includes(tag)) {
+          row[tag] = row[tag].split(flags.picklistdelimiter);
+        }
+
+        if (!Array.isArray(row[tag])) {
+          row[tag] = this.convertSpecialChars(row[tag]);
+        } else {
+          for (let idx = 0; idx < row[tag].length; idx++) {
+            row[tag][idx] = this.convertSpecialChars(row[tag][idx]);
+          }
         }
       });
 
@@ -866,6 +877,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     if (!Object.keys(row).includes('picklistLabel')) {
       this.pushValidationResult(errorIndexForType, messages.getMessage('validation.no.picklist.label'));
     }
+
     const picklistFullNames = row.picklistFullName;
     const picklistLabels = row.picklistLabel;
 

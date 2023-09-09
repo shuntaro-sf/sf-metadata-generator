@@ -12,7 +12,7 @@ import { Messages, SfError } from '@salesforce/core';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-metadata-generator', 'profile.convert');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profile.convert');
 
 export type ProfileConvertResult = {
   csvDataStr: string;
