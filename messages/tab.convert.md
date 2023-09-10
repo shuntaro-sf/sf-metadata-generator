@@ -1,10 +1,10 @@
 # summary
 
-Converts custom-object-xml-files to a file used to create or update the metadata.
+Converts custom-tab-xml-files to a file used to create or update the metadata.
 
 # description
 
-Converts custom-object-xml-files to a file used to create or update the metadata.
+Converts custom-tab-xml-files to a file used to create or update the metadata.
 
 # flags.sourcedir.summary
 
@@ -28,6 +28,6 @@ Cannot find the output-directory
 
   <%= config.bin %> <%= command.id %> --sourcedir ./sourcedir/ --outputdir ./outputdir/
 
-# info.object.convert
+# info.tab.convert
 
-object convert
+tab convert

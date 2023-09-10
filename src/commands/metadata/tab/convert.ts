@@ -14,13 +14,13 @@ import { Messages, SfError } from '@salesforce/core';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'object.convert');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'tab.convert');
 
-export type ObjectConvertResult = {
+export type TabConvertResult = {
   csvDataStr: string;
 };
 
-export default class Convert extends SfCommand<ObjectConvertResult> {
+export default class Convert extends SfCommand<TabConvertResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -37,10 +37,11 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
     }),
   };
 
-  private static header = ConfigData.objectConvertConfig.header;
-  private static objectExtension = ConfigData.objectConvertConfig.objectExtension;
+  private static header = ConfigData.tabConvertConfig.header;
+  private static metaSettings = ConfigData.tabConvertConfig.metaSettings as { [key: string]: string };
+  private static tabExtension = ConfigData.tabConvertConfig.tabExtension;
 
-  public async run(): Promise<ObjectConvertResult> {
+  public async run(): Promise<TabConvertResult> {
     const { flags } = await this.parse(Convert);
     if (flags.sourcedir === undefined || !existsSync(flags.sourcedir)) {
       throw new SfError(messages.getMessage('error.path.source') + flags.sourcedir);
@@ -71,19 +72,21 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
         if (err) {
           console.log(err.message);
         } else {
-          if (!Object.keys(metaJson).includes('CustomObject')) {
+          if (!Object.keys(metaJson).includes('CustomTab')) {
             return;
           }
           const row = [...Array(Convert.header.length)].map((elm, idx) => {
-            if (
-              Convert.header[idx] === 'nameFieldLabel' ||
-              Convert.header[idx] === 'nameFieldDisplayFormat' ||
-              Convert.header[idx] === 'nameFieldType'
-            ) {
-              return this.getValueForNameField(metaJson, idx);
+            if (Convert.header[idx] === 'type') {
+              const typeTag = Object.keys(Convert.metaSettings).filter((tag) => {
+                console.log(Object.keys(metaJson.CustomTab));
+                console.log(tag);
+                return Object.keys(metaJson.CustomTab).includes(tag);
+              })[0];
+              console.log(typeTag);
+              return Convert.metaSettings[typeTag];
             } else {
-              return Object.keys(metaJson.CustomObject).includes(Convert.header[idx])
-                ? this.convertSpecialChars(metaJson.CustomObject[Convert.header[idx]][0])
+              return Object.keys(metaJson.CustomTab).includes(Convert.header[idx])
+                ? this.convertSpecialChars(metaJson.CustomTab[Convert.header[idx]][0])
                 : '';
             }
           });
@@ -93,7 +96,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
       });
     });
     const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
+    writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
 
     return {
       csvDataStr: csvStr,
@@ -101,23 +104,13 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
   }
 
   private getFullNameFromPath(path: string): string {
-    const fullNameRegExp = new RegExp(Convert.objectExtension + '$');
+    const fullNameRegExp = new RegExp(Convert.tabExtension + '$');
     const fullNameMatch = parse(path).base.match(fullNameRegExp);
     if (fullNameMatch === null) {
       return '';
     }
-    return parse(path).base.replace(Convert.objectExtension, '');
-  }
-
-  private getValueForNameField(metaJson: { [key: string]: any }, colIndex: number): string {
-    if (!Object.keys(metaJson.CustomField).includes('nameField')) {
-      return '';
-    }
-    const nameFieldElm = metaJson.CustomField.nameField[0] as { [key: string]: string };
-    const tag =
-      Convert.header[colIndex].replace('nameField', '').substring(0, 1).toLocaleLowerCase() +
-      Convert.header[colIndex].replace('nameField', '').substring(1);
-    return nameFieldElm[tag];
+    console.log(parse(path).base);
+    return parse(path).base.replace(Convert.tabExtension, '');
   }
 
   private convertSpecialChars(str: string): string {
