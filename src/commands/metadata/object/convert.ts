@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -83,7 +84,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
               return this.getValueForNameField(metaJson, idx);
             } else {
               return Object.keys(metaJson.CustomObject).includes(Convert.header[idx])
-                ? this.convertSpecialChars(metaJson.CustomObject[Convert.header[idx]][0])
+                ? metaJson.CustomObject[Convert.header[idx]][0]
                 : '';
             }
           });
@@ -110,23 +111,13 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
   }
 
   private getValueForNameField(metaJson: { [key: string]: any }, colIndex: number): string {
-    if (!Object.keys(metaJson.CustomField).includes('nameField')) {
+    if (!Object.keys(metaJson.CustomObject).includes('nameField')) {
       return '';
     }
-    const nameFieldElm = metaJson.CustomField.nameField[0] as { [key: string]: string };
+    const nameFieldElm = metaJson.CustomObject.nameField[0] as { [key: string]: string };
     const tag =
       Convert.header[colIndex].replace('nameField', '').substring(0, 1).toLocaleLowerCase() +
       Convert.header[colIndex].replace('nameField', '').substring(1);
     return nameFieldElm[tag];
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&amp;/g, '&');
-    str = str.replace(/&lt;/g, '<');
-    str = str.replace(/&gt;/g, '>');
-    str = str.replace(/&quot;/g, '"');
-    str = str.replace(/&#x27;/g, "'");
-    str = str.replace(/&#x60;/g, '`');
-    return str;
   }
 }

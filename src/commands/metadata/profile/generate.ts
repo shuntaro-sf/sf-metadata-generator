@@ -123,10 +123,6 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
         if (Generate.permissionTags[row.type][tag] === null) {
           return;
         }
-        /*
-        if (!Generate.permissionMetaStrs[fullName]) {
-          //    this.extractMetaStrsForEachKeyTag(metastr, row.type, String(keyTag));
-        }*/
 
         // validates inputs
         if (!this.isValidInputs(tag, row, rowIndex, indexOfTag)) {
@@ -166,89 +162,6 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
     }
     return parse(path).base.replace(Generate.profileExtension, '');
   }
-  /*
-
-
-    for (let rowIndex = 1; rowIndex < csv.length; rowIndex++) {
-      if (csv[rowIndex].length < header.length) {
-        continue;
-      }
-
-      // generates metadata for each row
-      metaStr = this.getMetaStr(metaStr, csv, rowIndex, header);
-    }
-    if (Generate.validationResults.length > 0) {
-      this.showValidationErrorMessages();
-    } else {
-      this.saveMetaData(metaStr, flags);
-    }
-
-    return { metaStr };
-  }
-
-  private getMetaStr(metastr: string, csv: string[][], rowIndex: number, header: string[]): string {
-    const row = csv[rowIndex];
-    const indexOfFullName = header.indexOf('fullName');
-    const indexOfType = header.indexOf('type');
-
-    const fullName = row[indexOfFullName];
-    const type = row[indexOfType];
-
-    for (const tag of Generate.permissionTags[type]['tags']) {
-      const indexOfTag = header.indexOf(String(tag));
-      const keyTag = Generate.permissionTags[type]['keyTag'];
-
-      // dose not include tag at the header
-      if (indexOfTag === -1) {
-        continue;
-      }
-
-      // validates inputs
-      if (!this.isValidInputs(String(tag), row, header, rowIndex)) {
-        continue;
-      }
-
-      if (Generate.permissionTags[type][tag] === null) {
-        continue;
-      }
-
-      if (!Generate.permissionMetaStrs[fullName]) {
-        this.extractMetaStrsForEachKeyTag(metastr, type, String(keyTag));
-      }
-
-      row[indexOfTag] = this.convertSpecialChars(row[indexOfTag]);
-      this.formatBoolean(String(tag), row, indexOfTag);
-
-      const permissionStr = '<' + tag + '>' + row[indexOfTag] + '</' + tag + '>';
-      const permissionRegexp = new RegExp('<' + tag + '>(.+)<\\/' + tag + '>');
-      const newPermMetaStr = Generate.permissionMetaStrs[fullName].replace(permissionRegexp, permissionStr);
-      metastr = metastr.replace(Generate.permissionMetaStrs[fullName], newPermMetaStr);
-      Generate.permissionMetaStrs[fullName] = newPermMetaStr;
-    }
-    return metastr;
-  }*/ /*
-
-  private extractMetaStrsForEachKeyTag(metastr: string, type: string, keyTag: string): void {
-    const regexp = new RegExp('<' + type + '>');
-    const tagMetastrs = metastr.split(regexp);
-
-    for (const tagMetastr of tagMetastrs) {
-      const keyTagRegexp = new RegExp('<' + keyTag + '>(.+)*' + '\\</' + keyTag + '>');
-      const fullNameValue = tagMetastr.match(keyTagRegexp);
-      if (fullNameValue === null) {
-        continue;
-      }
-      Generate.permissionMetaStrs[fullNameValue[1]] = tagMetastr;
-    }
-  }
-
-  private formatBoolean(tag: string, row: string[], indexOfTag: number): void {
-    if (Generate.options[tag] !== undefined) {
-      if (Generate.options[tag].includes(true.toString()) && Generate.options[tag].includes(false.toString())) {
-        row[indexOfTag] = row[indexOfTag].toLowerCase();
-      }
-    }
-  }*/
 
   // eslint-disable-next-line complexity
   private isValidInputs(tag: string, row: { [key: string]: string }, rowIndex: number, colIndex: number): boolean {

@@ -39,7 +39,47 @@ export const fieldConvertConfig = {
   ],
   picklistDelimiter: ';',
 };
-
+export const fieldRetrieveConfig = {
+  header: [
+    'fullName',
+    'label',
+    'description',
+    'inlineHelpText',
+    'type',
+    'externalId',
+    'required',
+    'unique',
+    'defaultValue',
+    'formula',
+    'trackHistory',
+    'trackTrending',
+    'displayFormat',
+    'displayLocationInDecimal',
+    'scale',
+    'precision',
+    'visibleLines',
+    'length',
+    'maskChar',
+    'maskType',
+    'picklistFullName',
+    'picklistLabel',
+    'formulaTreatBlanksAs',
+    'referenceTo',
+    'relationshipLabel',
+    'relationshipName',
+    'relationshipOrder',
+    'deleteConstraint',
+    'reparentableMasterDetail',
+    'writeRequiresMasterRead',
+    'summarizedField',
+    'summaryForeignKey',
+    'summaryOperation',
+    'summaryFilterItemsField',
+    'summaryFilterItemsOperation',
+    'summaryFilterItemsValue',
+  ],
+  fieldExtension: 'field-meta.xml',
+};
 export const fieldGenerateConfig = {
   xmlSetting: {
     version: '1.0',
@@ -1973,7 +2013,6 @@ export const fieldGenerateConfig = {
   ],
   resolveJsonModule: true,
 };
-
 export const fieldTemplateConfig = {
   template: {
     rowCheckbox: {
@@ -2799,6 +2838,28 @@ export const objectConvertConfig = {
   objectExtension: '.object-meta.xml',
 };
 
+export const objectRetrieveConfig = {
+  header: [
+    'fullName',
+    'label',
+    'description',
+    'allowInChatterGroups',
+    'deploymentStatus',
+    'enableActivities',
+    'enableBulkApi',
+    'enableFeeds',
+    'enableHistory',
+    'enableReports',
+    'enableSearch',
+    'enableSharing',
+    'enableStreamingApi',
+    'nameFieldType',
+    'nameFieldLabel',
+    'nameFieldDisplayFormat',
+  ],
+  objectExtension: '.object',
+};
+
 export const objectGenerateConfig = {
   xmlSetting: {
     version: '1.0',
@@ -3399,6 +3460,18 @@ export const tabGenerateConfig = {
   options: {
     customObject: ['true', 'false'],
     hasSidebar: ['true', 'false'],
+    urlEncodingKey: [
+      'UTF-8',
+      'ISO-8859-1',
+      'Shift-JIS',
+      'JIS',
+      'EUC',
+      'ks_c_5601-1987',
+      'Big5',
+      'GB2312',
+      'Big5-HKSCS',
+      'Shift-JIS_2004',
+    ],
     type: ['CustomObject', 'Visualforce', 'LightningComponent', 'LightningPage', 'Web'],
   },
   indentationLength: 4,

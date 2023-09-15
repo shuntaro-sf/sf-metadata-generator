@@ -120,7 +120,7 @@ frameHeight must be a positive integer.
 
 # validation.frameheight.max
 
-frameHeight must be less than or equal to .
+frameHeight must be less than or equal to 9,999.
 
 # failureSave
 

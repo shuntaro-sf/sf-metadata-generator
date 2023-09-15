@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -86,7 +87,7 @@ export default class Convert extends SfCommand<TabConvertResult> {
               return Convert.metaSettings[typeTag];
             } else {
               return Object.keys(metaJson.CustomTab).includes(Convert.header[idx])
-                ? this.convertSpecialChars(metaJson.CustomTab[Convert.header[idx]][0])
+                ? metaJson.CustomTab[Convert.header[idx]][0]
                 : '';
             }
           });
@@ -111,15 +112,5 @@ export default class Convert extends SfCommand<TabConvertResult> {
     }
     console.log(parse(path).base);
     return parse(path).base.replace(Convert.tabExtension, '');
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&amp;/g, '&');
-    str = str.replace(/&lt;/g, '<');
-    str = str.replace(/&gt;/g, '>');
-    str = str.replace(/&quot;/g, '"');
-    str = str.replace(/&#x27;/g, "'");
-    str = str.replace(/&#x60;/g, '`');
-    return str;
   }
 }

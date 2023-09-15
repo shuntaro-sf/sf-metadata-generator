@@ -79,7 +79,7 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
               if (!Convert.header.includes(tag)) {
                 return;
               }
-              row[Convert.header.indexOf(tag)] = this.convertSpecialChars(elm[tag][0]);
+              row[Convert.header.indexOf(tag)] = elm[tag][0];
             });
             csvList.push(row);
           });
@@ -100,15 +100,5 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
       return '';
     }
     return parse(path).base.replace(Convert.profileExtension, '');
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&amp;/g, '&');
-    str = str.replace(/&lt;/g, '<');
-    str = str.replace(/&gt;/g, '>');
-    str = str.replace(/&quot;/g, '"');
-    str = str.replace(/&#x27;/g, "'");
-    str = str.replace(/&#x60;/g, '`');
-    return str;
   }
 }

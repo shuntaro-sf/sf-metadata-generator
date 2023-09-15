@@ -87,7 +87,7 @@ export default class Convert extends SfCommand<FieldConvertResult> {
               return this.getValueForSummaryFilterItems(metaJson, idx);
             } else {
               return Object.keys(metaJson.CustomField).includes(Convert.header[idx])
-                ? this.convertSpecialChars(metaJson.CustomField[Convert.header[idx]][0])
+                ? metaJson.CustomField[Convert.header[idx]][0]
                 : '';
             }
           });
@@ -133,15 +133,5 @@ export default class Convert extends SfCommand<FieldConvertResult> {
       Convert.header[colIndex].replace('summaryFilterItems', '').substring(0, 1).toLocaleLowerCase() +
       Convert.header[colIndex].replace('summaryFilterItems', '').substring(1);
     return summaryFIlterItemsElm[tag];
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&amp;/g, '&');
-    str = str.replace(/&lt;/g, '<');
-    str = str.replace(/&gt;/g, '>');
-    str = str.replace(/&quot;/g, '"');
-    str = str.replace(/&#x27;/g, "'");
-    str = str.replace(/&#x60;/g, '`');
-    return str;
   }
 }
