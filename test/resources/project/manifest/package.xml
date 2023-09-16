@@ -37,8 +37,8 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Account.*</members>
-        <name>CustomField</name>
+        <members>*</members>
+        <name>CustomTab</name>
     </types>
     <version>58.0</version>
 </Package>

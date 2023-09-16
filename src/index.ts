@@ -3277,6 +3277,35 @@ export const tabConvertConfig = {
   },
   tabExtension: '.tab-meta.xml',
 };
+
+export const tabRetrieveConfig = {
+  header: [
+    'fullName',
+    'label',
+    'type',
+    'description',
+    'customObject',
+    'flexiPage',
+    'frameHeight',
+    'hasSidebar',
+    'lwcComponent',
+    'motif',
+    'page',
+    'scontrol',
+    'splashPageLink',
+    'url',
+    'urlEncodingKey',
+  ],
+  metaSettings: {
+    customObject: 'CustomObject',
+    flexiPage: 'LightningPage',
+    lwcComponent: 'LightningComponent',
+    page: 'Visualforce',
+    url: 'Web',
+  },
+  tabExtension: '.tab',
+};
+
 export const tabGenerateConfig = {
   xmlSetting: {
     version: '1.0',

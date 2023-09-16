@@ -78,12 +78,9 @@ export default class Convert extends SfCommand<TabConvertResult> {
           }
           const row = [...Array(Convert.header.length)].map((elm, idx) => {
             if (Convert.header[idx] === 'type') {
-              const typeTag = Object.keys(Convert.metaSettings).filter((tag) => {
-                console.log(Object.keys(metaJson.CustomTab));
-                console.log(tag);
-                return Object.keys(metaJson.CustomTab).includes(tag);
-              })[0];
-              console.log(typeTag);
+              const typeTag = Object.keys(Convert.metaSettings).filter((tag) =>
+                Object.keys(metaJson.CustomTab).includes(tag)
+              )[0];
               return Convert.metaSettings[typeTag];
             } else {
               return Object.keys(metaJson.CustomTab).includes(Convert.header[idx])
@@ -110,7 +107,6 @@ export default class Convert extends SfCommand<TabConvertResult> {
     if (fullNameMatch === null) {
       return '';
     }
-    console.log(parse(path).base);
     return parse(path).base.replace(Convert.tabExtension, '');
   }
 }
