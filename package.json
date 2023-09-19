@@ -1,7 +1,7 @@
 {
   "name": "@shuntaro/sf-metadata-generator",
   "description": "sf plugin to generate metadata",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "dependencies": {
     "@oclif/core": "^2.11.8",
     "@salesforce/core": "^5.2.0",
@@ -9,6 +9,7 @@
     "@salesforce/sf-plugins-core": "^3.1.14",
     "@salesforce/source-deploy-retrieve": "^9.7.13",
     "csvtojson": "^2.0.10",
+    "pinst": "^3.0.0",
     "tslib": "^2",
     "unzipper": "^0.10.14",
     "xml2js": "^0.6.2"
@@ -89,7 +90,7 @@
     "docs": "sf-docs",
     "format": "wireit",
     "lint": "wireit",
-    "postinstall": "yarn husky install",
+    "_postinstall": "yarn husky install",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "sf-prepack",
     "prepublishOnly": "pinst --disable",
