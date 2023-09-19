@@ -121,6 +121,7 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
       moveCursor(process.stdout, -9999, 0);
       process.stdout.write(blue + 'Retrieving now: ' + spiner[spinerIdx] + white);
       spinerIdx++;
+      spinerIdx %= spiner.length;
     });
 
     const result = await retrieve.pollStatus();

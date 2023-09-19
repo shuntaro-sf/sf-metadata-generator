@@ -285,7 +285,7 @@ To use your plugin, run using the local `./bin/dev` or `./bin/dev.cmd` file.
 
 ```bash
 # Run using local run file.
-./bin/dev hello world
+./bin/dev metadata fil world
 ```
 
 There should be no differences when running via the Salesforce CLI or using the local run file. However, it can be useful to link the plugin to do some additional testing or run your commands from anywhere on your machine.
@@ -311,6 +311,7 @@ sf plugins
 - [`sf metadata object template`](#sf-metadata-object-template)
 - [`sf metadata profile convert`](#sf-metadata-profile-convert)
 - [`sf metadata profile generate`](#sf-metadata-profile-generate)
+- [`sf metadata profile retrieve`](#sf-metadata-profile-retrieve)
 - [`sf metadata tab convert`](#sf-metadata-tab-convert)
 - [`sf metadata tab generate`](#sf-metadata-tab-generate)
 - [`sf metadata tab retrieve`](#sf-metadata-tab-retrieve)
@@ -588,6 +589,34 @@ EXAMPLES
   Converts metadata in sourcedir to a csv file in ouputdir:
 
     $ sf metadata profile generate --input ./input.csv --source ./source.profile-meta.xml --outputdir ./outputdir/
+```
+
+## `sf metadata profile retrieve`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata profile retrieve -o <value> -x <value> [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>   [default: ./] output directory where metadata are saved
+  -o, --target-org=<value>  (required) Overrides your default org.
+  -x, --manifest=<value>    (required) File path for the manifest (package.xml) that specifies the components to
+                            retrieve.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata profile retrieve --sourcedir ./sourcedir/ --outputdir ./outputdir/
 ```
 
 ## `sf metadata tab convert`

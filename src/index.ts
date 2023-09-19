@@ -3190,6 +3190,60 @@ export const profileConvertConfig = {
   profileExtension: '.profile-meta.xml',
 };
 
+export const profileRetrieveConfig = {
+  header: [
+    'fullName',
+    'type',
+    'editable',
+    'readable',
+    'allowCreate',
+    'allowDelete',
+    'allowEdit',
+    'allowRead',
+    'modifyAllRecords',
+    'viewAllRecords',
+    'default',
+    'visible',
+    'enabled',
+    'visibility',
+  ],
+  permissionTags: {
+    applicationVisibilities: {
+      keyTag: 'application',
+      tags: ['default', 'visible'],
+    },
+    classAccesses: {
+      keyTag: 'apexClass',
+      tags: ['enabled'],
+    },
+    fieldPermissions: {
+      keyTag: 'field',
+      tags: ['editable', 'readable'],
+    },
+    objectPermissions: {
+      keyTag: 'object',
+      tags: ['allowCreate', 'allowDelete', 'allowEdit', 'allowRead', 'modifyAllRecords', 'viewAllRecords'],
+    },
+    pageAccesses: {
+      keyTag: 'apexPage',
+      tags: ['enabled'],
+    },
+    recordTypeVisibilities: {
+      keyTag: 'recordType',
+      tags: ['default', 'visible'],
+    },
+    tabVisibilities: {
+      keyTag: 'tab',
+      tags: ['visibility'],
+    },
+    userPermissions: {
+      keyTag: 'name',
+      tags: ['enabled'],
+    },
+  },
+  profileExtension: '.profile',
+};
+
 export const profileGenerateConfig = {
   xmlSetting: {
     version: '1.0',

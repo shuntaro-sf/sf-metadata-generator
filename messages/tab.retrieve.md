@@ -32,7 +32,7 @@ File path for the manifest (package.xml) that specifies the components to retrie
 
 # success
 
-Successfully retrieved field metadata in
+Successfully retrieved tab metadata in
 
 # examples
 

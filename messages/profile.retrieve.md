@@ -1,10 +1,14 @@
 # summary
 
-Converts custom-object-xml-files to a file used to create or update the metadata.
+Converts custom-field-xml-files to a file used to create or update the metadata.
 
 # description
 
-Converts custom-object-xml-files to a file used to create or update the metadata.
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+# flags.source.summary
+
+directory where source files you convert are stored
 
 # flags.outputdir.summary
 
@@ -18,6 +22,10 @@ Cannot find the souce-directory
 
 Cannot find the output-directory
 
+# error.source.extension
+
+Name of extension of source must be .profile-meta.xml.
+
 # flags.target-org.summary
 
 Overrides your default org.
@@ -28,7 +36,7 @@ File path for the manifest (package.xml) that specifies the components to retrie
 
 # success
 
-Successfully retrieved object metadata in
+Successfully retrieved profile metadata in
 
 # examples
 
@@ -36,6 +44,6 @@ Successfully retrieved object metadata in
 
   <%= config.bin %> <%= command.id %> --sourcedir ./sourcedir/ --outputdir ./outputdir/
 
-# info.object.convert
+# info.field.convert
 
-object convert
+profile convert

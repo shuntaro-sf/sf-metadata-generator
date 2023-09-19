@@ -42,7 +42,7 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
 
   private static permissionTags = ConfigData.profileConvertConfig.permissionTags as PermissionTags;
   private static header = ConfigData.profileConvertConfig.header;
-  private static profileExtension = ConfigData.profileGenerateConfig.profileExtension;
+  private static profileExtension = ConfigData.profileConvertConfig.profileExtension;
 
   public async run(): Promise<ProfileConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -71,6 +71,9 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
         }
 
         Object.keys(Convert.permissionTags).forEach((type) => {
+          if (!Object.keys(metaJson.Profile[type]).includes(type)) {
+            return;
+          }
           metaJson.Profile[type].forEach((elm: { [x: string]: any }) => {
             const row = [];
             row[Convert.header.indexOf('type')] = type;
@@ -95,7 +98,6 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
   private getFullNameFromPath(path: string): string {
     const fullNameRegExp = new RegExp(Convert.profileExtension + '$');
     const fullNameMatch = parse(path).base.match(fullNameRegExp);
-    console.log(fullNameMatch);
     if (fullNameMatch === null) {
       return '';
     }

@@ -40,5 +40,9 @@
         <members>*</members>
         <name>CustomTab</name>
     </types>
+     <types>
+        <members>*</members>
+        <name>Profile</name>
+    </types>
     <version>58.0</version>
 </Package>

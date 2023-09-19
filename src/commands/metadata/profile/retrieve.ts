@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable guard-for-in */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { writeFileSync, existsSync } from 'fs';
 import { join, extname, parse } from 'path';
 import { clearLine, moveCursor } from 'readline';
@@ -15,16 +16,18 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages, SfError } from '@salesforce/core';
 import { Schema } from 'jsforce';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
+
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'tab.retrieve');
+const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profile.retrieve');
 
-export type TabRetrieveResult = {
-  csvDataStr: string;
+export type ProfileRetrieveResult = {
+  csvDataStr: { [key: string]: string };
 };
+export type PermissionTags = { [key: string]: any | PermissionTags };
 
-export default class Retrieve extends SfCommand<TabRetrieveResult> {
+export default class Retrieve extends SfCommand<ProfileRetrieveResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -47,53 +50,59 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
     }),
   };
 
-  private static header = ConfigData.tabRetrieveConfig.header;
-  private static metaSettings = ConfigData.tabRetrieveConfig.metaSettings as { [key: string]: string };
-  private static tabExtension = ConfigData.tabRetrieveConfig.tabExtension;
+  private static permissionTags = ConfigData.profileRetrieveConfig.permissionTags as PermissionTags;
+  private static header = ConfigData.profileRetrieveConfig.header;
+  private static profileExtension = ConfigData.profileRetrieveConfig.profileExtension;
 
-  public async run(): Promise<TabRetrieveResult> {
+  public async run(): Promise<ProfileRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
+
     if (!existsSync(flags.outputdir)) {
       throw new SfError(messages.getMessage('error.path.output') + flags.outputdir);
     }
-
     const usernameOrConnection =
       flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']);
     const metaJsons = await this.retrieve(usernameOrConnection, flags.manifest);
-    const csvList = [] as string[][];
-    csvList[0] = Retrieve.header;
+
+    let csvList = [] as string[][];
+    const csvStrs = {} as { [key: string]: string };
+
     Object.keys(metaJsons).forEach((fullName) => {
-      const row = [...Array(Retrieve.header.length)].map((elm, idx) => {
-        if (Retrieve.header[idx] === 'type') {
-          const typeTag = Object.keys(Retrieve.metaSettings).filter((tag) =>
-            Object.keys(metaJsons[fullName]).includes(tag)
-          )[0];
-          return Retrieve.metaSettings[typeTag];
-        } else {
-          return Object.keys(metaJsons[fullName]).includes(Retrieve.header[idx])
-            ? metaJsons[fullName][Retrieve.header[idx]][0]
-            : '';
+      csvList = [];
+      csvList[0] = Retrieve.header;
+      Object.keys(Retrieve.permissionTags).forEach((type) => {
+        if (!Object.keys(metaJsons[fullName]).includes(type)) {
+          return;
         }
+        metaJsons[fullName][type].forEach((elm: { [x: string]: any }) => {
+          const row = [];
+          row[Retrieve.header.indexOf('type')] = type;
+          row[Retrieve.header.indexOf('fullName')] = elm[Retrieve.permissionTags[type].keyTag];
+          Retrieve.permissionTags[type].tags.forEach((tag: string) => {
+            if (!Retrieve.header.includes(tag)) {
+              return;
+            }
+            row[Retrieve.header.indexOf(tag)] = elm[tag][0];
+          });
+          csvList.push(row);
+        });
       });
-      row[Retrieve.header.indexOf('fullName')] = fullName;
-      csvList.push(row);
+      const csvStr = csvList.join('\n');
+      csvStrs[fullName] = csvStr;
+      writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
     console.log();
     console.log(messages.getMessage('success') + flags.outputdir + '.');
-    return {
-      csvDataStr: csvStr,
-    };
+    return { csvDataStr: csvStrs };
   }
 
   private getFullNameFromPath(path: string): string {
-    const fullNameRegExp = new RegExp(Retrieve.tabExtension + '$');
+    const fullNameRegExp = new RegExp(Retrieve.profileExtension + '$');
     const fullNameMatch = parse(path).base.match(fullNameRegExp);
     if (fullNameMatch === null) {
       return '';
     }
-    return parse(path).base.replace(Retrieve.tabExtension, '');
+    return parse(path).base.replace(Retrieve.profileExtension, '');
   }
 
   private async retrieve(
@@ -133,7 +142,7 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
     const metaJsons = {} as { [key: string]: any };
 
     for (const file of metadataDir.files) {
-      if (extname(file.path) === Retrieve.tabExtension) {
+      if (extname(file.path) === Retrieve.profileExtension) {
         const fullName = this.getFullNameFromPath(file.path);
         // eslint-disable-next-line no-await-in-loop
         fileBuffers[fullName] = await file.buffer();
@@ -146,7 +155,7 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
         if (err) {
           console.log(err.message);
         } else {
-          metaJsons[fullName] = metaJson.CustomTab;
+          metaJsons[fullName] = metaJson.Profile;
         }
       });
     });
