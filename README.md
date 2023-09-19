@@ -132,6 +132,12 @@ You can also update custom-object-xml-files with `sf metadata object convert`. A
   $ sf metadata object convert -sourcedir ./force-app/main/default/objects/ --outputdir ../outputdir/
 ```
 
+Or run retrieve command to call metadata API to get all field metadata specified in a manifest file:
+
+```
+  $ sf metadata object retrieve --target-org <your org ailius> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
+```
+
 Edit the craeted csv file as you want to update metadata, and then run `sf metadata object generate --updates` to override the xml files.
 
 Note that runnning without `--updates` avoids overrinding existing metadata.
@@ -173,6 +179,65 @@ Then, run `sf metadata profile generate --updates` to override the profile xml f
 
 ```
   $ sf metadata profile generate --input ./input.csv --outputdir ../outputdir/
+```
+
+## Tab metadata
+
+To start generating tab metadata, you need a csv file to include tab names e.g., fullName, label, allowInChatterGroups, ... , at the header and values for those tags to determine each detail of custom tabs from the second line.
+
+Other spreadsheet files are also supported as delimiter flag on the generator command can be any string.
+
+The description of each tag is as follows. For further details of custrom-tab-metadata, see [https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/customtab.htm](https://developer.salesforce.com/docs/atlas.en-us.242.0.api_meta.meta/api_meta/customtab.htm)
+
+| Tag            | Description                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| fullName       | Custom tab API name.                                                                                         |
+| label          | Custom tab label name.                                                                                       |
+| type           | Type of tab. Options are listed below:<br>CustomObject, Visualforce, LightningComponent, LightningPage, Web. |
+| description    | Tab descritpion.                                                                                             |
+| customObject   | Whether it is custom object tab. Options are listed below:<br>true or false.                                 |
+| flexiPage      | FullName of flexiPage applied when type is LightningPage.                                                    |
+| frameHeight    | Frame height of page when type is Web.                                                                       |
+| hasSidebar     | Whether page has a sidebar. Applied only for Web tab.                                                        |
+| lwcComponent   | FullName of flexiPage applied when type is LightningComponent.                                               |
+| motif          | Name of motif of tab.                                                                                        |
+| page           | FullName of flexiPage applied when type is Visualforce.                                                      |
+| splashPageLink | Splash page link.                                                                                            |
+| url            | URL for web tab. Applied only for web tab.                                                                   |
+| urlEncodingKey | ncoding key of URL. Options are listed below:<br>UTF-8,                                                      |
+
+Or you can create a template file running the following commnad:
+
+```
+  $ sf metadata tab template --outputdir ./outputdir/
+```
+
+Then, `sf metadata tab generate` generates custom tab metadata of the input-csv-file.
+
+The flag `--input` specifies the input-csv-file to be converted to metadata-xml-files and `--outputdir` the directory to save those xml files.
+
+```
+  $ sf metadata tab generate --input ./input.csv --outputdir ./outputdir/
+```
+
+You can also update custom-tab-xml-files with `sf metadata tab convert`. Assume you have created SFDX project and retrieved tab-xml files you want to update. Then, run the following command to rewrite the files in the csv format.
+
+```
+  $ sf metadata tab convert -sourcedir ./force-app/main/default/tabs/ --outputdir ../outputdir/
+```
+
+Or run retrieve command to call metadata API to get all field metadata specified in a manifest file:
+
+```
+  $ sf metadata tab retrieve --target-org <your org ailius> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
+```
+
+Edit the craeted csv file as you want to update metadata, and then run `sf metadata tab generate --updates` to override the xml files.
+
+Note that runnning without `--updates` avoids overrinding existing metadata.
+
+```
+  $ sf metadata tab generate --input ./input.csv --outputdir ./outputdir/ --updates
 ```
 
 ## Install
