@@ -1,7 +1,7 @@
 {
   "name": "@shuntaro/sf-metadata-generator",
   "description": "sf plugin to generate metadata",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "dependencies": {
     "@oclif/core": "^2.11.8",
     "@salesforce/core": "^5.2.0",
@@ -90,7 +90,7 @@
     "docs": "sf-docs",
     "format": "wireit",
     "lint": "wireit",
-    "_postinstall": "yarn husky install",
+    "postinstall": "yarn husky install",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "sf-prepack",
     "prepublishOnly": "pinst --disable",
