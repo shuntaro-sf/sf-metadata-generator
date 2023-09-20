@@ -9,6 +9,7 @@
 /* eslint-disable class-methods-use-this */
 import { existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { ux } from '@oclif/core';
 import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
@@ -71,7 +72,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
 
   private static validationResults = [] as Array<{ [key: string]: string }>;
   private static successResults = [] as Array<{ [key: string]: string }>;
-  private static failureResults = {} as { [key: string]: string };
+  private static failureResults = [] as Array<{ [key: string]: string }>;
   private static metaXmls = {} as { [key: string]: string };
   private static metaJson = {} as { [key: string]: any };
 
@@ -125,6 +126,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
           removedKeys.push(tag);
           return;
         }
+
         // set defaultvalue
         if (row[tag] === '' && Generate.defaultValues[row.type][tag] !== null) {
           row[tag] = Generate.defaultValues[row.type][tag];
@@ -137,14 +139,6 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
         if ((tag === 'picklistFullName' || tag === 'picklistLabel') && Object.keys(row).includes(tag)) {
           row[tag] = row[tag].split(flags.picklistdelimiter);
         }
-
-        if (!Array.isArray(row[tag])) {
-          row[tag] = this.convertSpecialChars(row[tag]);
-        } else {
-          for (let idx = 0; idx < row[tag].length; idx++) {
-            row[tag][idx] = this.convertSpecialChars(row[tag][idx]);
-          }
-        }
       });
 
       // valueSet
@@ -154,6 +148,10 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
       // summaryFilterItems
       if (row.type === 'Summary') {
         this.getSummaryFilterItemsMetaStr(row, rowIndex);
+      }
+      // formula
+      if (Object.keys(row).includes('formula') && row.formula !== '') {
+        this.formatRowForFormula(row);
       }
 
       Generate.successResults.push({
@@ -207,7 +205,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     delete row.picklistLabel;
   }
 
-  private getSummaryFilterItemsMetaStr(row: { [key: string]: any }, rowIndex: number): any {
+  private getSummaryFilterItemsMetaStr(row: { [key: string]: any }, rowIndex: number): void {
     // when there are no summaryFilterItems columns
     const noSummaryFilterItemsColumns =
       !Object.keys(row).includes('summaryFilterItemsField') &&
@@ -221,7 +219,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
       delete row.summaryFilterItemsField;
       delete row.summaryFilterItemsOperation;
       delete row.summaryFilterItemsValue;
-      return null;
+      return;
     }
     if (!this.isValidInputsForSummaryFilterItems(row, rowIndex)) {
       return;
@@ -237,6 +235,28 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     delete row.summaryFilterItemsField;
     delete row.summaryFilterItemsOperation;
     delete row.summaryFilterItemsValue;
+  }
+
+  private formatRowForFormula(row: { [key: string]: any }): void {
+    if (
+      row.type === 'Checkbox' ||
+      row.type === 'Currency' ||
+      row.type === 'Date' ||
+      row.type === 'Datetime' ||
+      row.type === 'Number' ||
+      row.type === 'Percent' ||
+      row.type === 'Text' ||
+      row.type === 'Time'
+    ) {
+      if (Object.keys(row).includes('defaultValue')) {
+        delete row.defaultValue;
+      }
+    }
+    if (row.type === 'Text') {
+      if (Object.keys(row).includes('length')) {
+        delete row.length;
+      }
+    }
   }
 
   // eslint-disable-next-line complexity
@@ -982,17 +1002,6 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     Generate.validationResults.push({ INDEX: index, PROBLEM: errorMessage });
   }
 
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/""/g, '"');
-    str = str.replace(/&/g, '&' + 'amp;');
-    str = str.replace(/</g, '&' + 'lt;');
-    str = str.replace(/>/g, '&' + 'gt;');
-    str = str.replace(/"/g, '&' + 'quot;');
-    str = str.replace(/'/g, '&' + '#x27;');
-    str = str.replace(/`/g, '&' + '#x60;');
-    return str;
-  }
-
   private isValidLengthForSummary(fullNames: string[]): boolean {
     let isValidLength = true;
     for (const fullName of fullNames) {
@@ -1022,8 +1031,8 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
   ): void {
     const blue = '\u001b[34m';
     const white = '\u001b[37m';
-    console.log('===' + blue + ' Generated Source' + white);
-    console.table(Generate.successResults);
+    this.log('===' + blue + ' Generated Source' + white);
+    this.logTable(Generate.successResults);
     Object.keys(Generate.metaXmls).forEach((fullName) => {
       if (
         (!flags.updates && !existsSync(join(flags.outputdir, fullName + '.' + Generate.fieldExtension))) ||
@@ -1037,8 +1046,11 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
         );
       } else {
         // when fail to save
-        Generate.failureResults[fullName + '.' + Generate.fieldExtension] =
-          'Failed to save ' + fullName + '.' + Generate.fieldExtension + '. ' + messages.getMessage('failureSave');
+        Generate.failureResults.push({
+          FILENAME: fullName + '.' + Generate.fieldExtension,
+          MESSAGE:
+            'Failed to save ' + fullName + '.' + Generate.fieldExtension + '. ' + messages.getMessage('failureSave'),
+        });
       }
     });
   }
@@ -1049,7 +1061,18 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     }
     const red = '\u001b[31m';
     const white = '\u001b[37m';
-    console.log('\n===' + red + ' Failure' + white);
-    console.table(Generate.failureResults);
+    this.log('\n===' + red + ' Failure' + white);
+    this.logTable(Generate.failureResults);
+  }
+
+  private logTable(table: Array<{ [key: string]: string }>): void {
+    if (table.length === 0) {
+      return;
+    }
+    const columns: ux.Table.table.Columns<{ [key: string]: string }> = {};
+    Object.keys(table[0]).forEach((key) => {
+      columns[key] = { header: key };
+    });
+    this.table(table, columns);
   }
 }

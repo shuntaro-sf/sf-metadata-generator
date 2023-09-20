@@ -9,11 +9,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { join, parse } from 'path';
+import { ux } from '@oclif/core';
 import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
-
 import * as ConfigData from '../../../';
 
 export type Results = { [key: string]: string };
@@ -96,7 +96,7 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
 
     parser.parseString(metaXml, (err, metaJson) => {
       if (err) {
-        console.log(err.message);
+        this.log(err.message);
       } else {
         if (!Object.keys(metaJson).includes('Profile')) {
           return;
@@ -104,11 +104,10 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
         Generate.metaJson = metaJson;
       }
     });
-    console.log(Generate.metaJson);
     const csvJson = await csvtojson().fromFile(flags.input);
 
     csvJson.forEach((row, rowIndex) => {
-      console.log(row.type);
+      this.log(row.type);
       const metaItem = Generate.metaJson.Profile[row.type].filter(
         (elm: { [x: string]: any[] }) => row.fullName === elm[Generate.permissionTags[row.type].keyTag][0]
       )[0];
@@ -331,8 +330,8 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
   ): void {
     const blue = '\u001b[34m';
     const white = '\u001b[37m';
-    console.log('===' + blue + ' Generated Source' + white);
-    console.table(Generate.successResults);
+    this.log('===' + blue + ' Generated Source' + white);
+    this.logTable(Generate.successResults);
     Object.keys(Generate.metaXmls).forEach((fullName) => {
       if (existsSync(join(flags.outputdir, fullName + '.' + Generate.profileExtension))) {
         // for creating
@@ -346,7 +345,18 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
   }
 
   private showValidationErrorMessages(): void {
-    console.table(Generate.validationResults);
+    this.logTable(Generate.validationResults);
     throw new SfError(messages.getMessage('validation'));
+  }
+
+  private logTable(table: Array<{ [key: string]: string }>): void {
+    if (table.length === 0) {
+      return;
+    }
+    const columns: ux.Table.table.Columns<{ [key: string]: string }> = {};
+    Object.keys(table[0]).forEach((key) => {
+      columns[key] = { header: key };
+    });
+    this.table(table, columns);
   }
 }

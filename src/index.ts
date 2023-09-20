@@ -1021,8 +1021,8 @@ export const fieldGenerateConfig = {
       summaryFilterItemsField: null,
       summaryFilterItemsOperation: null,
       summaryFilterItemsValue: null,
-      description: null,
-      inlineHelpText: null,
+      description: false,
+      inlineHelpText: false,
     },
     Checkbox: {
       fullName: true,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -8,12 +9,14 @@ import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
+import { FieldGenerateResult, DefaultValues } from '../../../../src/commands/metadata/field/generate';
+import * as ConfigData from '../../../../src/';
 
 const alias = 'sfPlugin';
 const inputFilePath = './test/resources/input/field/field_input.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
 
+const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as DefaultValues;
 let testSession: TestSession;
 
 describe('metadata field generate NUTs', () => {
@@ -39,22 +42,26 @@ describe('metadata field generate NUTs', () => {
     await testSession?.clean();
   });
 
-  it('metadata field generate', () => {
+  it('metadata field generate', async () => {
     const result = execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {
         ensureExitCode: 0,
       }
-    ).jsonOutput?.result as FieldGenerateResult;
+    ).jsonOutput?.result;
 
-    const input = fs.readFileSync(inputFilePath, 'utf-8');
-    const inputJson = csvtojson().fromFile(input);
+    const inputJson = await csvtojson().fromFile(inputFilePath);
 
-    void inputJson.forEach((inputRow) => {
+    inputJson.forEach((inputRow) => {
       const fullName = inputRow.fullName;
+      const type = inputRow.type;
       const customFieldJson = result?.MetaJson[fullName].CustomField;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+        if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
+          expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
+        } else if (customFieldJson[tag] !== undefined) {
+          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+        }
       });
     });
 

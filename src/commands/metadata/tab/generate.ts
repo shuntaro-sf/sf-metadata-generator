@@ -9,11 +9,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { ux } from '@oclif/core';
 import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
-
 import * as ConfigData from '../../../';
 
 export type MetaInfo = {
@@ -72,7 +72,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
 
   private static validationResults = [] as Array<{ [key: string]: string }>;
   private static successResults = [] as Array<{ [key: string]: string }>;
-  private static failureResults = {} as { [key: string]: string };
+  private static failureResults = [] as Array<{ [key: string]: string }>;
   private static metaXmls = {} as { [key: string]: string };
   private static metaJson = {} as { [key: string]: any };
 
@@ -136,7 +136,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
         if (!this.isValidInputs(tag, row, rowIndex, colIndex)) {
           return;
         }
-        console.log(row[tag]);
+        this.log(row[tag]);
         row[tag] = this.convertSpecialChars(row[tag]);
       });
       // nameField
@@ -369,7 +369,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
   }
 
   private showValidationErrorMessages(): void {
-    console.table(Generate.validationResults);
+    this.logTable(Generate.validationResults);
     throw new SfError(messages.getMessage('validation'));
   }
 
@@ -380,16 +380,18 @@ export default class Generate extends SfCommand<TabGenerateResult> {
   ): void {
     const blue = '\u001b[34m';
     const white = '\u001b[37m';
-    console.log('===' + blue + ' Generated Source' + white);
-    console.table(Generate.successResults);
+    this.log('===' + blue + ' Generated Source' + white);
+    this.logTable(Generate.successResults);
     Object.keys(Generate.metaXmls).forEach((fullName) => {
       if ((!flags.updates && !existsSync(join(flags.outputdir, fullName + Generate.tabExtension))) || flags.updates) {
         // for creating
         writeFileSync(join(flags.outputdir, fullName + Generate.tabExtension), Generate.metaXmls[fullName], 'utf8');
       } else {
         // when fail to save
-        Generate.failureResults[fullName + Generate.tabExtension] =
-          'Failed to save ' + fullName + Generate.tabExtension + '. ' + messages.getMessage('failureSave');
+        Generate.failureResults.push({
+          FILENAME: fullName + '.' + Generate.tabExtension,
+          MESSAGE: 'Failed to save ' + fullName + Generate.tabExtension + '. ' + messages.getMessage('failureSave'),
+        });
       }
     });
   }
@@ -400,7 +402,18 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     }
     const red = '\u001b[31m';
     const white = '\u001b[37m';
-    console.log('\n===' + red + ' Failure' + white);
-    console.table(Generate.failureResults);
+    this.log('\n===' + red + ' Failure' + white);
+    this.logTable(Generate.failureResults);
+  }
+
+  private logTable(table: Array<{ [key: string]: string }>): void {
+    if (table.length === 0) {
+      return;
+    }
+    const columns: ux.Table.table.Columns<{ [key: string]: string }> = {};
+    Object.keys(table[0]).forEach((key) => {
+      columns[key] = { header: key };
+    });
+    this.table(table, columns);
   }
 }
