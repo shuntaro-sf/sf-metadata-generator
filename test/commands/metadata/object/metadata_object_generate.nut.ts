@@ -8,12 +8,14 @@ import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { ObjectGenerateResult } from '../../../../src/commands/metadata/object/generate';
+import { ObjectGenerateResult, DefaultValues } from '../../../../src/commands/metadata/object/generate';
+import * as ConfigData from '../../../../src/';
 
 const alias = 'sfPlugin';
 const inputFilePath = './test/resources/input/object/object_input.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/';
 
+const defaultValues = ConfigData.objectGenerateConfig.defaultValues as DefaultValues;
 let testSession: TestSession;
 
 describe('metadata object generate NUTs', () => {
@@ -39,22 +41,24 @@ describe('metadata object generate NUTs', () => {
     await testSession?.clean();
   });
 
-  it('metadata object generate', () => {
+  it('metadata object generate', async () => {
     const result = execCmd<ObjectGenerateResult>(
       'metadata object generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {
         ensureExitCode: 0,
       }
     ).jsonOutput?.result as ObjectGenerateResult;
+    const inputJson = await csvtojson().fromFile(inputFilePath);
 
-    const input = fs.readFileSync(inputFilePath, 'utf-8');
-    const inputJson = csvtojson().fromFile(input);
-
-    void inputJson.forEach((inputRow) => {
+    inputJson.forEach((inputRow) => {
       const fullName = inputRow.fullName;
-      const customFieldJson = result?.MetaJson[fullName].CustomField;
+      const customFieldJson = result?.MetaJson[fullName].CustomObject;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+        if (inputRow[tag] === '' && defaultValues[tag] !== null) {
+          expect(customFieldJson[tag]).to.equal(defaultValues[tag]);
+        } else if (customFieldJson[tag] !== undefined) {
+          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+        }
       });
     });
 

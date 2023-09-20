@@ -2879,6 +2879,9 @@ export const objectGenerateConfig = {
     enableSharing: 'true',
     enableStreamingApi: 'true',
     description: null,
+    nameFieldType: null,
+    nameFieldLabel: null,
+    nameFieldDisplayFormat: null,
   },
   isRequired: {
     fullName: true,

@@ -17,7 +17,6 @@ import { Messages, SfError } from '@salesforce/core';
 import * as ConfigData from '../../../';
 
 export type Results = { [key: string]: string };
-export type DefaultValues = { [key: string]: any | DefaultValues };
 export type IsRequired = { [key: string]: any | IsRequired };
 export type Options = { [key: string]: any | Options };
 export type ActionOverrides = { [key: string]: any | ActionOverrides };
@@ -128,7 +127,7 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
           return;
         }
 
-        metaItem[tag][0] = this.convertSpecialChars(row[tag]);
+        metaItem[tag][0] = row[tag];
       });
 
       Object.keys(row).sort();
@@ -311,16 +310,6 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
 
   private pushValidationResult(index: string, errorMessage: string): void {
     Generate.validationResults.push({ INDEX: index, PROBLEM: errorMessage });
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&/g, '&' + 'amp;');
-    str = str.replace(/</g, '&' + 'lt;');
-    str = str.replace(/>/g, '&' + 'gt;');
-    str = str.replace(/"/g, '&' + 'quot;');
-    str = str.replace(/'/g, '&' + '#x27;');
-    str = str.replace(/`/g, '&' + '#x60;');
-    return str;
   }
 
   private saveMetaData(

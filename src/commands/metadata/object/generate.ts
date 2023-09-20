@@ -127,7 +127,6 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
         if (!this.isValidInputs(tag, row, rowIndex, colIndex)) {
           return;
         }
-        row[tag] = this.convertSpecialChars(row[tag]);
       });
       // nameField
       this.pushNameFieldMetaStr(row, rowIndex);
@@ -146,7 +145,7 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
 
       Object.keys(row).sort();
       row['$'] = { xmlns: Generate.xmlSetting.xmlns };
-      Generate.metaJson[row.fullName] = { CustomField: row };
+      Generate.metaJson[row.fullName] = { CustomObject: row };
       const xmlBuilder = new xml2js.Builder({
         renderOpts: { pretty: true, indent: ' '.repeat(Generate.indentationLength), newline: '\n' },
         xmldec: { version: Generate.xmlSetting.version, encoding: Generate.xmlSetting.encoding, standalone: undefined },
@@ -422,16 +421,6 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
 
   private pushValidationResult(index: string, errorMessage: string): void {
     Generate.validationResults.push({ INDEX: index, PROBLEM: errorMessage });
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&/g, '&' + 'amp;');
-    str = str.replace(/</g, '&' + 'lt;');
-    str = str.replace(/>/g, '&' + 'gt;');
-    str = str.replace(/"/g, '&' + 'quot;');
-    str = str.replace(/'/g, '&' + '#x27;');
-    str = str.replace(/`/g, '&' + '#x60;');
-    return str;
   }
 
   private showValidationErrorMessages(): void {

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-console */
-import * as fs from 'fs';
 import csvtojson from 'csvtojson';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
@@ -24,7 +23,7 @@ describe('metadata profile generate positive NUTs', () => {
     await testSession?.clean();
   });
 
-  it('metadata profile generate positive', () => {
+  it('metadata profile generate positive', async () => {
     const result = execCmd<ProfileGenerateResult>(
       'metadata profile generate --input ' +
         inputFilePath +
@@ -38,14 +37,14 @@ describe('metadata profile generate positive NUTs', () => {
       }
     ).jsonOutput?.result as ProfileGenerateResult;
 
-    const input = fs.readFileSync(inputFilePath, 'utf-8');
-    const inputJson = csvtojson().fromFile(input);
+    const inputJson = await csvtojson().fromFile(inputFilePath);
 
-    void inputJson.forEach((inputRow) => {
-      const fullName = inputRow.fullName;
-      const customProfileJson = result?.MetaJson[fullName].CustomProfile;
+    inputJson.forEach((inputRow) => {
+      const customFieldJson = result?.MetaJson.Profile;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        expect(customProfileJson[tag]).to.equal(inputRow[tag]);
+        if (customFieldJson[tag] !== undefined) {
+          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+        }
       });
     });
 
