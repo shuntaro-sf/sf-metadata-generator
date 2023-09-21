@@ -75,7 +75,7 @@ You can also update custom-field-xml-files with `sf metadata field convert` or `
 Or run retrieve command to call metadata API to get all field metadata specified in a manifest file:
 
 ```
-  $ sf metadata field retrieve --target-org <your org ailius> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
+  $ sf metadata field retrieve --target-org <your org alias> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
 ```
 
 Edit the craeted csv file as you want to update metadata, and then run `sf metadata field generate --updates` to override the xml files.
@@ -135,7 +135,7 @@ You can also update custom-object-xml-files with `sf metadata object convert`. A
 Or run retrieve command to call metadata API to get all field metadata specified in a manifest file:
 
 ```
-  $ sf metadata object retrieve --target-org <your org ailius> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
+  $ sf metadata object retrieve --target-org <your org alias> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
 ```
 
 Edit the craeted csv file as you want to update metadata, and then run `sf metadata object generate --updates` to override the xml files.
@@ -229,7 +229,7 @@ You can also update custom-tab-xml-files with `sf metadata tab convert`. Assume 
 Or run retrieve command to call metadata API to get all field metadata specified in a manifest file:
 
 ```
-  $ sf metadata tab retrieve --target-org <your org ailius> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
+  $ sf metadata tab retrieve --target-org <your org alias> -manifest ./force-app/main/default/manifest/package.xml --outputdir ../outputdir/
 ```
 
 Edit the craeted csv file as you want to update metadata, and then run `sf metadata tab generate --updates` to override the xml files.

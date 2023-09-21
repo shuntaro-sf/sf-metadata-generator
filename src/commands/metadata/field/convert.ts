@@ -9,6 +9,7 @@
 import { statSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, extname } from 'path';
 import xml2js from 'xml2js';
+import { Parser } from '@json2csv/plainjs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
@@ -44,6 +45,7 @@ export default class Convert extends SfCommand<FieldConvertResult> {
   };
 
   private static header = ConfigData.fieldConvertConfig.header;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<FieldConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -69,43 +71,45 @@ export default class Convert extends SfCommand<FieldConvertResult> {
         return;
       }
       const metaXml = readFileSync(join(flags.sourcedir, file), { encoding: 'utf8' });
+
       parser.parseString(metaXml, (err, metaJson) => {
         if (err) {
           console.log(err.message);
         } else {
+          const row = {} as { [key: string]: any };
           if (!Object.keys(metaJson).includes('CustomField')) {
             return;
           }
-          const row = [...Array(Convert.header.length)].map((elm, idx) => {
-            if (Convert.header[idx] === 'picklistFullName' || Convert.header[idx] === 'picklistLabel') {
-              return this.getValueForPicklist(metaJson, idx, flags);
+          Convert.header.forEach((tag: string) => {
+            if (tag === 'picklistFullName' || tag === 'picklistLabel') {
+              row[tag] = this.getValueForPicklist(metaJson, tag, flags);
             } else if (
-              Convert.header[idx] === 'summaryFilterItemsField' ||
-              Convert.header[idx] === 'summaryFilterItemsOperation' ||
-              Convert.header[idx] === 'summaryFilterItemsValue'
+              tag === 'summaryFilterItemsField' ||
+              tag === 'summaryFilterItemsOperation' ||
+              tag === 'summaryFilterItemsValue'
             ) {
-              return this.getValueForSummaryFilterItems(metaJson, idx);
+              row[tag] = this.getValueForSummaryFilterItems(metaJson, tag);
             } else {
-              return Object.keys(metaJson.CustomField).includes(Convert.header[idx])
-                ? metaJson.CustomField[Convert.header[idx]][0]
-                : '';
+              row[tag] = Object.keys(metaJson.CustomField).includes(tag) ? metaJson.CustomField[tag][0] : '';
             }
           });
-          csvList.push(row);
+          Convert.metaJson.push(row);
         }
       });
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
-
+    let csvStr = '';
+    if (Convert.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Convert.metaJson);
+      writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+    }
     return {
       csvDataStr: csvStr,
     };
   }
-
   private getValueForPicklist(
     metaJson: { [key: string]: any },
-    colIndex: number,
+    tag: string,
     flags: { sourcedir: string | undefined; outputdir: string; picklistdelimiter: string } & { [flag: string]: any } & {
       json: boolean | undefined;
     }
@@ -118,20 +122,19 @@ export default class Convert extends SfCommand<FieldConvertResult> {
     const valueElms = valueSetDefinitionElm.value as Array<{
       [key: string]: string;
     }>;
-    const tag =
-      Convert.header[colIndex].replace('picklist', '').substring(0, 1).toLocaleLowerCase() +
-      Convert.header[colIndex].replace('picklist', '').substring(1);
-    return valueElms.map((picklistElm) => picklistElm[tag]).join(flags.picklistdelimiter);
+    const xmlTag =
+      tag.replace('picklist', '').substring(0, 1).toLocaleLowerCase() + tag.replace('picklist', '').substring(1);
+    return valueElms.map((picklistElm) => picklistElm[xmlTag]).join(flags.picklistdelimiter);
   }
 
-  private getValueForSummaryFilterItems(metaJson: { [key: string]: any }, colIndex: number): string {
+  private getValueForSummaryFilterItems(metaJson: { [key: string]: any }, tag: string): string {
     if (!Object.keys(metaJson.CustomField).includes('summaryFilterItems')) {
       return '';
     }
     const summaryFIlterItemsElm = metaJson.CustomField.summaryFilterItems[0] as { [key: string]: string };
-    const tag =
-      Convert.header[colIndex].replace('summaryFilterItems', '').substring(0, 1).toLocaleLowerCase() +
-      Convert.header[colIndex].replace('summaryFilterItems', '').substring(1);
-    return summaryFIlterItemsElm[tag];
+    const xmlTag =
+      tag.replace('summaryFilterItems', '').substring(0, 1).toLocaleLowerCase() +
+      tag.replace('summaryFilterItems', '').substring(1);
+    return summaryFIlterItemsElm[xmlTag];
   }
 }

@@ -7,7 +7,8 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable class-methods-use-this */
 import { statSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
-import { join, extname, parse } from 'path';
+import { join, parse } from 'path';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
@@ -40,6 +41,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
 
   private static header = ConfigData.objectConvertConfig.header;
   private static objectExtension = ConfigData.objectConvertConfig.objectExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<ObjectConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -58,7 +60,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
       if (
         flags.sourcedir === undefined ||
         statSync(join(flags.sourcedir, file)).isDirectory() ||
-        extname(join(flags.sourcedir, file)) !== '.xml'
+        !new RegExp(Convert.objectExtension + '$').test(parse(file).base)
       ) {
         return;
       }
@@ -72,30 +74,28 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
         if (err) {
           console.log(err.message);
         } else {
+          const row = {} as { [key: string]: any };
           if (!Object.keys(metaJson).includes('CustomObject')) {
             return;
           }
-          const row = [...Array(Convert.header.length)].map((elm, idx) => {
-            if (
-              Convert.header[idx] === 'nameFieldLabel' ||
-              Convert.header[idx] === 'nameFieldDisplayFormat' ||
-              Convert.header[idx] === 'nameFieldType'
-            ) {
-              return this.getValueForNameField(metaJson, idx);
+          Convert.header.forEach((tag: string) => {
+            if (tag === 'nameFieldLabel' || tag === 'nameFieldDisplayFormat' || tag === 'nameFieldType') {
+              row[tag] = this.getValueForNameField(metaJson, tag);
             } else {
-              return Object.keys(metaJson.CustomObject).includes(Convert.header[idx])
-                ? metaJson.CustomObject[Convert.header[idx]][0]
-                : '';
+              row[tag] = Object.keys(metaJson.CustomObject).includes(tag) ? metaJson.CustomObject[tag][0] : '';
             }
           });
-          row[Convert.header.indexOf('fullName')] = fullName;
-          csvList.push(row);
+          row['fullName'] = fullName;
+          Convert.metaJson.push(row);
         }
       });
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
-
+    let csvStr = '';
+    if (Convert.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Convert.metaJson);
+      writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
+    }
     return {
       csvDataStr: csvStr,
     };
@@ -110,14 +110,13 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
     return parse(path).base.replace(Convert.objectExtension, '');
   }
 
-  private getValueForNameField(metaJson: { [key: string]: any }, colIndex: number): string {
+  private getValueForNameField(metaJson: { [key: string]: any }, tag: string): string {
     if (!Object.keys(metaJson.CustomObject).includes('nameField')) {
       return '';
     }
     const nameFieldElm = metaJson.CustomObject.nameField[0] as { [key: string]: string };
-    const tag =
-      Convert.header[colIndex].replace('nameField', '').substring(0, 1).toLocaleLowerCase() +
-      Convert.header[colIndex].replace('nameField', '').substring(1);
-    return nameFieldElm[tag];
+    const xmlTag =
+      tag.replace('nameField', '').substring(0, 1).toLocaleLowerCase() + tag.replace('nameField', '').substring(1);
+    return nameFieldElm[xmlTag];
   }
 }

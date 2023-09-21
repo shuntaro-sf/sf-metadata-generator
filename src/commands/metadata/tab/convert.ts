@@ -8,6 +8,7 @@
 /* eslint-disable class-methods-use-this */
 import { statSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, extname, parse } from 'path';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
@@ -41,6 +42,7 @@ export default class Convert extends SfCommand<TabConvertResult> {
   private static header = ConfigData.tabConvertConfig.header;
   private static metaSettings = ConfigData.tabConvertConfig.metaSettings as { [key: string]: string };
   private static tabExtension = ConfigData.tabConvertConfig.tabExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<TabConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -73,29 +75,32 @@ export default class Convert extends SfCommand<TabConvertResult> {
         if (err) {
           console.log(err.message);
         } else {
+          const row = {} as { [key: string]: any };
           if (!Object.keys(metaJson).includes('CustomTab')) {
             return;
           }
-          const row = [...Array(Convert.header.length)].map((elm, idx) => {
-            if (Convert.header[idx] === 'type') {
-              const typeTag = Object.keys(Convert.metaSettings).filter((tag) =>
-                Object.keys(metaJson.CustomTab).includes(tag)
+          Convert.header.forEach((tag: string) => {
+            if (tag === 'type') {
+              const typeTag = Object.keys(Convert.metaSettings).filter((typeKey) =>
+                Object.keys(metaJson.CustomTab).includes(typeKey)
               )[0];
-              return Convert.metaSettings[typeTag];
+              row[tag] = Convert.metaSettings[typeTag];
             } else {
-              return Object.keys(metaJson.CustomTab).includes(Convert.header[idx])
-                ? metaJson.CustomTab[Convert.header[idx]][0]
-                : '';
+              row[tag] = Object.keys(metaJson.CustomTab).includes(tag) ? metaJson.CustomTab[tag][0] : '';
             }
           });
-          row[Convert.header.indexOf('fullName')] = fullName;
-          csvList.push(row);
+          row['fullName'] = fullName;
+          Convert.metaJson.push(row);
         }
       });
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
 
+    let csvStr = '';
+    if (Convert.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Convert.metaJson);
+      writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
+    }
     return {
       csvDataStr: csvStr,
     };

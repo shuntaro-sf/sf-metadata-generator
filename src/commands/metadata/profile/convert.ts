@@ -9,6 +9,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, parse } from 'path';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
@@ -43,6 +44,7 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
   private static permissionTags = ConfigData.profileConvertConfig.permissionTags as PermissionTags;
   private static header = ConfigData.profileConvertConfig.header;
   private static profileExtension = ConfigData.profileConvertConfig.profileExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<ProfileConvertResult> {
     const { flags } = await this.parse(Convert);
@@ -71,27 +73,30 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
         }
 
         Object.keys(Convert.permissionTags).forEach((type) => {
-          if (!Object.keys(metaJson.Profile[type]).includes(type)) {
+          if (!Object.keys(metaJson.Profile).includes(type)) {
             return;
           }
           metaJson.Profile[type].forEach((elm: { [x: string]: any }) => {
-            const row = [];
-            row[Convert.header.indexOf('type')] = type;
-            row[Convert.header.indexOf('fullName')] = elm[Convert.permissionTags[type].keyTag];
+            const row = {} as { [key: string]: any };
+            row['type'] = type;
+            row['fullName'] = elm[Convert.permissionTags[type].keyTag][0];
             Convert.permissionTags[type].tags.forEach((tag: string) => {
               if (!Convert.header.includes(tag)) {
                 return;
               }
-              row[Convert.header.indexOf(tag)] = elm[tag][0];
+              row[tag] = elm[tag][0];
             });
-            csvList.push(row);
+            Convert.metaJson.push(row);
           });
         });
       }
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
-
+    let csvStr = '';
+    if (Convert.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Convert.metaJson);
+      writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
+    }
     return { csvDataStr: csvStr };
   }
 

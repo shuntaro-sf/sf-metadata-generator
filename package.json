@@ -1,7 +1,7 @@
 {
   "name": "@shuntaro/sf-metadata-generator",
   "description": "sf plugin to generate metadata",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "dependencies": {
     "@oclif/core": "^2.11.8",
     "@salesforce/core": "^5.2.0",
@@ -15,6 +15,7 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
+    "@json2csv/plainjs": "^7.0.3",
     "@salesforce/cli-plugins-testkit": "^4.3.0",
     "@salesforce/dev-config": "^4.0.1",
     "@salesforce/dev-scripts": "^5.7.0",
