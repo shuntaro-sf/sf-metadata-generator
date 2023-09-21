@@ -10,12 +10,15 @@
 import { writeFileSync, existsSync } from 'fs';
 import { join, extname } from 'path';
 import { clearLine, moveCursor } from 'readline';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import * as unzipper from 'unzipper';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages, SfError } from '@salesforce/core';
 import { Schema } from 'jsforce';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
+
+import { FieldConvert } from '../../../utils/fieldConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -53,8 +56,7 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
     }),
   };
 
-  private static header = ConfigData.fieldRetrieveConfig.header;
-  // private static fieldExtension = ConfigData.fieldGenerateConfig.fieldExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<FieldRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
@@ -66,28 +68,16 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
       flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']);
 
     const metaJsons = await this.retrieve(usernameOrConnection, flags.manifest);
-    const csvList = [] as string[][];
-    csvList[0] = Retrieve.header;
     Object.keys(metaJsons).forEach((fullName) => {
-      const row = [...Array(Retrieve.header.length)].map((elm, idx) => {
-        if (Retrieve.header[idx] === 'picklistFullName' || Retrieve.header[idx] === 'picklistLabel') {
-          return this.getValueForPicklist(metaJsons[fullName], idx, flags);
-        } else if (
-          Retrieve.header[idx] === 'summaryFilterItemsField' ||
-          Retrieve.header[idx] === 'summaryFilterItemsOperation' ||
-          Retrieve.header[idx] === 'summaryFilterItemsValue'
-        ) {
-          return this.getValueForSummaryFilterItems(metaJsons[fullName], idx);
-        } else {
-          return Object.keys(metaJsons[fullName]).includes(Retrieve.header[idx])
-            ? this.convertSpecialChars(metaJsons[fullName][Retrieve.header[idx]][0])
-            : '';
-        }
-      });
-      csvList.push(row);
+      const fieldConverter = new FieldConvert();
+      Retrieve.metaJson.push(fieldConverter.convert(metaJsons[fullName], flags.picklistdelimiter));
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+    let csvStr = '';
+    if (Retrieve.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Retrieve.metaJson);
+      writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+    }
     console.log();
     console.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
@@ -149,47 +139,5 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
       });
     });
     return metaJsons;
-  }
-
-  private getValueForPicklist(
-    metaJson: { [key: string]: any },
-    colIndex: number,
-    flags: { outputdir: string; picklistdelimiter: string } & { [flag: string]: any } & {
-      json: boolean | undefined;
-    }
-  ): string {
-    if (!Object.keys(metaJson).includes('valueSet')) {
-      return '';
-    }
-    const valueSetElm = metaJson.valueSet[0];
-    const valueSetDefinitionElm = valueSetElm.valueSetDefinition[0];
-    const valueElms = valueSetDefinitionElm.value as Array<{
-      [key: string]: string;
-    }>;
-    const tag =
-      Retrieve.header[colIndex].replace('picklist', '').substring(0, 1).toLocaleLowerCase() +
-      Retrieve.header[colIndex].replace('picklist', '').substring(1);
-    return valueElms.map((picklistElm) => picklistElm[tag]).join(flags.picklistdelimiter);
-  }
-
-  private getValueForSummaryFilterItems(metaJson: { [key: string]: any }, colIndex: number): string {
-    if (!Object.keys(metaJson).includes('summaryFilterItems')) {
-      return '';
-    }
-    const summaryFIlterItemsElm = metaJson.summaryFilterItems[0] as { [key: string]: string };
-    const tag =
-      Retrieve.header[colIndex].replace('summaryFilterItems', '').substring(0, 1).toLocaleLowerCase() +
-      Retrieve.header[colIndex].replace('summaryFilterItems', '').substring(1);
-    return summaryFIlterItemsElm[tag];
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&amp;/g, '&');
-    str = str.replace(/&lt;/g, '<');
-    str = str.replace(/&gt;/g, '>');
-    str = str.replace(/&quot;/g, '"');
-    str = str.replace(/&#x27;/g, "'");
-    str = str.replace(/&#x60;/g, '`');
-    return str;
   }
 }

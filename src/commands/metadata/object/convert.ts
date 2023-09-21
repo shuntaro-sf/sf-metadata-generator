@@ -13,6 +13,7 @@ import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
+import { ObjectConvert } from '../../../utils/objectConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -74,19 +75,11 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
         if (err) {
           console.log(err.message);
         } else {
-          const row = {} as { [key: string]: any };
           if (!Object.keys(metaJson).includes('CustomObject')) {
             return;
           }
-          Convert.header.forEach((tag: string) => {
-            if (tag === 'nameFieldLabel' || tag === 'nameFieldDisplayFormat' || tag === 'nameFieldType') {
-              row[tag] = this.getValueForNameField(metaJson, tag);
-            } else {
-              row[tag] = Object.keys(metaJson.CustomObject).includes(tag) ? metaJson.CustomObject[tag][0] : '';
-            }
-          });
-          row['fullName'] = fullName;
-          Convert.metaJson.push(row);
+          const objectConverter = new ObjectConvert();
+          Convert.metaJson.push(objectConverter.convert(metaJson.CustomObject, fullName));
         }
       });
     });
@@ -109,7 +102,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
     }
     return parse(path).base.replace(Convert.objectExtension, '');
   }
-
+  /*
   private getValueForNameField(metaJson: { [key: string]: any }, tag: string): string {
     if (!Object.keys(metaJson.CustomObject).includes('nameField')) {
       return '';
@@ -118,5 +111,5 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
     const xmlTag =
       tag.replace('nameField', '').substring(0, 1).toLocaleLowerCase() + tag.replace('nameField', '').substring(1);
     return nameFieldElm[xmlTag];
-  }
+  }*/
 }

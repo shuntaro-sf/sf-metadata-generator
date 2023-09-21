@@ -10,6 +10,7 @@
 import { writeFileSync, existsSync } from 'fs';
 import { join, extname, parse } from 'path';
 import { clearLine, moveCursor } from 'readline';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import * as unzipper from 'unzipper';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
@@ -17,6 +18,7 @@ import { Connection, Messages, SfError } from '@salesforce/core';
 import { Schema } from 'jsforce';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
 
+import { ObjectConvert } from '../../../utils/objectConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -49,8 +51,8 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
     }),
   };
 
-  private static header = ConfigData.objectRetrieveConfig.header;
   private static objectExtension = ConfigData.objectRetrieveConfig.objectExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<ObjectRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
@@ -62,27 +64,16 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
       flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']);
     const metaJsons = await this.retrieve(usernameOrConnection, flags.manifest);
 
-    const csvList = [] as string[][];
-    csvList[0] = Retrieve.header;
     Object.keys(metaJsons).forEach((fullName) => {
-      const row = [...Array(Retrieve.header.length)].map((elm, idx) => {
-        if (
-          Retrieve.header[idx] === 'nameFieldLabel' ||
-          Retrieve.header[idx] === 'nameFieldDisplayFormat' ||
-          Retrieve.header[idx] === 'nameFieldType'
-        ) {
-          return this.getValueForNameField(metaJsons[fullName], idx);
-        } else {
-          return Object.keys(metaJsons[fullName]).includes(Retrieve.header[idx])
-            ? metaJsons[fullName][Retrieve.header[idx]][0]
-            : '';
-        }
-      });
-      row[Retrieve.header.indexOf('fullName')] = fullName;
-      csvList.push(row);
+      const objectConverter = new ObjectConvert();
+      Retrieve.metaJson.push(objectConverter.convert(metaJsons[fullName], flags.picklistdelimiter));
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
+    let csvStr = '';
+    if (Retrieve.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Retrieve.metaJson);
+      writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+    }
     console.log();
     console.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
@@ -155,7 +146,7 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
     });
     return metaJsons;
   }
-
+  /*
   private getValueForNameField(metaJson: { [key: string]: any }, colIndex: number): string {
     if (!Object.keys(metaJson).includes('nameField')) {
       return '';
@@ -165,5 +156,5 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
       Retrieve.header[colIndex].replace('nameField', '').substring(0, 1).toLocaleLowerCase() +
       Retrieve.header[colIndex].replace('nameField', '').substring(1);
     return nameFieldElm[tag];
-  }
+  }*/
 }
