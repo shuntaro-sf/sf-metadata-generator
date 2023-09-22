@@ -72,7 +72,7 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
     if (Retrieve.metaJson.length > 0) {
       const json2csvParser = new Parser();
       csvStr = json2csvParser.parse(Retrieve.metaJson);
-      writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+      writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
     }
     console.log();
     console.log(messages.getMessage('success') + flags.outputdir + '.');
@@ -146,15 +146,4 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
     });
     return metaJsons;
   }
-  /*
-  private getValueForNameField(metaJson: { [key: string]: any }, colIndex: number): string {
-    if (!Object.keys(metaJson).includes('nameField')) {
-      return '';
-    }
-    const nameFieldElm = metaJson.nameField[0] as { [key: string]: string };
-    const tag =
-      Retrieve.header[colIndex].replace('nameField', '').substring(0, 1).toLocaleLowerCase() +
-      Retrieve.header[colIndex].replace('nameField', '').substring(1);
-    return nameFieldElm[tag];
-  }*/
 }

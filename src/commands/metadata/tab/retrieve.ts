@@ -9,12 +9,15 @@
 import { writeFileSync, existsSync } from 'fs';
 import { join, extname, parse } from 'path';
 import { clearLine, moveCursor } from 'readline';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import * as unzipper from 'unzipper';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages, SfError } from '@salesforce/core';
 import { Schema } from 'jsforce';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
+
+import { TabConvert } from '../../../utils/tabConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -47,9 +50,8 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
     }),
   };
 
-  private static header = ConfigData.tabRetrieveConfig.header;
-  private static metaSettings = ConfigData.tabRetrieveConfig.metaSettings as { [key: string]: string };
   private static tabExtension = ConfigData.tabRetrieveConfig.tabExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<TabRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
@@ -60,26 +62,16 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
     const usernameOrConnection =
       flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']);
     const metaJsons = await this.retrieve(usernameOrConnection, flags.manifest);
-    const csvList = [] as string[][];
-    csvList[0] = Retrieve.header;
     Object.keys(metaJsons).forEach((fullName) => {
-      const row = [...Array(Retrieve.header.length)].map((elm, idx) => {
-        if (Retrieve.header[idx] === 'type') {
-          const typeTag = Object.keys(Retrieve.metaSettings).filter((tag) =>
-            Object.keys(metaJsons[fullName]).includes(tag)
-          )[0];
-          return Retrieve.metaSettings[typeTag];
-        } else {
-          return Object.keys(metaJsons[fullName]).includes(Retrieve.header[idx])
-            ? metaJsons[fullName][Retrieve.header[idx]][0]
-            : '';
-        }
-      });
-      row[Retrieve.header.indexOf('fullName')] = fullName;
-      csvList.push(row);
+      const tabConverter = new TabConvert();
+      Retrieve.metaJson.push(tabConverter.convert(metaJsons[fullName], flags.picklistdelimiter));
     });
-    const csvStr = csvList.join('\n');
-    writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
+    let csvStr = '';
+    if (Retrieve.metaJson.length > 0) {
+      const json2csvParser = new Parser();
+      csvStr = json2csvParser.parse(Retrieve.metaJson);
+      writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
+    }
     console.log();
     console.log(messages.getMessage('success') + flags.outputdir + '.');
     return {

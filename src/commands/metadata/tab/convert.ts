@@ -13,6 +13,7 @@ import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
+import { TabConvert } from '../../../utils/tabConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -40,7 +41,6 @@ export default class Convert extends SfCommand<TabConvertResult> {
   };
 
   private static header = ConfigData.tabConvertConfig.header;
-  private static metaSettings = ConfigData.tabConvertConfig.metaSettings as { [key: string]: string };
   private static tabExtension = ConfigData.tabConvertConfig.tabExtension;
   private static metaJson = [] as Array<{ [key: string]: any }>;
 
@@ -75,22 +75,11 @@ export default class Convert extends SfCommand<TabConvertResult> {
         if (err) {
           console.log(err.message);
         } else {
-          const row = {} as { [key: string]: any };
           if (!Object.keys(metaJson).includes('CustomTab')) {
             return;
           }
-          Convert.header.forEach((tag: string) => {
-            if (tag === 'type') {
-              const typeTag = Object.keys(Convert.metaSettings).filter((typeKey) =>
-                Object.keys(metaJson.CustomTab).includes(typeKey)
-              )[0];
-              row[tag] = Convert.metaSettings[typeTag];
-            } else {
-              row[tag] = Object.keys(metaJson.CustomTab).includes(tag) ? metaJson.CustomTab[tag][0] : '';
-            }
-          });
-          row['fullName'] = fullName;
-          Convert.metaJson.push(row);
+          const tabConverter = new TabConvert();
+          Convert.metaJson.push(tabConverter.convert(metaJson.TabObject, fullName));
         }
       });
     });

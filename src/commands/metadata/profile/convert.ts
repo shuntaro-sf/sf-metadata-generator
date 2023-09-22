@@ -14,6 +14,7 @@ import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
+import { ProfileConvert } from '../../../utils/profileConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -22,7 +23,6 @@ const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profi
 export type ProfileConvertResult = {
   csvDataStr: string;
 };
-export type PermissionTags = { [key: string]: any | PermissionTags };
 
 export default class Convert extends SfCommand<ProfileConvertResult> {
   public static readonly summary = messages.getMessage('summary');
@@ -41,7 +41,6 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
     }),
   };
 
-  private static permissionTags = ConfigData.profileConvertConfig.permissionTags as PermissionTags;
   private static header = ConfigData.profileConvertConfig.header;
   private static profileExtension = ConfigData.profileConvertConfig.profileExtension;
   private static metaJson = [] as Array<{ [key: string]: any }>;
@@ -71,24 +70,8 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
         if (!Object.keys(metaJson).includes('Profile')) {
           return;
         }
-
-        Object.keys(Convert.permissionTags).forEach((type) => {
-          if (!Object.keys(metaJson.Profile).includes(type)) {
-            return;
-          }
-          metaJson.Profile[type].forEach((elm: { [x: string]: any }) => {
-            const row = {} as { [key: string]: any };
-            row['type'] = type;
-            row['fullName'] = elm[Convert.permissionTags[type].keyTag][0];
-            Convert.permissionTags[type].tags.forEach((tag: string) => {
-              if (!Convert.header.includes(tag)) {
-                return;
-              }
-              row[tag] = elm[tag][0];
-            });
-            Convert.metaJson.push(row);
-          });
-        });
+        const profileConverter = new ProfileConvert();
+        Convert.metaJson.push(profileConverter.convert(metaJson.TabObject, fullName));
       }
     });
     let csvStr = '';
