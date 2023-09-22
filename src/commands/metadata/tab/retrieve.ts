@@ -64,7 +64,7 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
     const metaJsons = await this.retrieve(usernameOrConnection, flags.manifest);
     Object.keys(metaJsons).forEach((fullName) => {
       const tabConverter = new TabConvert();
-      Retrieve.metaJson.push(tabConverter.convert(metaJsons[fullName], flags.picklistdelimiter));
+      Retrieve.metaJson.push(tabConverter.convert(metaJsons[fullName], fullName));
     });
     let csvStr = '';
     if (Retrieve.metaJson.length > 0) {

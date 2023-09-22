@@ -94,6 +94,7 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
     const csvJson = await csvtojson().fromFile(flags.input);
 
     csvJson.forEach((row, rowIndex) => {
+      rowIndex++;
       const removedKeys = [] as string[];
 
       Object.keys(Generate.defaultValues).forEach((tag) => {

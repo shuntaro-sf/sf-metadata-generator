@@ -89,6 +89,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     const csvJson = await csvtojson().fromFile(flags.input);
 
     csvJson.forEach((row, rowIndex) => {
+      rowIndex++;
       const removedKeys = [] as string[];
       const typeIndex = Object.keys(row).indexOf('type');
       if (!Object.keys(row).includes('type')) {
@@ -1016,7 +1017,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
   }
 
   private showValidationErrorMessages(): void {
-    console.table(Generate.validationResults);
+    this.logTable(Generate.validationResults);
     throw new SfError(messages.getMessage('validation'));
   }
 

@@ -91,8 +91,10 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     const csvJson = await csvtojson().fromFile(flags.input);
 
     csvJson.forEach((row, rowIndex) => {
+      rowIndex++;
       const removedKeys = [] as string[];
       const typeIndex = Object.keys(row).indexOf('type');
+      removedKeys.push('type');
       if (!Object.keys(row).includes('type')) {
         this.pushValidationResult('Row' + String(rowIndex + 1), messages.getMessage('validation.no.type'));
         return;
@@ -136,14 +138,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
         if (!this.isValidInputs(tag, row, rowIndex, colIndex)) {
           return;
         }
-        this.log(row[tag]);
-        row[tag] = this.convertSpecialChars(row[tag]);
       });
-      // nameField
-      // this.pushNameFieldMetaStr(row, rowIndex);
-
-      // metaSettings
-      // this.getMetaSettings(row);
 
       Generate.successResults.push({
         FULLNAME: row.fullName + Generate.tabExtension,
@@ -153,10 +148,9 @@ export default class Generate extends SfCommand<TabGenerateResult> {
       removedKeys.forEach((key) => {
         delete row[key];
       });
-
       Object.keys(row).sort();
       row['$'] = { xmlns: Generate.xmlSetting.xmlns };
-      Generate.metaJson[row.fullName] = { CustomField: row };
+      Generate.metaJson[row.fullName] = { CustomTab: row };
       const xmlBuilder = new xml2js.Builder({
         renderOpts: { pretty: true, indent: ' '.repeat(Generate.indentationLength), newline: '\n' },
         xmldec: { version: Generate.xmlSetting.version, encoding: Generate.xmlSetting.encoding, standalone: undefined },
@@ -250,6 +244,9 @@ export default class Generate extends SfCommand<TabGenerateResult> {
       if (!regExpForUrl.test(row[indexOfTag])) {
         this.pushValidationResult(errorIndex, messages.getMessage('validation.url.format'));
       }
+      if (row[indexOfTag].length > 3000) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.url.length'));
+      }
     }
   }
   private validatesSplashPageLink(
@@ -298,7 +295,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
       if (Number(row[indexOfTag]) < 0) {
         this.pushValidationResult(errorIndex, messages.getMessage('validation.frameheight.min'));
       }
-      if (Number(row[indexOfTag]) >= 1000) {
+      if (Number(row[indexOfTag]) > 9999) {
         this.pushValidationResult(errorIndex, messages.getMessage('validation.frameheight.max'));
       }
     }
@@ -334,7 +331,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     if (row[indexOfTag].length === 0) {
       this.pushValidationResult(errorIndex, messages.getMessage('validation.label.blank'));
     }
-    if (row[indexOfTag].length > 40) {
+    if (row[indexOfTag].length > 80) {
       this.pushValidationResult(errorIndex, messages.getMessage('validation.label.length'));
     }
   }
@@ -349,23 +346,13 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     if (row[indexOfTag].length === 0) {
       this.pushValidationResult(errorIndex, messages.getMessage('validation.fullname.blank'));
     }
-    if (row[indexOfTag].length > 40) {
+    if (row[indexOfTag].length > 80) {
       this.pushValidationResult(errorIndex, messages.getMessage('validation.fullname.length'));
     }
   }
 
   private pushValidationResult(index: string, errorMessage: string): void {
     Generate.validationResults.push({ INDEX: index, PROBLEM: errorMessage });
-  }
-
-  private convertSpecialChars(str: string): string {
-    str = str.replace(/&/g, '&' + 'amp;');
-    str = str.replace(/</g, '&' + 'lt;');
-    str = str.replace(/>/g, '&' + 'gt;');
-    str = str.replace(/"/g, '&' + 'quot;');
-    str = str.replace(/'/g, '&' + '#x27;');
-    str = str.replace(/`/g, '&' + '#x60;');
-    return str;
   }
 
   private showValidationErrorMessages(): void {

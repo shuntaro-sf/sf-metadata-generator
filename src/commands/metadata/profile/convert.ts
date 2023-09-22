@@ -71,7 +71,7 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
           return;
         }
         const profileConverter = new ProfileConvert();
-        Convert.metaJson.push(profileConverter.convert(metaJson.TabObject, fullName));
+        Convert.metaJson = profileConverter.convert(metaJson.Profile);
       }
     });
     let csvStr = '';

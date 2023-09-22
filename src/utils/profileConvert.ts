@@ -17,22 +17,24 @@ export class ProfileConvert {
 
   private static metaJson = [] as Array<{ [key: string]: any }>;
 
-  public convert(metaJson: { [key: string]: any }, type: string): { [key: string]: any } {
-    if (!Object.keys(metaJson.Profile).includes(type)) {
-      return metaJson;
-    }
-    metaJson.Profile[type].forEach((elm: { [x: string]: any }) => {
-      const row = {} as { [key: string]: any };
-      row['type'] = type;
-      row['fullName'] = elm[ProfileConvert.permissionTags[type].keyTag][0];
-      ProfileConvert.permissionTags[type].tags.forEach((tag: string) => {
-        if (!ProfileConvert.header.includes(tag)) {
-          return;
-        }
-        row[tag] = elm[tag][0];
+  public convert(metaJson: { [key: string]: any }): Array<{ [key: string]: any }> {
+    Object.keys(ProfileConvert.permissionTags).forEach((type) => {
+      if (!Object.keys(metaJson).includes(type)) {
+        return metaJson;
+      }
+      metaJson[type].forEach((elm: { [x: string]: any }) => {
+        const row = {} as { [key: string]: any };
+        row['type'] = type;
+        row['fullName'] = elm[ProfileConvert.permissionTags[type].keyTag][0];
+        ProfileConvert.permissionTags[type].tags.forEach((tag: string) => {
+          if (!ProfileConvert.header.includes(tag)) {
+            return;
+          }
+          row[tag] = elm[tag][0];
+        });
+        ProfileConvert.metaJson.push(row);
       });
-      ProfileConvert.metaJson.push(row);
     });
-    return metaJson;
+    return ProfileConvert.metaJson;
   }
 }

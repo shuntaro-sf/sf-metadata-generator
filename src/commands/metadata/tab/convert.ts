@@ -79,7 +79,7 @@ export default class Convert extends SfCommand<TabConvertResult> {
             return;
           }
           const tabConverter = new TabConvert();
-          Convert.metaJson.push(tabConverter.convert(metaJson.TabObject, fullName));
+          Convert.metaJson.push(tabConverter.convert(metaJson.CustomTab, fullName));
         }
       });
     });

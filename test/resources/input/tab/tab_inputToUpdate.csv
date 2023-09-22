@@ -1,0 +1,6 @@
+fullName,label,type,description,customObject,flexiPage,frameHeight,hasSidebar,lwcComponent,motif,page,splashPageLink,url,urlEncodingKey
+Custom_Object__c,Custom_Object,CustomObject,,true,,,,,Custom26: Flag,,,,
+Visualforce,Hello World,Visualforce,,,,,,,Custom70: Handsaw,HelloWorld,,,
+LightningComponent,Hello World,LightningComponent,,,,,,HelloWorld,Custom65: Cup,,,,
+LightningPage,Hello World,LightningPage,,,HelloWorld,,,,Custom72: Helicopter,,,,
+Web,Web,Web,,,,600,false,,Custom62: Chalkboard,,,https://google.com,UTF-8

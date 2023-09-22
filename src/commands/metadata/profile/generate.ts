@@ -106,7 +106,7 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
     const csvJson = await csvtojson().fromFile(flags.input);
 
     csvJson.forEach((row, rowIndex) => {
-      this.log(row.type);
+      rowIndex++;
       const metaItem = Generate.metaJson.Profile[row.type].filter(
         (elm: { [x: string]: any[] }) => row.fullName === elm[Generate.permissionTags[row.type].keyTag][0]
       )[0];

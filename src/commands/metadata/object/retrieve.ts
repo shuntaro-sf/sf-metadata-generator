@@ -66,7 +66,7 @@ export default class Retrieve extends SfCommand<ObjectRetrieveResult> {
 
     Object.keys(metaJsons).forEach((fullName) => {
       const objectConverter = new ObjectConvert();
-      Retrieve.metaJson.push(objectConverter.convert(metaJsons[fullName], flags.picklistdelimiter));
+      Retrieve.metaJson.push(objectConverter.convert(metaJsons[fullName], fullName));
     });
     let csvStr = '';
     if (Retrieve.metaJson.length > 0) {

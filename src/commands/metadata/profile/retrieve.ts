@@ -10,6 +10,7 @@
 import { writeFileSync, existsSync } from 'fs';
 import { join, extname, parse } from 'path';
 import { clearLine, moveCursor } from 'readline';
+import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import * as unzipper from 'unzipper';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
@@ -17,6 +18,7 @@ import { Connection, Messages, SfError } from '@salesforce/core';
 import { Schema } from 'jsforce';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
 
+import { ProfileConvert } from '../../../utils/profileConvert';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
@@ -25,7 +27,6 @@ const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profi
 export type ProfileRetrieveResult = {
   csvDataStr: { [key: string]: string };
 };
-export type PermissionTags = { [key: string]: any | PermissionTags };
 
 export default class Retrieve extends SfCommand<ProfileRetrieveResult> {
   public static readonly summary = messages.getMessage('summary');
@@ -50,9 +51,9 @@ export default class Retrieve extends SfCommand<ProfileRetrieveResult> {
     }),
   };
 
-  private static permissionTags = ConfigData.profileRetrieveConfig.permissionTags as PermissionTags;
   private static header = ConfigData.profileRetrieveConfig.header;
   private static profileExtension = ConfigData.profileRetrieveConfig.profileExtension;
+  private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<ProfileRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
@@ -70,26 +71,15 @@ export default class Retrieve extends SfCommand<ProfileRetrieveResult> {
     Object.keys(metaJsons).forEach((fullName) => {
       csvList = [];
       csvList[0] = Retrieve.header;
-      Object.keys(Retrieve.permissionTags).forEach((type) => {
-        if (!Object.keys(metaJsons[fullName]).includes(type)) {
-          return;
-        }
-        metaJsons[fullName][type].forEach((elm: { [x: string]: any }) => {
-          const row = [];
-          row[Retrieve.header.indexOf('type')] = type;
-          row[Retrieve.header.indexOf('fullName')] = elm[Retrieve.permissionTags[type].keyTag];
-          Retrieve.permissionTags[type].tags.forEach((tag: string) => {
-            if (!Retrieve.header.includes(tag)) {
-              return;
-            }
-            row[Retrieve.header.indexOf(tag)] = elm[tag][0];
-          });
-          csvList.push(row);
-        });
-      });
-      const csvStr = csvList.join('\n');
-      csvStrs[fullName] = csvStr;
-      writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
+      const objectConverter = new ProfileConvert();
+      Retrieve.metaJson = objectConverter.convert(metaJsons[fullName]);
+
+      let csvStr = '';
+      if (Retrieve.metaJson.length > 0) {
+        const json2csvParser = new Parser();
+        csvStr = json2csvParser.parse(Retrieve.metaJson);
+        writeFileSync(join(flags.outputdir, fullName + '.profile-meta.csv'), csvStr, 'utf8');
+      }
     });
     console.log();
     console.log(messages.getMessage('success') + flags.outputdir + '.');

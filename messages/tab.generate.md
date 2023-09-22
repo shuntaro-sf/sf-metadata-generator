@@ -52,7 +52,7 @@ fullName: API Name must not be blank.
 
 # validation.fullname.length
 
-Length of fullName must be less than or equal to 40.
+Length of fullName must be less than or equal to 80.
 
 # validation.label.blank
 
@@ -60,7 +60,7 @@ label: Label Name must not be blank.
 
 # validation.label.length
 
-Length of label must be less than or equal to 40.
+Length of label must be less than or equal to 80.
 
 # validation.no.type
 
@@ -73,6 +73,10 @@ type must be one of the followings:
 # validation.url.format
 
 url must start with 'https://'.
+
+# validation.url.length
+
+Length of url must be less than or equal to 3000.
 
 # validation.motif.format
 
@@ -105,10 +109,6 @@ customObject must be true or false.
 # validation.description.length
 
 Length of description must be less than or equal to 1000.
-
-# validation.inlinehelptext.length
-
-Length of inlineHelpText must be less than or equal to 510.
 
 # validation.frameheight.type
 
