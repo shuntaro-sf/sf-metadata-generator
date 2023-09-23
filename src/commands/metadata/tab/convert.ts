@@ -13,6 +13,7 @@ import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
+import { Json } from '../../../utils/type';
 import { TabConvert } from '../../../utils/tabConvert';
 import * as ConfigData from '../../../';
 
@@ -20,7 +21,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'tab.convert');
 
 export type TabConvertResult = {
-  csvDataStr: string;
+  MetaJson: Json;
 };
 
 export default class Convert extends SfCommand<TabConvertResult> {
@@ -83,15 +84,13 @@ export default class Convert extends SfCommand<TabConvertResult> {
         }
       });
     });
-
-    let csvStr = '';
     if (Convert.metaJson.length > 0) {
       const json2csvParser = new Parser();
-      csvStr = json2csvParser.parse(Convert.metaJson);
+      const csvStr = json2csvParser.parse(Convert.metaJson);
       writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
     }
     return {
-      csvDataStr: csvStr,
+      MetaJson: Convert.metaJson,
     };
   }
 

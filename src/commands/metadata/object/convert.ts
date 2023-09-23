@@ -7,12 +7,13 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable class-methods-use-this */
 import { statSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
-import { join, parse } from 'path';
+import { join, extname, parse } from 'path';
 import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
+import { Json } from '../../../utils/type';
 import { ObjectConvert } from '../../../utils/objectConvert';
 import * as ConfigData from '../../../';
 
@@ -20,7 +21,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'object.convert');
 
 export type ObjectConvertResult = {
-  csvDataStr: string;
+  MetaJson: Json;
 };
 
 export default class Convert extends SfCommand<ObjectConvertResult> {
@@ -61,7 +62,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
       if (
         flags.sourcedir === undefined ||
         statSync(join(flags.sourcedir, file)).isDirectory() ||
-        !new RegExp(Convert.objectExtension + '$').test(parse(file).base)
+        extname(join(flags.sourcedir, file)) !== '.xml'
       ) {
         return;
       }
@@ -83,14 +84,13 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
         }
       });
     });
-    let csvStr = '';
     if (Convert.metaJson.length > 0) {
       const json2csvParser = new Parser();
-      csvStr = json2csvParser.parse(Convert.metaJson);
+      const csvStr = json2csvParser.parse(Convert.metaJson);
       writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
     }
     return {
-      csvDataStr: csvStr,
+      MetaJson: Convert.metaJson,
     };
   }
 
@@ -102,14 +102,4 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
     }
     return parse(path).base.replace(Convert.objectExtension, '');
   }
-  /*
-  private getValueForNameField(metaJson: { [key: string]: any }, tag: string): string {
-    if (!Object.keys(metaJson.CustomObject).includes('nameField')) {
-      return '';
-    }
-    const nameFieldElm = metaJson.CustomObject.nameField[0] as { [key: string]: string };
-    const xmlTag =
-      tag.replace('nameField', '').substring(0, 1).toLocaleLowerCase() + tag.replace('nameField', '').substring(1);
-    return nameFieldElm[xmlTag];
-  }*/
 }

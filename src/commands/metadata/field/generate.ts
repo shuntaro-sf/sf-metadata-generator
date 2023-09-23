@@ -14,19 +14,15 @@ import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
-import * as ConfigData from '../../../';
 
-export type Results = { [key: string]: string };
-export type DefaultValues = { [key: string]: any | DefaultValues };
-export type IsRequired = { [key: string]: any | IsRequired };
-export type Options = { [key: string]: any | Options };
-export type MetaJson = { [key: string]: any | MetaJson };
+import { Json } from '../../../utils/type';
+import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'field.generate');
 
 export type FieldGenerateResult = {
-  MetaJson: MetaJson;
+  MetaJson: Json;
 };
 
 export default class Generate extends SfCommand<FieldGenerateResult> {
@@ -61,12 +57,12 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
   };
 
   private static xmlSetting = ConfigData.fieldGenerateConfig.xmlSetting as { [key: string]: string };
-  private static defaultValues = ConfigData.fieldGenerateConfig.defaultValues as DefaultValues;
-  private static valueSetDefaultValues = ConfigData.fieldGenerateConfig.valueSetDefaultValues as DefaultValues;
+  private static defaultValues = ConfigData.fieldGenerateConfig.defaultValues as Json;
+  private static valueSetDefaultValues = ConfigData.fieldGenerateConfig.valueSetDefaultValues as Json;
   private static summaryFilterItemsDefaultValues = ConfigData.fieldGenerateConfig
-    .summaryFilterItemsDefaultValues as DefaultValues;
-  private static isRequired = ConfigData.fieldGenerateConfig.isRequired as IsRequired;
-  private static options = ConfigData.fieldGenerateConfig.options as Options;
+    .summaryFilterItemsDefaultValues as Json;
+  private static isRequired = ConfigData.fieldGenerateConfig.isRequired as Json;
+  private static options = ConfigData.fieldGenerateConfig.options as Json;
   private static indentationLength = ConfigData.fieldGenerateConfig.indentationLength;
   private static fieldExtension = ConfigData.fieldGenerateConfig.fieldExtension;
 

@@ -8,14 +8,16 @@ import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { TabGenerateResult, DefaultValues } from '../../../../src/commands/metadata/tab/generate';
+
+import { Json } from '../../../../src/utils/type';
+import { TabGenerateResult } from '../../../../src/commands/metadata/tab/generate';
 import * as ConfigData from '../../../../src/';
 
 const alias = 'sfPlugin';
 const inputFilePath = './test/resources/input/tab/tab_inputToUpdate.csv';
 const outputDir = './test/resources/project/force-app/main/default/tabs/';
 
-const defaultValues = ConfigData.tabGenerateConfig.defaultValues as DefaultValues;
+const defaultValues = ConfigData.tabGenerateConfig.defaultValues as Json;
 let testSession: TestSession;
 
 describe('metadata tab generate update NUTs', () => {

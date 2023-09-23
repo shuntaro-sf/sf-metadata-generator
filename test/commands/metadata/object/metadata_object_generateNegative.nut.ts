@@ -5,17 +5,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
-import csvtojson from 'csvtojson';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { expect } from 'chai';
-import { ObjectGenerateResult, DefaultValues } from '../../../../src/commands/metadata/object/generate';
-import * as ConfigData from '../../../../src/';
 
-const alias = 'sfPlugin';
+import { ObjectGenerateResult } from '../../../../src/commands/metadata/object/generate';
+
 const inputFilePath = './test/resources/input/object/object_negativeTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/';
 
-const defaultValues = ConfigData.objectGenerateConfig.defaultValues as DefaultValues;
 let testSession: TestSession;
 
 describe('metadata object generate negative NUTs', () => {
@@ -42,27 +38,11 @@ describe('metadata object generate negative NUTs', () => {
   });
 
   it('metadata object generate negative', async () => {
-    const result = execCmd<ObjectGenerateResult>(
+    execCmd<ObjectGenerateResult>(
       'metadata object generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
-    ).jsonOutput?.result as ObjectGenerateResult;
-
-    const inputJson = await csvtojson().fromFile(inputFilePath);
-
-    inputJson.forEach((inputRow) => {
-      const fullName = inputRow.fullName;
-      const customFieldJson = result?.MetaJson[fullName].CustomObject;
-      Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        if (inputRow[tag] === '' && defaultValues[tag] !== null) {
-          expect(customFieldJson[tag]).to.equal(defaultValues[tag]);
-        } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
-        }
-      });
-    });
-
-    execCmd('project deploy start --checkonly --source-dir ' + outputDir + ' --target-org ' + alias, { cli: 'sf' });
+    );
   });
 });

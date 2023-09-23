@@ -14,21 +14,15 @@ import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
-import * as ConfigData from '../../../';
 
-export type Results = { [key: string]: string };
-export type IsRequired = { [key: string]: any | IsRequired };
-export type Options = { [key: string]: any | Options };
-export type ActionOverrides = { [key: string]: any | ActionOverrides };
-export type MetaSettings = { [key: string]: any | MetaSettings };
-export type PermissionTags = { [key: string]: any | PermissionTags };
-export type MetaJson = { [key: string]: any | MetaJson };
+import { Json } from '../../../utils/type';
+import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profile.generate');
 
 export type ProfileGenerateResult = {
-  MetaJson: MetaJson;
+  MetaJson: Json;
 };
 
 export default class Generate extends SfCommand<ProfileGenerateResult> {
@@ -59,8 +53,8 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
 
   private static xmlSetting = ConfigData.objectGenerateConfig.xmlSetting as { [key: string]: string };
   private static delimiter = ConfigData.profileGenerateConfig.delimiter;
-  private static permissionTags = ConfigData.profileGenerateConfig.permissionTags as PermissionTags;
-  private static options = ConfigData.profileGenerateConfig.options as Options;
+  private static permissionTags = ConfigData.profileGenerateConfig.permissionTags as Json;
+  private static options = ConfigData.profileGenerateConfig.options as Json;
   private static indentationLength = ConfigData.profileGenerateConfig.indentationLength;
   private static profileExtension = ConfigData.profileGenerateConfig.profileExtension;
 

@@ -15,13 +15,14 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
 import { FieldConvert } from '../../../utils/fieldConvert';
+import { Json } from '../../../utils/type';
 import * as ConfigData from '../../../';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'field.convert');
 
 export type FieldConvertResult = {
-  csvDataStr: string;
+  MetaJson: Json;
 };
 
 export default class Convert extends SfCommand<FieldConvertResult> {
@@ -86,14 +87,13 @@ export default class Convert extends SfCommand<FieldConvertResult> {
         }
       });
     });
-    let csvStr = '';
     if (Convert.metaJson.length > 0) {
       const json2csvParser = new Parser();
-      csvStr = json2csvParser.parse(Convert.metaJson);
+      const csvStr = json2csvParser.parse(Convert.metaJson);
       writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
     }
     return {
-      csvDataStr: csvStr,
+      MetaJson: Convert.metaJson,
     };
   }
 }

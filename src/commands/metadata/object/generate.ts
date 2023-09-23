@@ -14,6 +14,8 @@ import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
+
+import { Json } from '../../../utils/type';
 import * as ConfigData from '../../../';
 
 export type MetaInfo = {
@@ -21,19 +23,11 @@ export type MetaInfo = {
   metaStr: string;
 };
 
-export type Results = { [key: string]: string };
-export type DefaultValues = { [key: string]: any | DefaultValues };
-export type IsRequired = { [key: string]: any | IsRequired };
-export type Options = { [key: string]: any | Options };
-export type ActionOverrides = { [key: string]: any | ActionOverrides };
-export type MetaSettings = { [key: string]: any | MetaSettings };
-export type MetaJson = { [key: string]: any | MetaJson };
-
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'object.generate');
 
 export type ObjectGenerateResult = {
-  MetaJson: MetaJson;
+  MetaJson: Json;
 };
 
 export default class Generate extends SfCommand<ObjectGenerateResult> {
@@ -63,15 +57,14 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
   };
 
   private static xmlSetting = ConfigData.objectGenerateConfig.xmlSetting as { [key: string]: string };
-  private static defaultValues = ConfigData.objectGenerateConfig.defaultValues as DefaultValues;
-  private static isRequired = ConfigData.objectGenerateConfig.isRequired as IsRequired;
-  private static nameFieldDefaultValues = ConfigData.objectGenerateConfig.nameFieldDefaultValues as DefaultValues;
-  private static options = ConfigData.objectGenerateConfig.options as Options;
+  private static defaultValues = ConfigData.objectGenerateConfig.defaultValues as Json;
+  private static isRequired = ConfigData.objectGenerateConfig.isRequired as Json;
+  private static nameFieldDefaultValues = ConfigData.objectGenerateConfig.nameFieldDefaultValues as Json;
+  private static options = ConfigData.objectGenerateConfig.options as Json;
   private static indentationLength = ConfigData.objectGenerateConfig.indentationLength;
   private static objectExtension = ConfigData.objectGenerateConfig.objectExtension;
   private static delimiter = ConfigData.objectGenerateConfig.delimiter;
-
-  private static metaSettings = ConfigData.objectGenerateConfig.metaSettings as MetaSettings;
+  private static metaSettings = ConfigData.objectGenerateConfig.metaSettings as Json;
 
   private static validationResults = [] as Array<{ [key: string]: string }>;
   private static successResults = [] as Array<{ [key: string]: string }>;

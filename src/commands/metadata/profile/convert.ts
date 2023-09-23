@@ -14,6 +14,7 @@ import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
 
+import { Json } from '../../../utils/type';
 import { ProfileConvert } from '../../../utils/profileConvert';
 import * as ConfigData from '../../../';
 
@@ -21,7 +22,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'profile.convert');
 
 export type ProfileConvertResult = {
-  csvDataStr: string;
+  MetaJson: Json;
 };
 
 export default class Convert extends SfCommand<ProfileConvertResult> {
@@ -74,13 +75,12 @@ export default class Convert extends SfCommand<ProfileConvertResult> {
         Convert.metaJson = profileConverter.convert(metaJson.Profile);
       }
     });
-    let csvStr = '';
     if (Convert.metaJson.length > 0) {
       const json2csvParser = new Parser();
-      csvStr = json2csvParser.parse(Convert.metaJson);
+      const csvStr = json2csvParser.parse(Convert.metaJson);
       writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
     }
-    return { csvDataStr: csvStr };
+    return { MetaJson: Convert.metaJson };
   }
 
   private getFullNameFromPath(path: string): string {

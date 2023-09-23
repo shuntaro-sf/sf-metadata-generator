@@ -14,6 +14,8 @@ import csvtojson from 'csvtojson';
 import xml2js from 'xml2js';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages, SfError } from '@salesforce/core';
+
+import { Json } from '../../../utils/type';
 import * as ConfigData from '../../../';
 
 export type MetaInfo = {
@@ -21,19 +23,11 @@ export type MetaInfo = {
   metaStr: string;
 };
 
-export type Results = { [key: string]: string };
-export type DefaultValues = { [key: string]: any | DefaultValues };
-export type IsRequired = { [key: string]: any | IsRequired };
-export type Options = { [key: string]: any | Options };
-export type ActionOverrides = { [key: string]: any | ActionOverrides };
-export type MetaSettings = { [key: string]: any | MetaSettings };
-export type MetaJson = { [key: string]: any | MetaJson };
-
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'tab.generate');
 
 export type TabGenerateResult = {
-  MetaJson: MetaJson;
+  MetaJson: Json;
 };
 
 export default class Generate extends SfCommand<TabGenerateResult> {
@@ -63,9 +57,9 @@ export default class Generate extends SfCommand<TabGenerateResult> {
   };
 
   private static xmlSetting = ConfigData.tabGenerateConfig.xmlSetting as { [key: string]: string };
-  private static defaultValues = ConfigData.tabGenerateConfig.defaultValues as DefaultValues;
-  private static isRequired = ConfigData.tabGenerateConfig.isRequired as IsRequired;
-  private static options = ConfigData.tabGenerateConfig.options as Options;
+  private static defaultValues = ConfigData.tabGenerateConfig.defaultValues as Json;
+  private static isRequired = ConfigData.tabGenerateConfig.isRequired as Json;
+  private static options = ConfigData.tabGenerateConfig.options as Json;
   private static indentationLength = ConfigData.tabGenerateConfig.indentationLength;
   private static tabExtension = ConfigData.tabGenerateConfig.tabExtension;
   private static delimiter = ConfigData.tabGenerateConfig.delimiter;

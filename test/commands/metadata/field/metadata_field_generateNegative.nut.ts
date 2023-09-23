@@ -5,17 +5,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
-import csvtojson from 'csvtojson';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { expect } from 'chai';
-import { FieldGenerateResult, DefaultValues } from '../../../../src/commands/metadata/field/generate';
-import * as ConfigData from '../../../../src/';
 
-const alias = 'sfPlugin';
+import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+
+import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
+
 const inputFilePath = './test/resources/input/field/field_negativeTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
 
-const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as DefaultValues;
 let testSession: TestSession;
 
 describe('metadata field generate negative NUTs', () => {
@@ -42,28 +39,11 @@ describe('metadata field generate negative NUTs', () => {
   });
 
   it('metadata field generate negative', async () => {
-    const result = execCmd<FieldGenerateResult>(
+    execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
-    ).jsonOutput?.result as FieldGenerateResult;
-
-    const inputJson = await csvtojson().fromFile(inputFilePath);
-
-    inputJson.forEach((inputRow) => {
-      const fullName = inputRow.fullName;
-      const type = inputRow.type;
-      const customFieldJson = result?.MetaJson[fullName].CustomField;
-      Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
-          expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
-        } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
-        }
-      });
-    });
-
-    execCmd('project deploy start --checkonly --source-dir ' + outputDir + ' --target-org ' + alias, { cli: 'sf' });
+    );
   });
 });

@@ -25,7 +25,7 @@ describe('metadata tab generate flag NUTs', () => {
     execCmd<TabGenerateResult>(
       'metadata tab generate --input ' + invalidInputFilePath + ' --outputdir ' + validOutputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });
@@ -33,7 +33,7 @@ describe('metadata tab generate flag NUTs', () => {
     execCmd<TabGenerateResult>(
       'metadata tab generate --input ' + validInputFilePath + ' --outputdir ' + invalidOutputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });

@@ -8,14 +8,16 @@ import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { FieldGenerateResult, DefaultValues } from '../../../../src/commands/metadata/field/generate';
+
+import { Json } from '../../../../src/utils/type';
+import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
 import * as ConfigData from '../../../../src/';
 
 const alias = 'sfPlugin';
 const inputFilePath = './test/resources/input/field/field_positiveTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
 
-const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as DefaultValues;
+const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as Json;
 let testSession: TestSession;
 
 describe('metadata field generate positive NUTs', () => {

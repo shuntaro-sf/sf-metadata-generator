@@ -25,7 +25,7 @@ describe('metadata field generate flag NUTs', () => {
     execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + invalidInputFilePath + ' --outputdir ' + validOutputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });
@@ -33,7 +33,7 @@ describe('metadata field generate flag NUTs', () => {
     execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + validInputFilePath + ' --outputdir ' + invalidOutputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });
