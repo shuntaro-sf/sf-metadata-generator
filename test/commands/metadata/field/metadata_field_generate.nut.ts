@@ -42,14 +42,6 @@ describe('metadata field generate NUTs', () => {
   });
 
   it('metadata field generate', async () => {
-    console.log(
-      execCmd<FieldGenerateResult>(
-        'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
-        {
-          ensureExitCode: 0,
-        }
-      )
-    );
     const result = execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {

@@ -10,16 +10,10 @@ const validOutputDir = './test/resources/project/force-app/main/default/objects/
 const invalidSourceDir = './test/resources/input/field/notFound/';
 const invalidOutputDir = './test/resources/project/force-app/main/default/objects/ObjectNotFound/fields/';
 
-// let testSession: TestSession;
-
 describe('metadata field convert flag NUTs', () => {
-  before('prepare session', async () => {
-    //  testSession = await TestSession.create();
-  });
+  before('prepare session', async () => {});
 
-  after(async () => {
-    // await testSession?.clean();
-  });
+  after(async () => {});
 
   it('metadata field convert source flag', () => {
     execCmd<FieldConvertResult>(

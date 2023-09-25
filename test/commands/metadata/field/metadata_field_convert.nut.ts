@@ -19,12 +19,9 @@ const sourceDir = './test/resources/input/field/convert_source/';
 const outputDir = './test/resources/output/';
 
 // const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as Json;
-// let testSession: TestSession;
 
 describe('metadata field convert NUTs', () => {
   before('prepare session', async () => {
-    //  testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -40,8 +37,6 @@ describe('metadata field convert NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    // await testSession?.clean();
   });
 
   it('metadata field convert', async () => {

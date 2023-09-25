@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
 // import csvtojson from 'csvtojson';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 // import { expect } from 'chai';
 
 // import { Json } from '../../../../src/utils/type';
@@ -19,12 +19,9 @@ const sourceDir = './test/resources/input/object/convert_source/';
 const outputDir = './test/resources/output/';
 
 // const defaultValues = ConfigData.objectGenerateConfig.defaultValues as Json;
-let testSession: TestSession;
 
 describe('metadata object convert NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -40,8 +37,6 @@ describe('metadata object convert NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata object convert', async () => {
