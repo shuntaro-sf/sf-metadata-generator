@@ -14,11 +14,9 @@
     <fullName>co__c</fullName>
     <label>co</label>
     <nameField>
-        <nameField>
-            <label/>
-            <trackHistory>false</trackHistory>
-            <displayFormat/>
-            <type>Text</type>
-        </nameField>
+        <label/>
+        <trackHistory>false</trackHistory>
+        <displayFormat/>
+        <type>Text</type>
     </nameField>
 </CustomObject>

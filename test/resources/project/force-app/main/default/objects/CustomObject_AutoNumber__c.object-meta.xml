@@ -14,12 +14,10 @@
     <fullName>CustomObject_AutoNumber__c</fullName>
     <label>CustomObject</label>
     <nameField>
-        <nameField>
-            <label/>
-            <trackHistory>false</trackHistory>
-            <displayFormat/>
-            <type>Text</type>
-        </nameField>
+        <label/>
+        <trackHistory>false</trackHistory>
+        <displayFormat/>
+        <type>Text</type>
     </nameField>
     <nameFieldDisplayFormat>customObjectName-{0000}</nameFieldDisplayFormat>
 </CustomObject>

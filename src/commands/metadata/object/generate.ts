@@ -183,7 +183,9 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
     const nameFieldElm = { ...Generate.nameFieldDefaultValues };
     Object.keys(nameFieldElm).forEach((tag) => {
       if (Object.keys(row).includes('nameField' + tag.substring(1).toUpperCase())) {
-        nameFieldElm[tag] = row['nameField' + tag.substring(1).toUpperCase()];
+        if (!(row.nameFieldType === 'Text' && tag === 'displayFormat')) {
+          nameFieldElm[tag] = row['nameField' + tag.substring(1).toUpperCase()];
+        }
       }
     });
 
