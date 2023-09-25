@@ -2898,20 +2898,16 @@ export const objectGenerateConfig = {
     description: false,
   },
   nameFieldDefaultValues: {
-    nameField: {
-      label: null,
-      trackHistory: 'false',
-      displayFormat: null,
-      type: 'Text',
-    },
+    label: null,
+    trackHistory: 'false',
+    displayFormat: null,
+    type: 'Text',
   },
   nameFieldIsRequired: {
-    nameField: {
-      label: true,
-      trackHistory: null,
-      displayFormat: false,
-      type: true,
-    },
+    label: true,
+    trackHistory: null,
+    displayFormat: false,
+    type: true,
   },
   metaSettings: {
     actionOverrides: [
