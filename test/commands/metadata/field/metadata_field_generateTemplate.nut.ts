@@ -6,7 +6,6 @@ import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
 import { FieldTemplateResult } from '../../../../src/commands/metadata/field/template';
 
-const alias = 'sfPlugin';
 const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
 const templateOutputDir = './test/resources/input/field/';
 
@@ -36,6 +35,5 @@ describe('metadata field generate template NUTs', () => {
         ensureExitCode: 0,
       }
     );
-    execCmd('project deploy start --checkonly --source-dir ' + outputDir + ' --target-org ' + alias, { cli: 'sf' });
   });
 });

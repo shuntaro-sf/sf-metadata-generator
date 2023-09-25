@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 
 import { Json } from '../../../../src/utils/type';
@@ -14,16 +14,14 @@ import { TabGenerateResult } from '../../../../src/commands/metadata/tab/generat
 import * as ConfigData from '../../../../src/';
 
 const alias = 'sfPlugin';
+const projectPath = './test/resources/project/';
 const inputFilePath = './test/resources/input/tab/tab_input.csv';
 const outputDir = './test/resources/project/force-app/main/default/tabs/';
 
 const defaultValues = ConfigData.tabGenerateConfig.defaultValues as Json;
-let testSession: TestSession;
 
 describe('metadata tab generate NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -39,8 +37,6 @@ describe('metadata tab generate NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata tab generate', async () => {
@@ -60,11 +56,17 @@ describe('metadata tab generate NUTs', () => {
         if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
           expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
         } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+          expect(customFieldJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
+            inputRow[tag]
+          );
         }
       });
     });
-
-    execCmd('project deploy start --checkonly --source-dir ' + outputDir + ' --target-org ' + alias, { cli: 'sf' });
+    shell.cd(projectPath);
+    execCmd('project deploy validate --source-dir ' + outputDir.replace(projectPath, '') + ' --target-org ' + alias, {
+      ensureExitCode: 0,
+      cli: 'sf',
+    });
+    shell.cd('../../../');
   });
 });

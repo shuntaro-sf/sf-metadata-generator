@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>encryptedText__c</fullName>
+    <label>encryptedText</label>
+    <description>EncryptedText field.</description>
+    <type>EncryptedText</type>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <length>100</length>
+    <maskChar>asterisk</maskChar>
+    <maskType>all</maskType>
+</CustomField>

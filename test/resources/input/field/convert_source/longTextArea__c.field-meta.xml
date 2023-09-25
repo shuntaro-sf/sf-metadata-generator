@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>longTextArea__c</fullName>
+    <label>longTextArea</label>
+    <description>LongTextArea field.</description>
+    <type>LongTextArea</type>
+    <trackTrending>false</trackTrending>
+    <visibleLines>3</visibleLines>
+    <length>1000</length>
+</CustomField>

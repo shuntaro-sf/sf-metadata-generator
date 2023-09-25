@@ -5,25 +5,16 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
-import csvtojson from 'csvtojson';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { expect } from 'chai';
 
-import { Json } from '../../../../src/utils/type';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
+
 import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
-import * as ConfigData from '../../../../src/';
 
-const alias = 'sfPlugin';
 const inputFilePath = './test/resources/input/field/field_relationNegativeTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/Custom_Object__c/fields/';
 
-const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as Json;
-let testSession: TestSession;
-
 describe('metadata field generate relation negative NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -39,33 +30,14 @@ describe('metadata field generate relation negative NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata field generate relation negative ', async () => {
-    const result = execCmd<FieldGenerateResult>(
+    execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
-    ).jsonOutput?.result as FieldGenerateResult;
-
-    const inputJson = await csvtojson().fromFile(inputFilePath);
-
-    inputJson.forEach((inputRow) => {
-      const fullName = inputRow.fullName;
-      const type = inputRow.type;
-      const customFieldJson = result?.MetaJson[fullName].CustomField;
-      Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
-          expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
-        } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
-        }
-      });
-    });
-
-    execCmd('project deploy start --checkonly --source-dir ' + outputDir + ' --target-org ' + alias, { cli: 'sf' });
+    );
   });
 });

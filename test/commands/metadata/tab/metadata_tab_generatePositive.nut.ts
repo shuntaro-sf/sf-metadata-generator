@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 
 import { Json } from '../../../../src/utils/type';
@@ -18,12 +18,9 @@ const inputFilePath = './test/resources/input/tab/tab_positiveTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/tabs/';
 
 const defaultValues = ConfigData.tabGenerateConfig.defaultValues as Json;
-let testSession: TestSession;
 
 describe('metadata tab generate positive NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -39,8 +36,6 @@ describe('metadata tab generate positive NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata tab generate positive', async () => {
@@ -61,7 +56,9 @@ describe('metadata tab generate positive NUTs', () => {
         if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
           expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
         } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+          expect(customFieldJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
+            inputRow[tag]
+          );
         }
       });
     });

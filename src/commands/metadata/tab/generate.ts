@@ -142,7 +142,13 @@ export default class Generate extends SfCommand<TabGenerateResult> {
       removedKeys.forEach((key) => {
         delete row[key];
       });
-      Object.keys(row).sort();
+
+      row = Object.keys(row)
+        .sort()
+        .reduce((obj: { [key: string]: any }, key) => {
+          obj[key] = row[key];
+          return obj;
+        }, {});
       row['$'] = { xmlns: Generate.xmlSetting.xmlns };
       Generate.metaJson[row.fullName] = { CustomTab: row };
       const xmlBuilder = new xml2js.Builder({

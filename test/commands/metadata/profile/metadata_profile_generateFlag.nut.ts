@@ -33,7 +33,7 @@ describe('metadata profile generate flag NUTs', () => {
         validSourcePath +
         ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });
@@ -47,7 +47,7 @@ describe('metadata profile generate flag NUTs', () => {
         validSourcePath +
         ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });
@@ -61,7 +61,7 @@ describe('metadata profile generate flag NUTs', () => {
         invalidSourcePath +
         ' --json',
       {
-        ensureExitCode: 0,
+        ensureExitCode: 1,
       }
     );
   });

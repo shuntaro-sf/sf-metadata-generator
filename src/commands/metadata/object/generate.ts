@@ -137,7 +137,12 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
         delete row[key];
       });
 
-      Object.keys(row).sort();
+      row = Object.keys(row)
+        .sort()
+        .reduce((obj: { [key: string]: any }, key) => {
+          obj[key] = row[key];
+          return obj;
+        }, {});
       row['$'] = { xmlns: Generate.xmlSetting.xmlns };
       Generate.metaJson[row.fullName] = { CustomObject: row };
       const xmlBuilder = new xml2js.Builder({
@@ -175,7 +180,7 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
       return;
     }
 
-    const nameFieldElm = Generate.nameFieldDefaultValues;
+    const nameFieldElm = { ...Generate.nameFieldDefaultValues };
     Object.keys(nameFieldElm).forEach((tag) => {
       if (Object.keys(row).includes('nameField' + tag.substring(1).toUpperCase())) {
         nameFieldElm[tag] = row['nameField' + tag.substring(1).toUpperCase()];

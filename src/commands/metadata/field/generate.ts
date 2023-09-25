@@ -83,7 +83,6 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     }
 
     const csvJson = await csvtojson().fromFile(flags.input);
-
     csvJson.forEach((row, rowIndex) => {
       rowIndex++;
       const removedKeys = [] as string[];
@@ -146,7 +145,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
       if (row.type === 'Summary') {
         this.getSummaryFilterItemsMetaStr(row, rowIndex);
       }
-      // formula
+      // formula//
       if (Object.keys(row).includes('formula') && row.formula !== '') {
         this.formatRowForFormula(row);
       }
@@ -160,12 +159,18 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
         delete row[key];
       });
 
-      Object.keys(row).sort();
+      row = Object.keys(row)
+        .sort()
+        .reduce((obj: { [key: string]: any }, key) => {
+          obj[key] = row[key];
+          return obj;
+        }, {});
       row['$'] = { xmlns: Generate.xmlSetting.xmlns };
       Generate.metaJson[row.fullName] = { CustomField: row };
       const xmlBuilder = new xml2js.Builder({
         renderOpts: { pretty: true, indent: ' '.repeat(Generate.indentationLength), newline: '\n' },
         xmldec: { version: Generate.xmlSetting.version, encoding: Generate.xmlSetting.encoding, standalone: undefined },
+        allowSurrogateChars: true,
       });
       const xml = xmlBuilder.buildObject(Generate.metaJson[row.fullName]);
       Generate.metaXmls[row.fullName] = xml;
@@ -187,7 +192,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     const valueSetDefinitionElm = Generate.valueSetDefaultValues.valueSetDefinition;
     const valueElms = [] as Array<{ [key: string]: any }>;
     for (let idx = 0; idx < row.picklistFullName.length; idx++) {
-      const valueElm = valueSetDefinitionElm.value[0] as { [key: string]: any };
+      const valueElm = { ...valueSetDefinitionElm.value[0] };
       Object.keys(valueSetDefinitionElm.value[0]).forEach((tag) => {
         const tagForRow = 'picklist' + tag.substring(0, 1).toUpperCase() + tag.substring(1);
         if (Object.keys(row).includes(tagForRow)) {
@@ -221,10 +226,11 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     if (!this.isValidInputsForSummaryFilterItems(row, rowIndex)) {
       return;
     }
-    const summaryFilterItemsElm = Generate.summaryFilterItemsDefaultValues;
+    const summaryFilterItemsElm = { ...Generate.summaryFilterItemsDefaultValues };
     Object.keys(summaryFilterItemsElm).forEach((tag) => {
-      if (Object.keys(row).includes('summaryFilterItems' + tag.substring(1).toUpperCase())) {
-        summaryFilterItemsElm[tag] = row['summaryFilterItems' + tag.substring(1).toUpperCase()];
+      const tagForRow = 'summaryFilterItems' + tag.substring(0, 1).toUpperCase() + tag.substring(1);
+      if (Object.keys(row).includes(tagForRow)) {
+        summaryFilterItemsElm[tag] = row[tagForRow];
       }
     });
 

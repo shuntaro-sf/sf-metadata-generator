@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>percent__c</fullName>
+    <label>percent</label>
+    <description>Precent field.</description>
+    <type>Percent</type>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <scale>0</scale>
+    <precision>18</precision>
+</CustomField>

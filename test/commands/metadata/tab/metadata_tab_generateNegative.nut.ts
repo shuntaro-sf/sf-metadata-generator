@@ -5,19 +5,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 
 import { TabGenerateResult } from '../../../../src/commands/metadata/tab/generate';
 
 const inputFilePath = './test/resources/input/tab/tab_negativeTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/tabs/';
 
-let testSession: TestSession;
-
 describe('metadata tab generate negative NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -33,8 +29,6 @@ describe('metadata tab generate negative NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata tab generate negative', async () => {

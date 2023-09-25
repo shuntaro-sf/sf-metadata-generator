@@ -120,11 +120,15 @@ export default class Generate extends SfCommand<ProfileGenerateResult> {
         if (!this.isValidInputs(tag, row, rowIndex, indexOfTag)) {
           return;
         }
-
         metaItem[tag][0] = row[tag];
       });
 
-      Object.keys(row).sort();
+      row = Object.keys(row)
+        .sort()
+        .reduce((obj: { [key: string]: any }, key) => {
+          obj[key] = row[key];
+          return obj;
+        }, {});
       row['$'] = { xmlns: Generate.xmlSetting.xmlns };
       const xmlBuilder = new xml2js.Builder({
         renderOpts: { pretty: true, indent: ' '.repeat(Generate.indentationLength), newline: '\n' },

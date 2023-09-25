@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>location__c</fullName>
+    <label>location</label>
+    <description>Location field.</description>
+    <type>Location</type>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <displayLocationInDecimal>false</displayLocationInDecimal>
+    <scale>6</scale>
+</CustomField>

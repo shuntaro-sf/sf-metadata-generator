@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -7,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
 import csvtojson from 'csvtojson';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 
 import { Json } from '../../../../src/utils/type';
@@ -15,16 +16,14 @@ import { FieldGenerateResult } from '../../../../src/commands/metadata/field/gen
 import * as ConfigData from '../../../../src/';
 
 const alias = 'sfPlugin';
+const projectPath = './test/resources/project/';
 const inputFilePath = './test/resources/input/field/field_input.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
 
 const defaultValues = ConfigData.fieldGenerateConfig.defaultValues as Json;
-let testSession: TestSession;
 
 describe('metadata field generate NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -40,11 +39,17 @@ describe('metadata field generate NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata field generate', async () => {
+    console.log(
+      execCmd<FieldGenerateResult>(
+        'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
+        {
+          ensureExitCode: 0,
+        }
+      )
+    );
     const result = execCmd<FieldGenerateResult>(
       'metadata field generate --input ' + inputFilePath + ' --outputdir ' + outputDir + ' --json',
       {
@@ -53,7 +58,6 @@ describe('metadata field generate NUTs', () => {
     ).jsonOutput?.result;
 
     const inputJson = await csvtojson().fromFile(inputFilePath);
-
     inputJson.forEach((inputRow) => {
       const fullName = inputRow.fullName;
       const type = inputRow.type;
@@ -62,11 +66,17 @@ describe('metadata field generate NUTs', () => {
         if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
           expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
         } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag]).to.equal(inputRow[tag]);
+          expect(customFieldJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
+            inputRow[tag]
+          );
         }
       });
     });
-
-    execCmd('project deploy start --checkonly --source-dir ' + outputDir + ' --target-org ' + alias, { cli: 'sf' });
+    shell.cd(projectPath);
+    execCmd('project deploy validate --source-dir ' + outputDir.replace(projectPath, '') + ' --target-org ' + alias, {
+      ensureExitCode: 0,
+      cli: 'sf',
+    });
+    shell.cd('../../../');
   });
 });

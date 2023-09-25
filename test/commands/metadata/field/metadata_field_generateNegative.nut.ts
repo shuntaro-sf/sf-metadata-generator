@@ -6,19 +6,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as shell from 'shelljs';
 
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 
 import { FieldGenerateResult } from '../../../../src/commands/metadata/field/generate';
 
 const inputFilePath = './test/resources/input/field/field_negativeTestInput.csv';
 const outputDir = './test/resources/project/force-app/main/default/objects/Account/fields/';
 
-let testSession: TestSession;
-
 describe('metadata field generate negative NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
-
     fs.readdir(outputDir, (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -34,8 +30,6 @@ describe('metadata field generate negative NUTs', () => {
         shell.rm(path.join(outputDir, file));
       }
     });
-
-    await testSession?.clean();
   });
 
   it('metadata field generate negative', async () => {
