@@ -207,7 +207,7 @@ export default class Generate extends SfCommand<TabGenerateResult> {
       case 'motif':
         this.validatesMotif(rowList, colIndex, errorIndex, regExpForMotif);
         break;
-      case 'Page':
+      case 'page':
         this.validatesPage(row.type, rowList, colIndex, errorIndex, regExpForSnakeCase);
         break;
       case 'splashPageLink':
@@ -226,9 +226,15 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     errorIndex: string,
     regExpForSnakeCase: RegExp
   ): void {
-    if (type === 'VisualforcePage' && row[indexOfTag] !== '') {
+    if (type === 'Visualforce' && row[indexOfTag] !== '') {
       if (!regExpForSnakeCase.test(row[indexOfTag])) {
         this.pushValidationResult(errorIndex, messages.getMessage('validation.page.format'));
+      }
+      if (row[indexOfTag].length > 80) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.page.length'));
+      }
+      if (row[indexOfTag].split('__').length > 2) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.page.underscore'));
       }
     }
   }
@@ -273,9 +279,15 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     errorIndex: string,
     regExpForSnakeCase: RegExp
   ): void {
-    if (type === 'LightningWebComponentPage' && row[indexOfTag] !== '') {
+    if (type === 'LightningComponent' && row[indexOfTag] !== '') {
       if (!regExpForSnakeCase.test(row[indexOfTag])) {
         this.pushValidationResult(errorIndex, messages.getMessage('validation.lwccomponent.format'));
+      }
+      if (row[indexOfTag].length > 80) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.lwccomponent.length'));
+      }
+      if (row[indexOfTag].split('__').length > 2) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.lwccomponent.underscore'));
       }
     }
   }
@@ -307,9 +319,15 @@ export default class Generate extends SfCommand<TabGenerateResult> {
     errorIndex: string,
     regExpForSnakeCase: RegExp
   ): void {
-    if (type === 'LightiningPage' && row[indexOfTag] !== '') {
+    if (type === 'LightningPage' && row[indexOfTag] !== '') {
       if (!regExpForSnakeCase.test(row[indexOfTag])) {
         this.pushValidationResult(errorIndex, messages.getMessage('validation.flexipage.format'));
+      }
+      if (row[indexOfTag].length > 80) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.flexipage.length'));
+      }
+      if (row[indexOfTag].split('__').length > 2) {
+        this.pushValidationResult(errorIndex, messages.getMessage('validation.flexipage.underscore'));
       }
     }
   }

@@ -86,13 +86,37 @@ motif must be the form of 'motif index: motif name'
 
 lwcComponent can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
 
+# validation.lwccomponent.length
+
+Length of lwccomponent must be less than or equal to 80.
+
+# validation.lwccomponent.underscore
+
+lwccomponen cannot contain two consecutive underscore characters.
+
 # validation.page.format
 
 page can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
 
+# validation.page.length
+
+Length of page must be less than or equal to 80.
+
+# validation.page.underscore
+
+page cannot contain two consecutive underscore characters.
+
 # validation.flexipage.format
 
 flexiPage can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
+
+# validation.flexipage.length
+
+Length of flexipage must be less than or equal to 80.
+
+# validation.flexipage.underscore
+
+flexipage cannot contain two consecutive underscore characters.
 
 # validation.splashpagelink.options
 
