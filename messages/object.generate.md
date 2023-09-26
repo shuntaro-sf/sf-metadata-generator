@@ -156,7 +156,7 @@ Length of inlineHelpText must be less than or equal to 510.
 
 # failureSave
 
-To update exiting files, Add the flag --updates to this command."
+To update exiting files, Add the flag --updates to this command.
 
 # examples
 

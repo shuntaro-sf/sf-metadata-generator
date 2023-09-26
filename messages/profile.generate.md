@@ -88,7 +88,7 @@ enabled must be true or false.
 
 # validation.visibility.options
 
-visibility must be one of the followings: "
+visibility must be one of the followings:
 
 # examples
 
