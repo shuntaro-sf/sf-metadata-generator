@@ -1,0 +1,14 @@
+Validating Deployment of v56.0 metadata to shuntaro.ohtsuka@sfplugin.com using the v58.0 SOAP API.
+Deploy ID: 0Af5j00000bAx2DCAS
+
+Component Failures [2]
+==============================================================================================================
+| Type  Name               Problem                                                                             
+| ───── ────────────────── ─────────────────────────────────────────────────────────────────────────────────── 
+| Error LightningComponent In field: lwcComponent - no LightningComponentBundle named LightningComponent found 
+| Error LightningComponent In field: lwcComponent - no LightningComponentBundle named LightningComponent found 
+
+Test Results Summary
+Passing: 0
+Failing: 0
+Total: 0
