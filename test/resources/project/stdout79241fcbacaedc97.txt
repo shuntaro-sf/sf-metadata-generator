@@ -1,0 +1,16 @@
+Validating Deployment of v56.0 metadata to shuntaro.ohtsuka@sfplugin.com using the v58.0 SOAP API.
+Deploy ID: 0Af5j00000bAsGRCA0
+
+Component Failures [4]
+==============================================================================================================
+| Type  Name               Problem                                                                             
+| ───── ────────────────── ─────────────────────────────────────────────────────────────────────────────────── 
+| Error LightningComponent In field: lwcComponent - no LightningComponentBundle named LightningComponent found 
+| Error Web                FrameHeight required for url and scontrol tabs                                      
+| Error LightningComponent In field: lwcComponent - no LightningComponentBundle named LightningComponent found 
+| Error Web                FrameHeight required for url and scontrol tabs                                      
+
+Test Results Summary
+Passing: 0
+Failing: 0
+Total: 0

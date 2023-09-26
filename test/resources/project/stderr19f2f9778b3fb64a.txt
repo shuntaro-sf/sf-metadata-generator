@@ -1,0 +1,5 @@
+Status: {status} | 0/0 Components (Errors:{errorCount}) {testInfo}
+Status: Failed | 5/5 Components (Errors:2) | 0/0 Tests (Errors:0)
+
+Error (1): Failed to validate the deployment (0Af5j00000bAsGRCA0). Due To:
+2 component error(s)
