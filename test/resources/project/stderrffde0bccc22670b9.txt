@@ -1,0 +1,5 @@
+Error (1): No local changes to deploy.
+
+Try this:
+
+To see conflicts and ignored files, run "sf project deploy preview" with any of the manifest, directory, or metadata flags.

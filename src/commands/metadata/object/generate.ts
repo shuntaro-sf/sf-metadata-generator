@@ -182,16 +182,18 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
 
     const nameFieldElm = { ...Generate.nameFieldDefaultValues };
     Object.keys(nameFieldElm).forEach((tag) => {
-      if (Object.keys(row).includes('nameField' + tag.substring(1).toUpperCase())) {
-        if (!(row.nameFieldType === 'Text' && tag === 'displayFormat')) {
-          nameFieldElm[tag] = row['nameField' + tag.substring(1).toUpperCase()];
-        }
+      const tagForRow = 'nameField' + tag.substring(0, 1).toUpperCase() + tag.substring(1);
+      if (Object.keys(row).includes(tagForRow)) {
+        nameFieldElm[tag] = row[tagForRow];
       }
     });
-
+    if (row.nameFieldType === 'Text') {
+      delete nameFieldElm.displayFormat;
+    }
     row['nameField'] = nameFieldElm;
     delete row.nameFieldType;
     delete row.nameFieldLabel;
+    delete row.nameFieldDisplayFormat;
   }
 
   // eslint-disable-next-line complexity

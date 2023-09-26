@@ -1,0 +1,6 @@
+Status: {status} | 0/0 Components (Errors:{errorCount}) {testInfo}
+Status: In Progress | 0/5 Components (Errors:0) | 0/0 Tests (Errors:0)
+Status: Failed | 5/5 Components (Errors:4) | 0/0 Tests (Errors:0)
+
+Error (1): Failed to validate the deployment (0Af5j00000bAiWeCAK). Due To:
+4 component error(s)
