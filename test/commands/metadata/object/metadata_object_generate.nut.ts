@@ -51,6 +51,8 @@ describe('metadata object generate NUTs', () => {
     inputJson.forEach((inputRow) => {
       const fullName = inputRow.fullName;
       const customFieldJson = result?.MetaJson[fullName].CustomObject;
+      console.log(inputRow);
+      console.log(customFieldJson);
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
         if (inputRow[tag] === '' && defaultValues[tag] !== null) {
           expect(customFieldJson[tag]).to.equal(defaultValues[tag]);

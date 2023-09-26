@@ -33,10 +33,10 @@ describe('metadata profile generate positive NUTs', () => {
     const inputJson = await csvtojson().fromFile(inputFilePath);
 
     inputJson.forEach((inputRow) => {
-      const customFieldJson = result?.MetaJson.Profile;
+      const customProfileJson = result?.MetaJson.Profile;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
-        if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
+        if (customProfileJson[tag] !== undefined) {
+          expect(customProfileJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
             inputRow[tag]
           );
         }

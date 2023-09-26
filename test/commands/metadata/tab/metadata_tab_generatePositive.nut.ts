@@ -51,12 +51,12 @@ describe('metadata tab generate positive NUTs', () => {
     inputJson.forEach((inputRow) => {
       const fullName = inputRow.fullName;
       const type = inputRow.type;
-      const customFieldJson = result?.MetaJson[fullName].CustomTab;
+      const customTabJson = result?.MetaJson[fullName].CustomTab;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
         if (inputRow[tag] === '' && defaultValues[type][tag] !== null) {
-          expect(customFieldJson[tag]).to.equal(defaultValues[type][tag]);
-        } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
+          expect(customTabJson[tag]).to.equal(defaultValues[type][tag]);
+        } else if (customTabJson[tag] !== undefined) {
+          expect(customTabJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
             inputRow[tag]
           );
         }

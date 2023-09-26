@@ -49,12 +49,12 @@ describe('metadata object generate positive NUTs', () => {
 
     inputJson.forEach((inputRow) => {
       const fullName = inputRow.fullName;
-      const customFieldJson = result?.MetaJson[fullName].CustomObject;
+      const customObjectJson = result?.MetaJson[fullName].CustomObject;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
         if (inputRow[tag] === '' && defaultValues[tag] !== null) {
-          expect(customFieldJson[tag]).to.equal(defaultValues[tag]);
-        } else if (customFieldJson[tag] !== undefined) {
-          expect(customFieldJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
+          expect(customObjectJson[tag]).to.equal(defaultValues[tag]);
+        } else if (customObjectJson[tag] !== undefined) {
+          expect(customObjectJson[tag].replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/lt;/g, '<')).to.equal(
             inputRow[tag]
           );
         }
