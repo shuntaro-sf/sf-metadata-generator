@@ -1,5 +1,0 @@
-Status: {status} | 0/0 Components (Errors:{errorCount}) {testInfo}
-Status: Failed | 5/5 Components (Errors:1) | 0/0 Tests (Errors:0)
-
-Error (1): Failed to validate the deployment (0Af5j00000bAxeACAS). Due To:
-1 component error(s)
