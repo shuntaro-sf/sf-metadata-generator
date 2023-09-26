@@ -1,0 +1,20 @@
+Validating Deployment of v56.0 metadata to shuntaro.ohtsuka@sfplugin.com using the v58.0 SOAP API.
+Deploy ID: 0Af5j00000bAsG9CAK
+
+Component Failures [8]
+===========================================================================================
+| Type  Name                       Problem                                                  
+| ───── ────────────────────────── ──────────────────────────────────────────────────────── 
+| Error CustomObject_AutoNumber__c Must specify a sharing model value for the Custom Object 
+| Error CustomObject__c            Must specify a sharing model value for the Custom Object 
+| Error co__c                      Must specify a sharing model value for the Custom Object 
+| Error obj__c                     Must specify a sharing model value for the Custom Object 
+| Error CustomObject_AutoNumber__c Must specify a sharing model value for the Custom Object 
+| Error co__c                      Must specify a sharing model value for the Custom Object 
+| Error obj__c                     Must specify a sharing model value for the Custom Object 
+| Error CustomObject__c            Must specify a sharing model value for the Custom Object 
+
+Test Results Summary
+Passing: 0
+Failing: 0
+Total: 0

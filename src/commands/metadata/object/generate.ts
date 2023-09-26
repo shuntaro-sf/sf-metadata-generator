@@ -163,15 +163,8 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
   }
 
   private getMetaSettings(row: { [key: string]: any }): void {
-    const parser = new xml2js.Parser();
-    parser.parseString(Generate.metaSettings, (err, metaJson) => {
-      if (err) {
-        this.log(err.message);
-      } else {
-        Object.keys(metaJson).forEach((tag) => {
-          row[tag] = metaJson[tag];
-        });
-      }
+    Object.keys(Generate.metaSettings).forEach((tag) => {
+      row[tag] = Generate.metaSettings[tag];
     });
   }
 
