@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable sf-plugin/no-missing-messages */
@@ -46,7 +45,7 @@ export default class Template extends SfCommand<FieldTemplateResult> {
     });
     const csvStr = csvList.join('\n');
     writeFileSync(flags.outputdir + '/field-template.csv', csvStr, 'utf8');
-    console.log(messages.getMessage('success') + flags.outputdir + '.');
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return { CsvTemplate: csvStr };
   }
 }

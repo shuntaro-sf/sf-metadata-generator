@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -81,8 +80,8 @@ export default class Retrieve extends SfCommand<ProfileRetrieveResult> {
         writeFileSync(join(flags.outputdir, fullName + '.profile-meta.csv'), csvStr, 'utf8');
       }
     });
-    console.log();
-    console.log(messages.getMessage('success') + flags.outputdir + '.');
+    this.log();
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return { csvDataStr: csvStrs };
   }
 
@@ -143,7 +142,7 @@ export default class Retrieve extends SfCommand<ProfileRetrieveResult> {
     Object.keys(fileBuffers).forEach((fullName) => {
       parser.parseString(fileBuffers[fullName], (err, metaJson) => {
         if (err) {
-          console.log(err.message);
+          this.log(err.message);
         } else {
           metaJsons[fullName] = metaJson.Profile;
         }

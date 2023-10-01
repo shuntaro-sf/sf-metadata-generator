@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable class-methods-use-this */
 import { writeFileSync, existsSync } from 'fs';
@@ -72,8 +71,8 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
       csvStr = json2csvParser.parse(Retrieve.metaJson);
       writeFileSync(join(flags.outputdir, 'tab-meta.csv'), csvStr, 'utf8');
     }
-    console.log();
-    console.log(messages.getMessage('success') + flags.outputdir + '.');
+    this.log();
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
       csvDataStr: csvStr,
     };
@@ -136,7 +135,7 @@ export default class Retrieve extends SfCommand<TabRetrieveResult> {
     Object.keys(fileBuffers).forEach((fullName) => {
       parser.parseString(fileBuffers[fullName], (err, metaJson) => {
         if (err) {
-          console.log(err.message);
+          this.log(err.message);
         } else {
           metaJsons[fullName] = metaJson.CustomTab;
         }

@@ -26,6 +26,10 @@ Cannot find the souce-directory
 
 Cannot find the output-directory
 
+# success
+
+Successfully converted field metadata in
+
 # examples
 
 - Converts metadata in sourcedir to a csv file in ouputdir:

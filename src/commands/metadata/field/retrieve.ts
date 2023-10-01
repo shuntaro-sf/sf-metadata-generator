@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -78,8 +77,8 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
       csvStr = json2csvParser.parse(Retrieve.metaJson);
       writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
     }
-    console.log();
-    console.log(messages.getMessage('success') + flags.outputdir + '.');
+    this.log();
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
       csvDataStr: csvStr,
     };
@@ -130,7 +129,7 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
     await Promise.all(fileBuffers).then((buffer) => {
       parser.parseString(buffer.toString(), (err, metaJson) => {
         if (err) {
-          console.log(err.message);
+          this.log(err.message);
         } else {
           metaJson.CustomObject.fields.forEach((field: { [key: string]: any }) => {
             metaJsons[field.fullName] = field;

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 /* eslint-disable guard-for-in */
 import { existsSync, writeFileSync } from 'fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
@@ -45,7 +44,7 @@ export default class Template extends SfCommand<ObjectTemplateResult> {
     });
     const csvStr = csvList.join('\n');
     writeFileSync(flags.outputdir + '/object-template.csv', csvStr, 'utf8');
-    console.log(messages.getMessage('success') + flags.outputdir + '.');
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return { CsvTemplate: csvStr };
   }
 }

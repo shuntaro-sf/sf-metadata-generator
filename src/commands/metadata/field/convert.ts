@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -77,7 +76,7 @@ export default class Convert extends SfCommand<FieldConvertResult> {
 
       parser.parseString(metaXml, (err, metaJson) => {
         if (err) {
-          console.log(err.message);
+          this.log(err.message);
         } else {
           if (!Object.keys(metaJson).includes('CustomField')) {
             return;
@@ -92,6 +91,7 @@ export default class Convert extends SfCommand<FieldConvertResult> {
       const csvStr = json2csvParser.parse(Convert.metaJson);
       writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
     }
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
       MetaJson: Convert.metaJson,
     };

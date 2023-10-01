@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable class-methods-use-this */
 import { statSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
@@ -74,7 +73,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
       const metaXml = readFileSync(join(flags.sourcedir, file), { encoding: 'utf8' });
       parser.parseString(metaXml, (err, metaJson) => {
         if (err) {
-          console.log(err.message);
+          this.log(err.message);
         } else {
           if (!Object.keys(metaJson).includes('CustomObject')) {
             return;
@@ -89,6 +88,7 @@ export default class Convert extends SfCommand<ObjectConvertResult> {
       const csvStr = json2csvParser.parse(Convert.metaJson);
       writeFileSync(join(flags.outputdir, 'object-meta.csv'), csvStr, 'utf8');
     }
+    this.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
       MetaJson: Convert.metaJson,
     };
