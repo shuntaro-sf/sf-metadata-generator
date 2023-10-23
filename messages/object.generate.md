@@ -154,6 +154,14 @@ Length of description must be less than or equal to 1000.
 
 Length of inlineHelpText must be less than or equal to 510.
 
+# validation.sharingModel.options
+
+sharingModel must be one of the followings:
+
+# validation.externalSharingModel.options
+
+externalSharingModel must be one of the followings:
+
 # failureSave
 
 To update exiting files, Add the flag --updates to this command.

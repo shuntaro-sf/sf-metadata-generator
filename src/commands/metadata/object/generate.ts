@@ -238,8 +238,33 @@ export default class Generate extends SfCommand<ObjectGenerateResult> {
       case 'nameFieldType':
         this.validatesNameFieldType(rowList, colIndex, errorIndex);
         break;
+      case 'sharingModel':
+        this.validatesSharingModel(rowList, colIndex, errorIndex);
+        break;
+      case 'externalSharingModel':
+        this.validatesExternalSharingModel(rowList, colIndex, errorIndex);
+        break;
     }
     return validationResLenBefore === Generate.validationResults.length;
+  }
+
+  private validatesExternalSharingModel(row: string[], indexOfTag: number, errorIndex: string): void {
+    if (!Generate.options.externalSharingModel.includes(row[indexOfTag]) && row[indexOfTag] !== '') {
+      this.pushValidationResult(
+        errorIndex,
+        messages.getMessage('validation.externalSharingModel.options') +
+          Generate.options.externalSharingModel.toString()
+      );
+    }
+  }
+
+  private validatesSharingModel(row: string[], indexOfTag: number, errorIndex: string): void {
+    if (!Generate.options.sharingModel.includes(row[indexOfTag]) && row[indexOfTag] !== '') {
+      this.pushValidationResult(
+        errorIndex,
+        messages.getMessage('validation.sharingModel.options') + Generate.options.sharingModel.toString()
+      );
+    }
   }
 
   private validatesNameFieldType(row: string[], indexOfTag: number, errorIndex: string): void {

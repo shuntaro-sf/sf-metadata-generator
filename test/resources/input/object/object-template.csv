@@ -1,3 +1,3 @@
-fullName,label,description,allowInChatterGroups,deploymentStatus,enableActivities,enableBulkApi,enableHistory,enableReports,enableSearch,enableSharing,enableStreamingApi,nameFieldType,nameFieldLabel,nameFieldDisplayFormat
-CustomObject__c,CustomObject,Custom object.,false,Deployed,false,true,false,false,false,true,true,Text,CustomObjectName,
-CustomObject_AutoNumber__c,CustomObject,Custom object.,true,InDevelopment,true,true,true,true,true,true,true,AutoNumber,CustomObjectName,CustomObject-{0000}
+fullName,label,description,allowInChatterGroups,deploymentStatus,enableActivities,enableBulkApi,enableHistory,enableReports,enableSearch,enableSharing,enableStreamingApi,nameFieldType,nameFieldLabel,nameFieldDisplayFormat,sharingModel,externalSharingModel
+CustomObject__c,CustomObject,Custom object.,false,Deployed,false,true,false,false,false,true,true,Text,CustomObjectName,,Private,Private
+CustomObject_AutoNumber__c,CustomObject,Custom object.,true,InDevelopment,true,true,true,true,true,true,true,AutoNumber,CustomObjectName,CustomObject-{0000},ReadWrite,ReadWrite
