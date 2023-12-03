@@ -3316,6 +3316,174 @@ export const profileGenerateConfig = {
   resolveJsonModule: true,
 };
 
+export const permissionsetConvertConfig = {
+  header: [
+    'fullName',
+    'type',
+    'editable',
+    'readable',
+    'allowCreate',
+    'allowDelete',
+    'allowEdit',
+    'allowRead',
+    'modifyAllRecords',
+    'viewAllRecords',
+    'default',
+    'visible',
+    'enabled',
+    'visibility',
+  ],
+  permissionTags: {
+    applicationVisibilities: {
+      keyTag: 'application',
+      tags: ['default', 'visible'],
+    },
+    classAccesses: {
+      keyTag: 'apexClass',
+      tags: ['enabled'],
+    },
+    fieldPermissions: {
+      keyTag: 'field',
+      tags: ['editable', 'readable'],
+    },
+    objectPermissions: {
+      keyTag: 'object',
+      tags: ['allowCreate', 'allowDelete', 'allowEdit', 'allowRead', 'modifyAllRecords', 'viewAllRecords'],
+    },
+    pageAccesses: {
+      keyTag: 'apexPage',
+      tags: ['enabled'],
+    },
+    recordTypeVisibilities: {
+      keyTag: 'recordType',
+      tags: ['default', 'visible'],
+    },
+    tabVisibilities: {
+      keyTag: 'tab',
+      tags: ['visibility'],
+    },
+    userPermissions: {
+      keyTag: 'name',
+      tags: ['enabled'],
+    },
+  },
+  permissionsetExtension: '.permissionset-meta.xml',
+};
+
+export const permissionsetRetrieveConfig = {
+  header: [
+    'fullName',
+    'type',
+    'editable',
+    'readable',
+    'allowCreate',
+    'allowDelete',
+    'allowEdit',
+    'allowRead',
+    'modifyAllRecords',
+    'viewAllRecords',
+    'default',
+    'visible',
+    'enabled',
+    'visibility',
+  ],
+  permissionTags: {
+    applicationVisibilities: {
+      keyTag: 'application',
+      tags: ['default', 'visible'],
+    },
+    classAccesses: {
+      keyTag: 'apexClass',
+      tags: ['enabled'],
+    },
+    fieldPermissions: {
+      keyTag: 'field',
+      tags: ['editable', 'readable'],
+    },
+    objectPermissions: {
+      keyTag: 'object',
+      tags: ['allowCreate', 'allowDelete', 'allowEdit', 'allowRead', 'modifyAllRecords', 'viewAllRecords'],
+    },
+    pageAccesses: {
+      keyTag: 'apexPage',
+      tags: ['enabled'],
+    },
+    recordTypeVisibilities: {
+      keyTag: 'recordType',
+      tags: ['default', 'visible'],
+    },
+    tabVisibilities: {
+      keyTag: 'tab',
+      tags: ['visibility'],
+    },
+    userPermissions: {
+      keyTag: 'name',
+      tags: ['enabled'],
+    },
+  },
+  permissionsetExtension: '.permissionset',
+};
+
+export const permissionsetGenerateConfig = {
+  xmlSetting: {
+    version: '1.0',
+    encoding: 'UTF-8',
+    xmlns: 'http://soap.sforce.com/2006/04/metadata',
+  },
+  permissionTags: {
+    applicationVisibilities: {
+      keyTag: 'application',
+      tags: ['default', 'visible'],
+    },
+    classAccesses: {
+      keyTag: 'apexClass',
+      tags: ['enabled'],
+    },
+    fieldPermissions: {
+      keyTag: 'field',
+      tags: ['editable', 'readable'],
+    },
+    objectPermissions: {
+      keyTag: 'object',
+      tags: ['allowCreate', 'allowDelete', 'allowEdit', 'allowRead', 'modifyAllRecords', 'viewAllRecords'],
+    },
+    pageAccesses: {
+      keyTag: 'apexPage',
+      tags: ['enabled'],
+    },
+    recordTypeVisibilities: {
+      keyTag: 'recordType',
+      tags: ['default', 'visible'],
+    },
+    tabVisibilities: {
+      keyTag: 'tab',
+      tags: ['visibility'],
+    },
+    userPermissions: {
+      keyTag: 'name',
+      tags: ['enabled'],
+    },
+  },
+  options: {
+    editable: ['true', 'false'],
+    readable: ['true', 'false'],
+    allowCreate: ['true', 'false'],
+    allowDelete: ['true', 'false'],
+    allowEdit: ['true', 'false'],
+    allowRead: ['true', 'false'],
+    modifyAllRecords: ['true', 'false'],
+    viewAllRecords: ['true', 'false'],
+    default: ['true', 'false'],
+    visible: ['true', 'false'],
+    enabled: ['true', 'false'],
+    visibility: ['DefaultOn', 'DefaultOff', 'Hidden'],
+  },
+  indentationLength: 4,
+  permissionsetExtension: '.permissionset-meta.xml',
+  delimiter: ',',
+  resolveJsonModule: true,
+};
+
 export const tabConvertConfig = {
   header: [
     'fullName',

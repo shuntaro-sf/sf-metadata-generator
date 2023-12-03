@@ -309,6 +309,9 @@ sf plugins
 - [`sf metadata object generate`](#sf-metadata-object-generate)
 - [`sf metadata object retrieve`](#sf-metadata-object-retrieve)
 - [`sf metadata object template`](#sf-metadata-object-template)
+- [`sf metadata permissionset convert`](#sf-metadata-permissionset-convert)
+- [`sf metadata permissionset generate`](#sf-metadata-permissionset-generate)
+- [`sf metadata permissionset retrieve`](#sf-metadata-permissionset-retrieve)
 - [`sf metadata profile convert`](#sf-metadata-profile-convert)
 - [`sf metadata profile generate`](#sf-metadata-profile-generate)
 - [`sf metadata profile retrieve`](#sf-metadata-profile-retrieve)
@@ -535,6 +538,89 @@ EXAMPLES
   Creates a template input-csv-file to ouputdir:
 
     $ sf metadata object template --outputdir ./outputdir/
+```
+
+## `sf metadata permissionset convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata permissionset convert [--json] [-s <value>] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -s, --source=<value>     directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata permissionset convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata permissionset generate`
+
+Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata permissionset generate [--json] [-i <value>] [-e <value>] [-s <value>] [-d <value>]
+
+FLAGS
+  -d, --delimiter=<value>  [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>  [default: ./] output directory where metadata are saved
+  -i, --input=<value>      input file to be converted to xml files
+  -s, --source=<value>     directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata permissionset generate --input ./input.csv --source ./source.permissionset-meta.xml --outputdir ^
+      ./outputdir/
+```
+
+## `sf metadata permissionset retrieve`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata permissionset retrieve -o <value> -x <value> [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>   [default: ./] output directory where metadata are saved
+  -o, --target-org=<value>  (required) Overrides your default org.
+  -x, --manifest=<value>    (required) File path for the manifest (package.xml) that specifies the components to
+                            retrieve.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata permissionset retrieve --sourcedir ./sourcedir/ --outputdir ./outputdir/
 ```
 
 ## `sf metadata profile convert`
