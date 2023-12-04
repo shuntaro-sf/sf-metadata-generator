@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable class-methods-use-this */
 import { writeFileSync, existsSync } from 'fs';
-import { join, extname } from 'path';
+import { join, extname, parse } from 'path';
 import { clearLine, moveCursor } from 'readline';
 import { Parser } from '@json2csv/plainjs';
 import xml2js from 'xml2js';
@@ -55,7 +55,8 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
     }),
   };
 
-  private static metaJson = [] as Array<{ [key: string]: any }>;
+  private static objectExtension = ConfigData.objectRetrieveConfig.objectExtension;
+  private static metaJson = {} as { [key: string]: any };
 
   public async run(): Promise<FieldRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
@@ -67,21 +68,36 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
       flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']);
 
     const metaJsons = await this.retrieve(usernameOrConnection, flags.manifest);
-    Object.keys(metaJsons).forEach((fullName) => {
+    Object.keys(metaJsons).forEach((objectFullName: any) => {
+      const metaJson = [] as Array<{ [key: string]: any }>;
       const fieldConverter = new FieldConvert();
-      Retrieve.metaJson.push(fieldConverter.convert(metaJsons[fullName], flags.picklistdelimiter));
+      Object.keys(metaJsons[objectFullName]).forEach((fieldFullName: any) => {
+        metaJson.push(fieldConverter.convert(metaJsons[objectFullName][fieldFullName], flags.picklistdelimiter));
+      });
+      Retrieve.metaJson[objectFullName] = metaJson;
     });
     let csvStr = '';
-    if (Retrieve.metaJson.length > 0) {
+    if (Object.keys(Retrieve.metaJson).length > 0) {
       const json2csvParser = new Parser();
-      csvStr = json2csvParser.parse(Retrieve.metaJson);
-      writeFileSync(join(flags.outputdir, 'field-meta.csv'), csvStr, 'utf8');
+      Object.keys(Retrieve.metaJson).forEach((fullName: any) => {
+        csvStr = json2csvParser.parse(Retrieve.metaJson[fullName]);
+        writeFileSync(join(flags.outputdir, fullName + '.field-meta.csv'), csvStr, 'utf8');
+      });
     }
     this.log();
     this.log(messages.getMessage('success') + flags.outputdir + '.');
     return {
       csvDataStr: csvStr,
     };
+  }
+
+  private getFullNameFromPath(path: string): string {
+    const fullNameRegExp = new RegExp(Retrieve.objectExtension + '$');
+    const fullNameMatch = parse(path).base.match(fullNameRegExp);
+    if (fullNameMatch === null) {
+      return '';
+    }
+    return parse(path).base.replace(Retrieve.objectExtension, '');
   }
 
   private async retrieve(
@@ -117,23 +133,28 @@ export default class Retrieve extends SfCommand<FieldRetrieveResult> {
 
     const zipFileContents = Buffer.from(result.response.zipFile, 'base64');
     const metadataDir = await unzipper.Open.buffer(zipFileContents);
-    const fileBuffers: any[] = [];
+    const fileBuffers = {} as { [key: string]: any };
     const metaJsons = {} as { [key: string]: any };
-    metadataDir.files.forEach((file) => {
-      if (extname(file.path) === '.object') {
-        const fileBuffer = file.buffer();
-        fileBuffers.push(fileBuffer);
+
+    for (const file of metadataDir.files) {
+      if (extname(file.path) === Retrieve.objectExtension) {
+        const fullName = this.getFullNameFromPath(file.path);
+        // eslint-disable-next-line no-await-in-loop
+        fileBuffers[fullName] = await file.buffer();
       }
-    });
+    }
     const parser = new xml2js.Parser();
-    await Promise.all(fileBuffers).then((buffer) => {
-      parser.parseString(buffer.toString(), (err, metaJson) => {
+
+    Object.keys(fileBuffers).forEach((fullName) => {
+      parser.parseString(fileBuffers[fullName], (err, metaJson) => {
         if (err) {
           this.log(err.message);
         } else {
+          const fieldMetaJson = {} as { [key: string]: any };
           metaJson.CustomObject.fields.forEach((field: { [key: string]: any }) => {
-            metaJsons[field.fullName] = field;
+            fieldMetaJson[field.fullName] = field;
           });
+          metaJsons[fullName] = fieldMetaJson;
         }
       });
     });
