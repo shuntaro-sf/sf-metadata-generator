@@ -25,11 +25,15 @@ export class PermissionsetConvert {
       metaJson[type].forEach((elm: { [x: string]: any }) => {
         const row = {} as { [key: string]: any };
         row['type'] = type;
+        console.log(type);
+        console.log(elm);
+        console.log(elm[PermissionsetConvert.permissionTags[type].keyTag]);
         row['fullName'] = elm[PermissionsetConvert.permissionTags[type].keyTag][0];
         PermissionsetConvert.permissionTags[type].tags.forEach((tag: string) => {
           if (!PermissionsetConvert.header.includes(tag)) {
             return;
           }
+          console.log(elm);
           row[tag] = elm[tag][0];
         });
         PermissionsetConvert.metaJson.push(row);

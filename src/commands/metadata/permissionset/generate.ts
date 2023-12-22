@@ -90,7 +90,7 @@ export default class Generate extends SfCommand<PermissionsetGenerateResult> {
       if (err) {
         this.log(err.message);
       } else {
-        if (!Object.keys(metaJson).includes('permissionset')) {
+        if (!Object.keys(metaJson).includes('PermissionSet')) {
           return;
         }
         Generate.metaJson = metaJson;
@@ -100,7 +100,7 @@ export default class Generate extends SfCommand<PermissionsetGenerateResult> {
 
     csvJson.forEach((row, rowIndex) => {
       rowIndex++;
-      const metaItem = Generate.metaJson.permissionset[row.type].filter(
+      const metaItem = Generate.metaJson.PermissionSet[row.type].filter(
         (elm: { [x: string]: any[] }) => row.fullName === elm[Generate.permissionTags[row.type].keyTag][0]
       )[0];
       Generate.permissionTags[row.type].tags.forEach((tag: string) => {

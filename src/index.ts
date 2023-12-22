@@ -81,6 +81,7 @@ export const fieldRetrieveConfig = {
     'summaryFilterItemsValue',
   ],
   fieldExtension: 'field-meta.xml',
+  csvExtension: '.field-metad.csv',
 };
 export const fieldGenerateConfig = {
   xmlSetting: {
@@ -2860,6 +2861,7 @@ export const objectConvertConfig = {
     'nameFieldDisplayFormat',
   ],
   objectExtension: '.object-meta.xml',
+  csvExtension: '.object-metad.csv',
 };
 
 export const objectRetrieveConfig = {
@@ -3224,6 +3226,7 @@ export const profileConvertConfig = {
     },
   },
   profileExtension: '.profile-meta.xml',
+  csvExtension: '.profile-metad.csv',
 };
 
 export const profileRetrieveConfig = {
@@ -3360,7 +3363,7 @@ export const permissionsetConvertConfig = {
   permissionTags: {
     applicationVisibilities: {
       keyTag: 'application',
-      tags: ['default', 'visible'],
+      tags: ['visible'],
     },
     classAccesses: {
       keyTag: 'apexClass',
@@ -3392,6 +3395,7 @@ export const permissionsetConvertConfig = {
     },
   },
   permissionsetExtension: '.permissionset-meta.xml',
+  csvExtension: '.permissionset-metad.csv',
 };
 
 export const permissionsetRetrieveConfig = {
@@ -3414,7 +3418,7 @@ export const permissionsetRetrieveConfig = {
   permissionTags: {
     applicationVisibilities: {
       keyTag: 'application',
-      tags: ['default', 'visible'],
+      tags: ['visible'],
     },
     classAccesses: {
       keyTag: 'apexClass',
@@ -3457,7 +3461,7 @@ export const permissionsetGenerateConfig = {
   permissionTags: {
     applicationVisibilities: {
       keyTag: 'application',
-      tags: ['default', 'visible'],
+      tags: ['visible'],
     },
     classAccesses: {
       keyTag: 'apexClass',

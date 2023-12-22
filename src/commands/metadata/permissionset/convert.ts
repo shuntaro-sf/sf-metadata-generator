@@ -43,6 +43,7 @@ export default class Convert extends SfCommand<PermissionsetConvertResult> {
 
   private static header = ConfigData.permissionsetConvertConfig.header;
   private static permissionsetExtension = ConfigData.permissionsetConvertConfig.permissionsetExtension;
+  private static csvExtension = ConfigData.permissionsetConvertConfig.csvExtension;
   private static metaJson = [] as Array<{ [key: string]: any }>;
 
   public async run(): Promise<PermissionsetConvertResult> {
@@ -77,7 +78,7 @@ export default class Convert extends SfCommand<PermissionsetConvertResult> {
     if (Convert.metaJson.length > 0) {
       const json2csvParser = new Parser();
       const csvStr = json2csvParser.parse(Convert.metaJson);
-      writeFileSync(join(flags.outputdir, fullName + '.csv'), csvStr, 'utf8');
+      writeFileSync(join(flags.outputdir, fullName + Convert.csvExtension), csvStr, 'utf8');
     }
     this.log(messages.getMessage('success') + flags.outputdir + '.');
     return { MetaJson: Convert.metaJson };

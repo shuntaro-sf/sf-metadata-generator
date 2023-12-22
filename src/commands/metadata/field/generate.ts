@@ -111,7 +111,6 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
           removedKeys.push(tag);
           return;
         }
-
         // to omit tag that dosent need to be xml tag if blank
         if (
           !Generate.isRequired[row.type][tag] &&
