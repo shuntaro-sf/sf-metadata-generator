@@ -34,7 +34,7 @@ describe('metadata permissionset generate positive NUTs', () => {
     const inputJson = await csvtojson().fromFile(inputFilePath);
 
     inputJson.forEach((inputRow) => {
-      const custompermissionsetJson = result?.MetaJson.permissionset;
+      const custompermissionsetJson = result?.MetaJson.PermissionSet;
       Object.keys(inputRow as { [key: string]: string }).forEach((tag) => {
         if (custompermissionsetJson[tag] !== undefined) {
           expect(
