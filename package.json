@@ -1,7 +1,7 @@
 {
   "name": "@shuntaro/sf-metadata-generator",
   "description": "sf plugin to generate metadata",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "dependencies": {
     "@json2csv/plainjs": "^7.0.3",
     "@oclif/core": "^2.11.8",
