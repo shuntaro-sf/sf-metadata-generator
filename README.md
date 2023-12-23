@@ -1,6 +1,6 @@
 # @shuntaro/sf-metadata-generator
 
-[![NPM](https://img.shields.io/npm/v/@shuntaro/sf-metadata-generator.svg?label=@shuntaro/sf-metadata-generator)](https://www.npmjs.com/package/@shuntaro/sf-metadata-generator) [![Downloads/week](https://img.shields.io/npm/dw/@shuntaro/sf-metadata-generator.svg)](https://npmjs.org/package/@shuntaro/sf-metadata-generator) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/shuntaro-sf/sf-metadata-generator/main/LICENSE.txt)
+[![NPM](https://img.shields.io/npm/v/@shuntaro/sf-metadata-generator.svg?label=@shuntaro/sf-metadata-generator)](https://www.npmjs.com/package/@shuntaro/sf-metadata-generator) [![Downloads/week](https://img.shields.io/npm/dw/@shuntaro/.svg)](https://npmjs.org/package/@shuntaro/sf-metadata-generator) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/shuntaro-sf/sf-metadata-generator/main/LICENSE.txt)
 
 # How to get started
 
@@ -170,7 +170,7 @@ Edit the craeted csv file as you want to update metadata. The description of the
 | allowRead        | Whether it is allowed to read the object of fullName. Options are listed below:<br>true, false.                                                                                                         |
 | modifyAllRecords | Whether it is allowed to modify all records of the object of fullName.Options are listed below:<br>true, false.                                                                                         |
 | viewAllRecords   | Whether it is allowed to view all records of the object of fullName. Options are listed below:<br>true, false.                                                                                          |
-| default          | Whether it is default. Applied for applicationVisibilities and recordTypeVisibilities. Options are listed below:<br>true, false.                                                                        |
+| default          | Whether it is default. Applied for recordTypeVisibilities. Options are listed below:<br>true, false.                                                                                                    |
 | visible          | Whether it is visible. Applied for applicationVisibilities and recordTypeVisibilities. Options are listed below:<br>true, false.                                                                        |
 | enabled          | Whether it is enabled. Applied for classAccesses, pageAccesses, and userPermissions. Options are listed below:<br>true, false.                                                                          |
 | visibility       | Type of tag-visibility. Applied for tabVisibilities. Options are listed below:<br>DefaultOn, DefaultOff,Hidden                                                                                          |
