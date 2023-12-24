@@ -340,6 +340,10 @@ sf plugins
 - [`sf metadata field generate`](#sf-metadata-field-generate)
 - [`sf metadata field retrieve`](#sf-metadata-field-retrieve)
 - [`sf metadata field template`](#sf-metadata-field-template)
+- [`sf metadata listview convert`](#sf-metadata-listview-convert)
+- [`sf metadata listview generate`](#sf-metadata-listview-generate)
+- [`sf metadata listview retrieve`](#sf-metadata-listview-retrieve)
+- [`sf metadata listview template`](#sf-metadata-listview-template)
 - [`sf metadata object convert`](#sf-metadata-object-convert)
 - [`sf metadata object generate`](#sf-metadata-object-generate)
 - [`sf metadata object retrieve`](#sf-metadata-object-retrieve)
@@ -466,6 +470,118 @@ EXAMPLES
   Creates a template input-csv-file to ouputdir:
 
     $ sf metadata field template --outputdir ./outputdir/
+```
+
+## `sf metadata listview convert`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata listview convert [--json] [-s <value>] [-e <value>] [-p <value>]
+
+FLAGS
+  -e, --outputdir=<value>         [default: ./] output directory where metadata are saved
+  -p, --columnsdelimiter=<value>  [default: ;] delimiter for columns and filters. the default value is semicolon
+  -s, --sourcedir=<value>         directory where source files you convert are stored
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata listview convert --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata listview generate`
+
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+```
+USAGE
+  $ sf metadata listview generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>] [-p <value>]
+
+FLAGS
+  -d, --delimiter=<value>          [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
+  -i, --input=<value>              input file to be converted to xml files
+  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
+  -u, --updates                    whether update existing xml files in outputdir or not
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+
+EXAMPLES
+  Generates metadata from input to a csv file in ouputdir:
+
+    $ sf metadata listview generate --input ./input.csv --outputdir ./outputdir/
+```
+
+## `sf metadata listview retrieve`
+
+Converts custom-field-xml-files to a file used to create or update the metadata.
+
+```
+USAGE
+  $ sf metadata listview retrieve -o <value> -x <value> [--json] [-e <value>] [-p <value>]
+
+FLAGS
+  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
+  -o, --target-org=<value>         (required) Overrides your default org.
+  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
+  -x, --manifest=<value>           (required) File path for the manifest (package.xml) that specifies the components to
+                                   retrieve.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+  Converts custom-field-xml-files to a file used to create or update the metadata.
+
+EXAMPLES
+  Converts metadata in sourcedir to a csv file in ouputdir:
+
+    $ sf metadata listview retrieve --sourcedir ./sourcedir/ --outputdir ./outputdir/
+```
+
+## `sf metadata listview template`
+
+Creates a template input-csv-file.
+
+```
+USAGE
+  $ sf metadata listview template [--json] [-e <value>]
+
+FLAGS
+  -e, --outputdir=<value>  [default: ./] directory where a template csv file is saved.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Creates a template input-csv-file.
+
+  Creates a template input-csv-file.
+
+EXAMPLES
+  Creates a template input-csv-file to ouputdir:
+
+    $ sf metadata listview template --outputdir ./outputdir/
 ```
 
 ## `sf metadata object convert`
