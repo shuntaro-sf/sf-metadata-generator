@@ -1,10 +1,10 @@
 # summary
 
-Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Updates profile metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 # description
 
-Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Updates profile metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 # flags.input.summary
 

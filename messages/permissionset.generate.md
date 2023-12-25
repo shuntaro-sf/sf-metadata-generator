@@ -1,10 +1,10 @@
 # summary
 
-Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 # description
 
-Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 # flags.input.summary
 

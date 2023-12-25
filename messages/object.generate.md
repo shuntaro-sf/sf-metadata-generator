@@ -1,10 +1,10 @@
 # summary
 
-Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 # description
 
-Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 # flags.input.summary
 

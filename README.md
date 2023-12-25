@@ -389,7 +389,7 @@ EXAMPLES
 
 ## `sf metadata field generate`
 
-Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 ```
 USAGE
@@ -407,9 +407,9 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 EXAMPLES
   Generates metadata from input to a csv file in ouputdir:
@@ -501,7 +501,7 @@ EXAMPLES
 
 ## `sf metadata listview generate`
 
-Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 ```
 USAGE
@@ -519,9 +519,9 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 EXAMPLES
   Generates metadata from input to a csv file in ouputdir:
@@ -612,7 +612,7 @@ EXAMPLES
 
 ## `sf metadata object generate`
 
-Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 ```
 USAGE
@@ -628,9 +628,9 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 EXAMPLES
   Converts metadata in sourcedir to a csv file in ouputdir:
@@ -719,7 +719,7 @@ EXAMPLES
 
 ## `sf metadata permissionset generate`
 
-Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 ```
 USAGE
@@ -735,9 +735,9 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
-  Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Updates permissionset metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 EXAMPLES
   Converts metadata in sourcedir to a csv file in ouputdir:
@@ -802,7 +802,7 @@ EXAMPLES
 
 ## `sf metadata profile generate`
 
-Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Updates profile metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 ```
 USAGE
@@ -818,9 +818,9 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
-  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Updates profile metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 EXAMPLES
   Converts metadata in sourcedir to a csv file in ouputdir:
@@ -884,7 +884,7 @@ EXAMPLES
 
 ## `sf metadata tab generate`
 
-Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 ```
 USAGE
@@ -900,9 +900,9 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
-  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv and excel to xml files.
+  Generates custom field metadata converting values in any sort of spreadsheets, e.g., csv to xml files.
 
 EXAMPLES
   Converts metadata in sourcedir to a csv file in ouputdir:
