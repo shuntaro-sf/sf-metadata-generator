@@ -40,7 +40,7 @@ export default class Convert extends SfCommand<listviewConvertResult> {
       default: './',
     }),
     columnsdelimiter: Flags.string({
-      char: 'p',
+      char: 'c',
       summary: messages.getMessage('flags.columnsdelimiter.summary'),
       default: ConfigData.listviewConvertConfig.columnsDelimiter,
     }),

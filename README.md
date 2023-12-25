@@ -478,11 +478,11 @@ Converts custom-field-xml-files to a file used to create or update the metadata.
 
 ```
 USAGE
-  $ sf metadata listview convert [--json] [-s <value>] [-e <value>] [-p <value>]
+  $ sf metadata listview convert [--json] [-s <value>] [-e <value>] [-c <value>]
 
 FLAGS
+  -c, --columnsdelimiter=<value>  [default: ;] delimiter for columns and filters. the default value is semicolon
   -e, --outputdir=<value>         [default: ./] output directory where metadata are saved
-  -p, --columnsdelimiter=<value>  [default: ;] delimiter for columns and filters. the default value is semicolon
   -s, --sourcedir=<value>         directory where source files you convert are stored
 
 GLOBAL FLAGS
@@ -505,14 +505,14 @@ Generates custom field metadata converting values in any sort of spreadsheets, e
 
 ```
 USAGE
-  $ sf metadata listview generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>] [-p <value>]
+  $ sf metadata listview generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>] [-c <value>]
 
 FLAGS
+  -c, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
   -d, --delimiter=<value>          [default: ,] delimiter for the input file. the default value is comma
   -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
   -i, --input=<value>              input file to be converted to xml files
-  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
-                                   semicolon
   -u, --updates                    whether update existing xml files in outputdir or not
 
 GLOBAL FLAGS
@@ -535,13 +535,13 @@ Converts custom-field-xml-files to a file used to create or update the metadata.
 
 ```
 USAGE
-  $ sf metadata listview retrieve -o <value> -x <value> [--json] [-e <value>] [-p <value>]
+  $ sf metadata listview retrieve -o <value> -x <value> [--json] [-e <value>] [-c <value>]
 
 FLAGS
+  -c, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                   semicolon
   -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
   -o, --target-org=<value>         (required) Overrides your default org.
-  -p, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
-                                   semicolon
   -x, --manifest=<value>           (required) File path for the manifest (package.xml) that specifies the components to
                                    retrieve.
 

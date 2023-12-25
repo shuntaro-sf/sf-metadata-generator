@@ -21,7 +21,7 @@ export class FieldConvert {
         tag === 'summaryFilterItemsOperation' ||
         tag === 'summaryFilterItemsValue'
       ) {
-        row[tag] = this.getValueForSummaryFilterItems(metaJson, tag);
+        row[tag] = this.getValueForSummaryFilterItems(metaJson, tag, picklistdelimiter);
       } else {
         row[tag] = Object.keys(metaJson).includes(tag) ? metaJson[tag][0] : '';
       }
@@ -43,14 +43,19 @@ export class FieldConvert {
     return valueElms.map((picklistElm) => picklistElm[xmlTag]).join(picklistdelimiter);
   }
 
-  private getValueForSummaryFilterItems(metaJson: { [key: string]: any }, tag: string): string {
+  private getValueForSummaryFilterItems(
+    metaJson: { [key: string]: any },
+    tag: string,
+    picklistdelimiter: string
+  ): string {
     if (!Object.keys(metaJson).includes('summaryFilterItems')) {
       return '';
     }
-    const summaryFIlterItemsElm = metaJson.summaryFilterItems[0] as { [key: string]: string };
+    const summaryFIlterItemsElms = metaJson.summaryFilterItems as Array<{ [key: string]: string }>;
     const xmlTag =
       tag.replace('summaryFilterItems', '').substring(0, 1).toLocaleLowerCase() +
       tag.replace('summaryFilterItems', '').substring(1);
-    return summaryFIlterItemsElm[xmlTag][0];
+    console.log(summaryFIlterItemsElms);
+    return summaryFIlterItemsElms.map((elm: { [key: string]: any }) => elm[xmlTag]).join(picklistdelimiter);
   }
 }

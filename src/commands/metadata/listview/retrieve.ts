@@ -44,7 +44,7 @@ export default class Retrieve extends SfCommand<listviewRetrieveResult> {
       default: './',
     }),
     picklistdelimiter: Flags.string({
-      char: 'p',
+      char: 'c',
       summary: messages.getMessage('flags.picklistdelimiter.summary'),
       default: ConfigData.listviewGenerateConfig.columnsDelimiter,
     }),

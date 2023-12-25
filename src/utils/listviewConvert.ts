@@ -40,7 +40,6 @@ export class ListviewConvert {
     const filtersElms = metaJson.filters;
     const xmlTag =
       tag.replace('filters', '').substring(0, 1).toLocaleLowerCase() + tag.replace('filters', '').substring(1);
-    console.log(filtersElms.map((elm: { [key: string]: any }) => elm[xmlTag][0]));
     return filtersElms.map((elm: { [key: string]: any }) => elm[xmlTag]).join(columnsdeliter);
   }
 }

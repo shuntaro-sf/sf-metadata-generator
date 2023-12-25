@@ -49,7 +49,7 @@ export default class Generate extends SfCommand<listviewGenerateResult> {
       default: ConfigData.listviewGenerateConfig.delimiter,
     }),
     picklistdelimiter: Flags.string({
-      char: 'p',
+      char: 'c',
       summary: messages.getMessage('flags.picklistdelimiter.summary'),
       default: ConfigData.listviewGenerateConfig.columnsDelimiter,
     }),
