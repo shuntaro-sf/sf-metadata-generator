@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Html field.</description>
+    <fullName>html__c</fullName>
+    <inlineHelpText>Html helptext</inlineHelpText>
+    <label>リッチテキストエリア</label>
+    <length>1000</length>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

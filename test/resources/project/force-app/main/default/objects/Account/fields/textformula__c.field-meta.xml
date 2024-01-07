@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Text field.</description>
+    <externalId>false</externalId>
+    <formula>"&amp;aa&lt;&gt;aaaa"</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <fullName>textformula__c</fullName>
+    <inlineHelpText>Text helptext</inlineHelpText>
+    <label>テキスト</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

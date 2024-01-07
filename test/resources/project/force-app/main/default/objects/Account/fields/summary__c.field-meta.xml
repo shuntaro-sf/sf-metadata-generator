@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Summary field.</description>
+    <externalId>false</externalId>
+    <fullName>summary__c</fullName>
+    <inlineHelpText>Summary helptext</inlineHelpText>
+    <label>積み上げ集計</label>
+    <summarizedField>Custom_Object__c.Number__c</summarizedField>
+    <summaryFilterItems>
+        <field>Custom_Object__c.Number__c</field>
+        <operation>lessThan</operation>
+        <value>1000</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Custom_Object__c.Account__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

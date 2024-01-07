@@ -130,7 +130,14 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
           return;
         }
 
-        if ((tag === 'picklistFullName' || tag === 'picklistLabel') && Object.keys(row).includes(tag)) {
+        if (
+          (tag === 'picklistFullName' ||
+            tag === 'picklistLabel' ||
+            tag === 'summaryFilterItemsField' ||
+            tag === 'summaryFilterItemsOperation' ||
+            tag === 'summaryFilterItemsValue') &&
+          Object.keys(row).includes(tag)
+        ) {
           row[tag] = row[tag].split(flags.picklistdelimiter);
         }
       });
@@ -224,15 +231,20 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     if (!this.isValidInputsForSummaryFilterItems(row, rowIndex)) {
       return;
     }
-    const summaryFilterItemsElm = { ...Generate.summaryFilterItemsDefaultValues };
-    Object.keys(summaryFilterItemsElm).forEach((tag) => {
-      const tagForRow = 'summaryFilterItems' + tag.substring(0, 1).toUpperCase() + tag.substring(1);
-      if (Object.keys(row).includes(tagForRow)) {
-        summaryFilterItemsElm[tag] = row[tagForRow];
-      }
-    });
 
-    row['summaryFilterItems'] = summaryFilterItemsElm;
+    const summaryFilterItemsElms = [] as Array<{ [key: string]: any }>;
+    for (let idx = 0; idx < row.summaryFilterItemsField.length; idx++) {
+      const summaryFilterItemsElm = { ...Generate.summaryFilterItemsDefaultValues };
+      Object.keys(summaryFilterItemsElm).forEach((tag) => {
+        const tagForRow = 'summaryFilterItems' + tag.substring(0, 1).toUpperCase() + tag.substring(1);
+        if (Object.keys(row).includes(tagForRow)) {
+          summaryFilterItemsElm[tag] = row[tagForRow][idx];
+        }
+      });
+      summaryFilterItemsElms.push(summaryFilterItemsElm);
+    }
+
+    row['summaryFilterItems'] = summaryFilterItemsElms;
     delete row.summaryFilterItemsField;
     delete row.summaryFilterItemsOperation;
     delete row.summaryFilterItemsValue;
@@ -882,7 +894,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     }
   }
 
-  private isValidInputsForPicklist(row: { [key: string]: string }, rowIndex: number): boolean {
+  private isValidInputsForPicklist(row: { [key: string]: any }, rowIndex: number): boolean {
     const header = Object.keys(row);
     const validationResLenBefore = Generate.validationResults.length;
     const typeColIndex = header.indexOf('type');
@@ -912,6 +924,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     if (picklistLabels.length > 1000) {
       this.pushValidationResult(errorIndexForLabel, messages.getMessage('validation.picklist.label.length'));
     }
+
     for (let idx = 0; idx < picklistFullNames.length; idx++) {
       if (picklistFullNames[idx].length === 0) {
         this.pushValidationResult(errorIndexForFullName, messages.getMessage('validation.picklist.fullname.blank'));
@@ -929,7 +942,7 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     return validationResLenBefore === Generate.validationResults.length;
   }
 
-  private isValidInputsForSummaryFilterItems(row: { [key: string]: string }, rowIndex: number): boolean {
+  private isValidInputsForSummaryFilterItems(row: { [key: string]: any }, rowIndex: number): boolean {
     const header = Object.keys(row);
     const validationResLenBefore = Generate.validationResults.length;
     const fieldColIndex = header.indexOf('summaryFilterItemsField');
@@ -952,49 +965,65 @@ export default class Generate extends SfCommand<FieldGenerateResult> {
     if (!Object.keys(row).includes('summaryFilterItemsValue')) {
       this.pushValidationResult(errorIndexForValue, messages.getMessage('validation.no.summaryfilteritemsvalue'));
     }
-    const field = row.summaryFilterItemsField;
-    const operation = row.summaryFilterItemsOperation;
-    const value = row.summaryFilterItemsValue;
+    const fields = row.summaryFilterItemsField;
+    const operations = row.summaryFilterItemsOperation;
+    const values = row.summaryFilterItemsValue;
 
     // for field tag
-    const fullNameSplit = field.split('.');
-    const regExpForSnakeCase = /^[a-zA-Z][0-9a-zA-Z_]+[a-zA-Z]$/;
+    fields.forEach((field: string) => {
+      const fullNameSplit = field.split('.');
+      const regExpForSnakeCase = /^[a-zA-Z][0-9a-zA-Z_]+[a-zA-Z]$/;
 
-    if (fullNameSplit.length !== 2) {
-      this.pushValidationResult(
-        errorIndexForField,
-        messages.getMessage('validation.summarizedfield.invalid.reference')
-      );
-    } else {
-      if (!regExpForSnakeCase.test(fullNameSplit[0]) || !regExpForSnakeCase.test(fullNameSplit[1])) {
-        this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.format'));
-      }
-      if (fullNameSplit[0].split('__').length > 2 || fullNameSplit[1].split('__').length > 2) {
+      if (fullNameSplit.length !== 2) {
         this.pushValidationResult(
           errorIndexForField,
-          messages.getMessage('validation.summaryfilteritemsfield.underscore')
+          messages.getMessage('validation.summarizedfield.invalid.reference')
         );
+      } else {
+        if (!regExpForSnakeCase.test(fullNameSplit[0]) || !regExpForSnakeCase.test(fullNameSplit[1])) {
+          this.pushValidationResult(
+            errorIndexForField,
+            messages.getMessage('validation.summaryfilteritemsfield.format')
+          );
+        }
+        if (fullNameSplit[0].split('__').length > 2 || fullNameSplit[1].split('__').length > 2) {
+          this.pushValidationResult(
+            errorIndexForField,
+            messages.getMessage('validation.summaryfilteritemsfield.underscore')
+          );
+        }
+        if (fullNameSplit[0].length === 0 || fullNameSplit[1].length === 0) {
+          this.pushValidationResult(
+            errorIndexForField,
+            messages.getMessage('validation.summaryfilteritemsfield.blank')
+          );
+        }
+        if (!this.isValidLengthForSummary(fullNameSplit)) {
+          this.pushValidationResult(
+            errorIndexForField,
+            messages.getMessage('validation.summaryfilteritemsfield.length')
+          );
+        }
       }
-      if (fullNameSplit[0].length === 0 || fullNameSplit[1].length === 0) {
-        this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.blank'));
-      }
-      if (!this.isValidLengthForSummary(fullNameSplit)) {
-        this.pushValidationResult(errorIndexForField, messages.getMessage('validation.summaryfilteritemsfield.length'));
-      }
-    }
+    });
 
     // for operation tag
-    if (!Generate.options.summaryFilterItemsOperation.includes(operation)) {
-      this.pushValidationResult(
-        errorIndexForOperation,
-        messages.getMessage('validation.summaryfilteritemsoperation.options') +
-          Generate.options.summaryFilterItemsOperation.toString()
-      );
-    }
+    operations.forEach((operation: string) => {
+      if (!Generate.options.summaryFilterItemsOperation.includes(operation)) {
+        this.pushValidationResult(
+          errorIndexForOperation,
+          messages.getMessage('validation.summaryfilteritemsoperation.options') +
+            Generate.options.summaryFilterItemsOperation.toString()
+        );
+      }
+    });
+
     // for value tag
-    if (value.length > 255) {
-      this.pushValidationResult(errorIndexForValue, messages.getMessage('validation.summaryfilteritemsvalue.length'));
-    }
+    values.forEach((value: string) => {
+      if (value.length > 255) {
+        this.pushValidationResult(errorIndexForValue, messages.getMessage('validation.summaryfilteritemsvalue.length'));
+      }
+    });
 
     return validationResLenBefore === Generate.validationResults.length;
   }

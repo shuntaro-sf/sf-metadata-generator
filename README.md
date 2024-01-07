@@ -508,12 +508,12 @@ USAGE
   $ sf metadata listview generate [--json] [-i <value>] [-e <value>] [-u] [-d <value>] [-c <value>]
 
 FLAGS
-  -c, --picklistdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
-                                   semicolon
-  -d, --delimiter=<value>          [default: ,] delimiter for the input file. the default value is comma
-  -e, --outputdir=<value>          [default: ./] output directory where metadata are saved
-  -i, --input=<value>              input file to be converted to xml files
-  -u, --updates                    whether update existing xml files in outputdir or not
+  -c, --columnsdelimiter=<value>  [default: ;] delimiter for picklist fullNames and labels. the default value is
+                                  semicolon
+  -d, --delimiter=<value>         [default: ,] delimiter for the input file. the default value is comma
+  -e, --outputdir=<value>         [default: ./] output directory where metadata are saved
+  -i, --input=<value>             input file to be converted to xml files
+  -u, --updates                   whether update existing xml files in outputdir or not
 
 GLOBAL FLAGS
   --json  Format output as json.

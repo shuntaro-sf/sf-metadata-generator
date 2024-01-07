@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>MultiselectPicklist field.</description>
+    <fullName>multiselectPicklist__c</fullName>
+    <inlineHelpText>MultiselectPicklist helptext</inlineHelpText>
+    <label>複数選択リスト</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>a</fullName>
+                <default>false</default>
+                <label>い</label>
+            </value>
+            <value>
+                <fullName>b</fullName>
+                <default>false</default>
+                <label>ろ</label>
+            </value>
+            <value>
+                <fullName>c</fullName>
+                <default>false</default>
+                <label>は</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

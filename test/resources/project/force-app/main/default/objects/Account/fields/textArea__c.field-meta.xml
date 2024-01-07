@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>TextArea field.</description>
+    <fullName>textArea__c</fullName>
+    <inlineHelpText>TextArea helptext</inlineHelpText>
+    <label>テキストエリア</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

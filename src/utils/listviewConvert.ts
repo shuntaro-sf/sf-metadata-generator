@@ -19,6 +19,8 @@ export class ListviewConvert {
         row[tag] = this.getValueForColumns(metaJson, columnsdelimiter);
       } else if (tag === 'filtersField' || tag === 'filtersOperation' || tag === 'filtersValue') {
         row[tag] = this.getValueForFilters(metaJson, tag, columnsdelimiter);
+      } else if (tag === 'sharedToRole' || tag === 'sharedToRoleAndSubordinates' || tag === 'sharedToGroup') {
+        row[tag] = this.getValueForSharedTo(metaJson, tag, columnsdelimiter);
       } else {
         row[tag] = Object.keys(metaJson).includes(tag) ? metaJson[tag][0] : '';
       }
@@ -40,6 +42,16 @@ export class ListviewConvert {
     const filtersElms = metaJson.filters;
     const xmlTag =
       tag.replace('filters', '').substring(0, 1).toLocaleLowerCase() + tag.replace('filters', '').substring(1);
+    return filtersElms.map((elm: { [key: string]: any }) => elm[xmlTag]).join(columnsdeliter);
+  }
+
+  private getValueForSharedTo(metaJson: { [key: string]: any }, tag: string, columnsdeliter: string): string {
+    if (!Object.keys(metaJson).includes('sharedTo')) {
+      return '';
+    }
+    const filtersElms = metaJson.filters;
+    const xmlTag =
+      tag.replace('sharedTo', '').substring(0, 1).toLocaleLowerCase() + tag.replace('sharedTo', '').substring(1);
     return filtersElms.map((elm: { [key: string]: any }) => elm[xmlTag]).join(columnsdeliter);
   }
 }
