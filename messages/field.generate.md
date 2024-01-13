@@ -48,7 +48,7 @@ fullName: API Name must end with '\_\_c'.
 
 # validation.fullname.underscore
 
-fullName: API Name cannot contain two consecutive underscore characters,
+fullName: API Name cannot contain two consecutive underscore characters.
 
 # validation.fullname.blank
 
@@ -280,7 +280,7 @@ referenceTo can only contain alphanumeric characters, must begin with a letter, 
 
 # validation.referenceto.underscore
 
-referenceTo cannot contain two consecutive underscore characters,
+referenceTo cannot contain two consecutive underscore characters.
 
 # validation.referenceto.blank
 
@@ -348,7 +348,7 @@ summarizedField can only contain alphanumeric characters, must begin with a lett
 
 # validation.summarizedfield.underscore
 
-summarizedField cannot contain two consecutive underscore characters,
+summarizedField cannot contain two consecutive underscore characters.
 
 # validation.summarizedfield.blank
 
@@ -372,7 +372,7 @@ summaryForeignKey can only contain alphanumeric characters, must begin with a le
 
 # validation.summaryforeignkey.underscore
 
-summaryForeignKey cannot contain two consecutive underscore characters,
+summaryForeignKey cannot contain two consecutive underscore characters.
 
 # validation.summaryforeignkey.blank
 
@@ -400,7 +400,7 @@ summarizedFilterItemsField can only contain alphanumeric characters, must begin 
 
 # validation.summaryfilteritemsfield.underscore
 
-summarizedFilterItemsField cannot contain two consecutive underscore characters,
+summarizedFilterItemsField cannot contain two consecutive underscore characters.
 
 # validation.summaryfilteritemsfield.blank
 

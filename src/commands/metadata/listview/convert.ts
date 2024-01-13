@@ -20,11 +20,11 @@ import * as ConfigData from '../../../';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'listview.convert');
 
-export type listviewConvertResult = {
+export type ListviewConvertResult = {
   MetaJson: Json;
 };
 
-export default class Convert extends SfCommand<listviewConvertResult> {
+export default class Convert extends SfCommand<ListviewConvertResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -50,7 +50,7 @@ export default class Convert extends SfCommand<listviewConvertResult> {
   private static csvExtension = ConfigData.permissionsetConvertConfig.csvExtension;
   private static metaJson = [] as Array<{ [key: string]: any }>;
 
-  public async run(): Promise<listviewConvertResult> {
+  public async run(): Promise<ListviewConvertResult> {
     const { flags } = await this.parse(Convert);
 
     if (flags.sourcedir === undefined || !existsSync(flags.sourcedir)) {

@@ -23,11 +23,11 @@ import * as ConfigData from '../../../';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'listview.retrieve');
 
-export type listviewRetrieveResult = {
+export type ListviewRetrieveResult = {
   csvDataStr: string;
 };
 
-export default class Retrieve extends SfCommand<listviewRetrieveResult> {
+export default class Retrieve extends SfCommand<ListviewRetrieveResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -58,7 +58,7 @@ export default class Retrieve extends SfCommand<listviewRetrieveResult> {
   private static objectExtension = ConfigData.objectRetrieveConfig.objectExtension;
   private static metaJson = {} as { [key: string]: any };
 
-  public async run(): Promise<listviewRetrieveResult> {
+  public async run(): Promise<ListviewRetrieveResult> {
     const { flags } = await this.parse(Retrieve);
 
     if (!existsSync(flags.outputdir)) {

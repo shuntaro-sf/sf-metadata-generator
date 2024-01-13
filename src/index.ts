@@ -2859,8 +2859,8 @@ export const listviewConvertConfig = {
     'sharedToRoleAndSubordinates',
   ],
   columnsDelimiter: ';',
-  listviewExtension: '.listview-meta.xml',
-  csvExtension: '.listview-metad.csv',
+  listviewExtension: '.listView-meta.xml',
+  csvExtension: '.listView-metad.csv',
 };
 
 export const listviewRetrieveConfig = {
@@ -2881,7 +2881,7 @@ export const listviewRetrieveConfig = {
     'sharedToRoleAndSubordinates',
   ],
   columnsDelimiter: ';',
-  listviewExtension: '.listview',
+  listviewExtension: '.listView',
 };
 
 export const listviewGenerateConfig = {
@@ -2956,7 +2956,7 @@ export const listviewGenerateConfig = {
       'SalesTeam',
       'ScopingRule',
     ],
-    filtersOperatio: [
+    filtersOperation: [
       'equals',
       'notEqual',
       'lessThan',
@@ -2973,7 +2973,7 @@ export const listviewGenerateConfig = {
   },
   columnsDelimiter: ';',
   indentationLength: 4,
-  listviewExtension: '.listview-meta.xml',
+  listviewExtension: '.listView-meta.xml',
   delimiter: ',',
   tagNames: [
     'fullName',
@@ -3001,7 +3001,7 @@ export const listviewTemplateConfig = {
       label: 'MineListView',
       columns: 'ACCOUNT.NAME;ACCOUNT.SITE;ACCOUNT.ADDRESS1_STATE;ACCOUNT.PHONE1;ACCOUNT.TYPE;CORE.USERS.ALIAS',
       filterScope: 'Mine',
-      filtersField: 'Employee',
+      filtersField: 'ACCOUNT.EMPLOYEES',
       filtersOperation: 'greaterThan',
       filtersValue: '100',
       sharedToRole: '',

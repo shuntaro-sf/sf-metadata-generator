@@ -14,11 +14,11 @@ export type TemplateInput = { [key: string]: any | TemplateInput };
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@shuntaro/sf-metadata-generator', 'listview.template');
 
-export type listviewTemplateResult = {
+export type ListviewTemplateResult = {
   CsvTemplate: string;
 };
 
-export default class Template extends SfCommand<listviewTemplateResult> {
+export default class Template extends SfCommand<ListviewTemplateResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -33,7 +33,7 @@ export default class Template extends SfCommand<listviewTemplateResult> {
 
   private static templateInput = TemplateData.listviewTemplateConfig.template as TemplateInput;
 
-  public async run(): Promise<listviewTemplateResult> {
+  public async run(): Promise<ListviewTemplateResult> {
     const { flags } = await this.parse(Template);
     if (!existsSync(flags.outputdir)) {
       throw new SfError(messages.getMessage('error.path.output') + flags.outputdir);

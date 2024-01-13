@@ -70,9 +70,9 @@ Length of label must be less than or equal to 40.
 
 summaryOperation must be one of the followings:
 
-# validation.summarizedfield.no.summaryoperation
+# validation.filtersfield.no.filtersoperation
 
-summarizedField must be specified when summaryOperation is not count.
+filtersfield must be specified when summaryOperation is not count.
 
 # validation.summaryforeignkey.invalid.reference
 
@@ -94,45 +94,105 @@ summaryForeignKey must not be blank.
 
 Length of summaryForeignKey must be less than or equal to 40.
 
-# validation.no.summaryfilteritemsfield
+# validation.no.filtersfield
 
-Column of summaryFilterItemsField can not be found.
+Column of filtersField can not be found.
 
-# validation.no.summaryfilteritemsoperation
+# validation.no.filtersoperation
 
-Column of summaryFilterItemsOperation can not be found.
+Column of filtersOperation can not be found.
 
-# validation.no.summaryfilteritemsvalue
+# validation.no.filtersvalue
 
-Column of summaryFilterItemsValue can not be found.
+Column of filtersValue can not be found.
 
-# validation.summaryfilteritemsfield.format
+# validation.filtersfield.format
 
-summarizedFilterItemsField can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
+filtersField can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
 
-# validation.summaryfilteritemsfield.underscore
+# validation.filtersfield.underscore
 
-summarizedFilterItemsField cannot contain two consecutive underscore characters,
+filtersField cannot contain two consecutive underscore characters,
 
-# validation.summaryfilteritemsfield.blank
+# validation.filtersfield.blank
 
-summarizedFilterItemsField must not be blank.
+filtersField must not be blank.
 
-# validation.summaryfilteritemsfield.length
+# validation.filtersfield.length
 
-Length of summarizedFilterItemsField must be less than or equal to 40.
+Length of filtersField must be less than or equal to 40.
 
-# validation.summaryfilteritemsoperation.options
+# validation.filtersoperation.options
 
-summarizedFilterItemsOperation must be one of the followings:
+filtersOperation must be one of the followings:
 
-# validation.summaryfilteritemsvalue.length
+# validation.filtersvalue.length
 
-Length of summaryFilterItemsValue must be less than or equal to 255.
+Length of filtersValue must be less than or equal to 255.
 
-# validation.summarizedfield.invalid.reference
+# validation.filtersfield.invalid.reference
 
-summarizedField must be in the form of ObjectFullName.FieldFullName.
+filtersfield must be in the form of ObjectFullName.FieldFullName.
+
+# validation.no.sharedtorole
+
+Column of sharedToRole can not be found.
+
+# validation.no.sharedtoroleandsubordinates
+
+Column of sharedToRoleAndSubordinates can not be found.
+
+# validation.no.sharedtogroup
+
+Column of sharedToGroup can not be found.
+
+# validation.sharedtorole.format
+
+sharedToRole can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
+
+# validation.sharedtorole.underscore
+
+sharedToRole cannot contain two consecutive underscore characters.
+
+# validation.sharedtorole.blank
+
+sharedToRole must not be blank.
+
+# validation.sharedtorole.length
+
+Length of shardToRole must be less than or equal to 80.
+
+# validation.sharedtoroleandsubordinates.format
+
+sharedToRoleAndSubordinates can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
+
+# validation.sharedtoroleandsubordinates.underscore
+
+sharedToRoleAndSubordinates cannot contain two consecutive underscore characters.
+
+# validation.sharedtoroleandsubordinates.blank
+
+sharedToRoleAndSubordinates must not be blank.
+
+# validation.sharedtoroleandsubordinates.length
+
+Length of sharedToRoleAndSubordinates must be less than or equal to 80.
+
+# validation.sharedtogroup.format
+
+sharedToGroup can only contain alphanumeric characters, must begin with a letter, cannot end with an underscore or contain two consecutive underscore characters.
+
+# validation.sharedtogroup.underscore
+
+sharedToGroup cannot contain two consecutive underscore characters.
+
+# validation.sharedtogroup.blank
+
+sharedToGroup must not be blank.
+
+# validation.sharedtogroup.length
+
+Length of sharedToGroup must be less than or equal to 40.
 
 # failureSave
 

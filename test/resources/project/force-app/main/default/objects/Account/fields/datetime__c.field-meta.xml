@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Datetime field.</description>
-    <fullName>datetime__c</fullName>
-    <inlineHelpText>Datetime helptext</inlineHelpText>
-    <label>日付時間</label>
-    <trackTrending>false</trackTrending>
-    <type>DateTime</type>
-</CustomField>

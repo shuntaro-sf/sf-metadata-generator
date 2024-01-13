@@ -1,0 +1,5 @@
+fullName,label,description,allowInChatterGroups,deploymentStatus,enableActivities,enableBulkApi,enableHistory,enableReports,enableSearch,enableSharing,enableStreamingApi,nameFieldType,nameFieldLabel,nameFieldDisplayFormat,sharingModel,externalSharingModel
+CustomObject__c,CustomObjectUpdate,object description,true,Deployed,false,false,true,true,true,false,false,Text,customObjectUpdateName,,ReadWrite,ReadWrite
+CustomObject_AutoNumber__c,CustomObjectUpdate,object description,true,Deployed,false,false,true,true,true,false,false,AutoNumber,customObjectNameUpdate,coNameUpdate-{0000},ReadWrite,ReadWrite
+obj__c,objUpdate,object description,true,InDevelopment,true,true,true,true,true,true,true,Text,objUpdateName,,ReadWrite,ReadWrite
+co__c,coUpdate,object description,false,InDevelopment,false,false,false,false,false,false,false,Text,coUpdateName,,ReadWrite,ReadWrite
